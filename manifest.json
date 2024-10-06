@@ -1,0 +1,26 @@
+{
+  "name": "VE Xtension",
+  "description": "A Value Edege Chrome EXtension",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "permissions": [
+    "webNavigation",
+    "activeTab",
+    "scripting"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://ot-internal.saas.microfocus.com/*"],
+      "js": ["./Scripts/content.js","./Scripts/utility.js","./Scripts/draggable.js"],
+      "css":["./Styles/content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "main.html",
+    "default_icon":"icons/VE Extension.png",
+    "default_title": "A VE Xtension"
+  },
+  "background": {
+    "service_worker": "./Scripts/background.js"
+  }
+}

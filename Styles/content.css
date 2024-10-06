@@ -1,0 +1,13 @@
+#veX-button {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    user-select: none;
+    z-index: 999999999;
+    border: 1px solid #eef2f5;
+    background-color: #1668c1;
+}
+
