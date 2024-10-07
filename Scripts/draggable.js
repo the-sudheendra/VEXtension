@@ -1,4 +1,4 @@
-const draggableDiv = document.getElementById("veX-button");
+const draggableDiv = document.getElementById("veX-Button");
 let isDragging = false;
 let currentX;
 let currentY;
@@ -43,3 +43,43 @@ function dragEnd(e) {
 function setTranslate(xPos, yPos, el) {
     el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
 }
+
+// class DraggableElement {
+//     constructor(elementId) {
+//         this.elementId = elementId;
+//         this.isDragging = false;
+//         this.xOffset = 0;
+//         this.yOffset = 0;
+//         this.draggableDiv = document.getElementById(this.elementId);
+//     }
+
+//     dragStart(e) {
+//         this.initialX = e.clientX - this.xOffset;
+//         this.initialY = e.clientY - this.yOffset;
+//         if (e.target === this.draggableDiv) {
+//             this.isDragging = true;
+//         }
+//     }
+//     drag(e) {
+//         if (this.isDragging) {
+//             e.preventDefault();
+//             this.currentX = e.clientX - this.initialX;
+//             this.currentY = e.clientY - this.initialY;
+//             this.xOffset = this.currentX;
+//             this.yOffset = this.currentY;
+//             this.setTranslate(this.currentX, this.currentY, this.draggableDiv);
+//         }
+//     }
+//     setTranslate(xPos, yPos, el) {
+//         el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+//     }
+//     dragEnd(e) {
+//         this.initialX = this.currentX;
+//         this.initialY = this.currentY;
+//         this.isDragging = false;
+//     }
+// }
+// let draggableveXButton = new DraggableElement("veX-Button");
+// draggableveXButton.draggableDiv.addEventListener('mousedown', draggableveXButton.dragStart);
+// document.addEventListener('mousemove', draggableveXButton.drag);
+// document.addEventListener('mouseup', draggableveXButton.dragEnd);

@@ -1,12 +1,27 @@
 {
-    "Epic":[],
-    "Feature":[],
-    "Defect": [],
-    "Enhancement":[],
-    "CPE Incident":[],
-    "UserStory": [],
-    "Spike":[],
-    "Documentation":[],
-    "Localization":[]
+  "Epic": {
+    "desc": ""
+    
+  },
+  "Feature": {
+    "desc": ""
+  },
+  "Defect": {
+    "desc": ""
+  },
+  "Enhancement": {
+    "desc": ""
+  },
+  "CPE Incident": {
+    "desc": ""
+  },
+  "UserStory": {
+    "desc": ""
+  },
+  "Spike": {
+    "desc": ""
+  },
+  "Documentation": {
+    "desc": ""
   }
-  
+}
