@@ -1,14 +1,22 @@
 #veX-Button {
     height: 40px;
     width: 40px;
-    border-radius: 50%;
+    border-radius: 2%;
     position: fixed;
     bottom: 25px;
     right: 25px;
     user-select: none;
     z-index: 999999999;
-    border: 1px solid #eef2f5;
-    background-color: #1668c1;
+    border: 1px solid #ffffff;
+    background-color: #00a6ed;
+    border-radius: 50%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    font-size: 20px; 
+    color: white;
+    cursor: pointer;
+
 }
 #veX-PopUp-Container{
     position: fixed; 
@@ -57,14 +65,15 @@ header {
 .veX_main-content {
   flex: 1;
   padding: 20px;
+  background-color: #ddd;
 }
 .veX_tab-content {
-  display: none;
+  display: block;
 }
 .veX_tab-content.active {
   display: block;
 }
-.veX_checkbox-group {
+.veX_dod_list {
   margin-bottom: 20px;
 }
 .threshold-settings {
@@ -74,4 +83,34 @@ input[type="text"] {
   width: 100%;
   padding: 5px;
   margin-top: 5px;
+}
+
+.veX_dod_title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.veX_dod_desc {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.veX_dod_list {
+  padding-left: 20px;
+}
+
+.veX_dod_list ul {
+  list-style-type: disc;
+  margin: 0;
+  padding: 0;
+}
+
+.veX_dod_list li {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 5px;
 }

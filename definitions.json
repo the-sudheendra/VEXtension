@@ -1,27 +1,94 @@
 {
+  "DOD":{
+    "title": "What is the Definition of Done?",
+    "desc": "The definition of done (DoD) is when all conditions, or acceptance criteria, that a software product must satisfy are met and ready to be accepted by a user, customer, team, or consuming system.  We must meet the definition of done to ensure quality.  It lowers rework, by preventing user stories that don’t meet the definition from being promoted to higher level environments. It will prevent features that don’t meet the definition from being delivered to the customer or user.",
+    "list": [
+    ]
+  },
   "Epic": {
-    "desc": ""
-    
+    "title": "Completion of Epic",
+    "desc": "The Epic is considered done when all associated user stories and tasks are completed and accepted by the Product Owner, and it delivers the intended value.",
+    "list": [
+      "All associated stories and tasks are complete.",
+      "Acceptance criteria for all stories are met.",
+      "Product Owner has accepted the deliverable.",
+      "Documentation (if applicable) is complete.",
+      "All dependencies and blockers are resolved."
+    ]
   },
   "Feature": {
-    "desc": ""
+    "title": "Feature Ready for Release",
+    "desc": "The Feature is complete when it fulfills its requirements, passes all acceptance criteria, and is ready for production deployment.",
+    "list": [
+      "Feature passes all acceptance criteria.",
+      "Code is fully tested (unit, integration, and UAT).",
+      "Documentation is updated.",
+      "Stakeholders have reviewed and approved.",
+      "All related bugs have been addressed."
+    ]
   },
   "Defect": {
-    "desc": ""
+    "title": "Defect Resolution",
+    "desc": "A defect is done when it is identified, fixed, and tested in all applicable environments to ensure the issue does not recur.",
+    "list": [
+      "Defect is reproduced and root cause identified.",
+      "Fix is implemented and code is reviewed.",
+      "Fix passes all levels of testing (unit, integration, UAT).",
+      "No new defects are introduced by the fix.",
+      "Stakeholder approval and defect closure."
+    ]
   },
   "Enhancement": {
-    "desc": ""
+    "title": "Enhancement Complete",
+    "desc": "An enhancement is complete when it improves the functionality as requested, passes acceptance criteria, and does not introduce any regressions.",
+    "list": [
+      "Enhancement passes all acceptance tests.",
+      "No regression issues are introduced.",
+      "Code is tested and peer-reviewed.",
+      "Documentation is updated to reflect changes.",
+      "Stakeholders have approved the changes."
+    ]
   },
   "CPE Incident": {
-    "desc": ""
+    "title": "CPE Incident Resolution",
+    "desc": "The CPE (Customer Premises Equipment) incident is resolved when the issue is addressed, service is restored, and root cause analysis is documented.",
+    "list": [
+      "Incident is fully diagnosed and resolved.",
+      "Root cause analysis is completed.",
+      "No further issues observed in monitoring.",
+      "Service is fully restored.",
+      "Customer has been informed and issue closed."
+    ]
   },
   "UserStory": {
-    "desc": ""
+    "title": "User Story Completion",
+    "desc": "A user story is complete when it meets its acceptance criteria, passes testing, and the Product Owner has reviewed and accepted it.",
+    "list": [
+      "Acceptance criteria are met.",
+      "Code is peer-reviewed and tested.",
+      "Stakeholders/Product Owner sign-off.",
+      "All related tasks are complete.",
+      "No critical bugs or issues remain."
+    ]
   },
   "Spike": {
-    "desc": ""
+    "title": "Spike Resolution",
+    "desc": "A spike is complete when the research or prototype work is done and documented, and the team has enough information to proceed with implementation or further work.",
+    "list": [
+      "Research or prototype completed.",
+      "Findings are documented and shared.",
+      "Questions driving the spike are answered.",
+      "Next steps are clearly defined for the team."
+    ]
   },
   "Documentation": {
-    "desc": ""
+    "title": "Documentation Finalized",
+    "desc": "Documentation is done when it accurately describes the feature or product, is reviewed for clarity and accuracy, and is stored in the appropriate repository.",
+    "list": [
+      "Documentation is complete and up-to-date.",
+      "Reviewed by relevant team members.",
+      "Stored in the correct repository.",
+      "Stakeholders have reviewed and approved."
+    ]
   }
 }
