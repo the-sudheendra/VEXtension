@@ -126,8 +126,8 @@ veXPopUpNode.innerHTML =
       <div id="tiles" class="veX_tab-content">
          <div class="veX_dod_title">a</div>
          <div class="veX_dod_desc">a</div>
-         <div class="veX_dod_list">
-            <ul>
+         <div class="veX_dod_list_container">
+            <ul class="veX_dod_list" id="myUL">
                <li>Documentation is complete and up-to-date.</li>
                <li>Reviewed by relevant team members.</li>
                <li>Stored in the correct repository.</li>
@@ -157,11 +157,11 @@ function showTab(tabId) {
 
   let tabTitle = document.getElementsByClassName('veX_dod_title')[0];
   let tabDesc = document.getElementsByClassName('veX_dod_desc')[0];
-  let tabList = document.getElementsByClassName('veX_dod_list')[0];
+  let tabList = document.getElementsByClassName('veX_dod_list_container')[0];
   let dod = dods[tabId];
   tabTitle.innerHTML = dod.title;
   tabDesc.innerHTML = dod.desc;
-  tabDesc.innerHTML = dod.list;
+  updateTheListView(dod.list);
 }
 
 function addClickEventForSideBarTab() {
@@ -176,5 +176,72 @@ function addClickEventForSideBarTab() {
   });
 
 }
+function updateTheListView(listItems)
+{
+ let list = document.getElementsByClassName("veX_dod_list")[0];
+ list.innerHTML='';
+ listItems.forEach(item => {
+  const li = document.createElement('li');
+  li.textContent = item;
+  list.appendChild(li);
+})
+
+
+}
 addClickEventForSideBarTab();
 showTab('dod');
+// Create a "close" button and append it to each list item
+var myNodelist = document.getElementsByTagName("LI");
+var i;
+for (i = 0; i < myNodelist.length; i++) {
+  var span = document.createElement("SPAN");
+  var txt = document.createTextNode("\u00D7");
+  span.className = "close";
+  span.appendChild(txt);
+  myNodelist[i].appendChild(span);
+}
+
+// Click on a close button to hide the current list item
+var close = document.getElementsByClassName("close");
+var i;
+for (i = 0; i < close.length; i++) {
+  close[i].onclick = function() {
+    var div = this.parentElement;
+    div.style.display = "none";
+  }
+}
+
+// Add a "checked" symbol when clicking on a list item
+var list = document.querySelector('ul');
+list.addEventListener('click', function(ev) {
+  if (ev.target.tagName === 'LI') {
+    ev.target.classList.toggle('checked');
+  }
+}, false);
+
+// Create a new list item when clicking on the "Add" button
+function newElement() {
+  var li = document.createElement("li");
+  var inputValue = document.getElementById("myInput").value;
+  var t = document.createTextNode(inputValue);
+  li.appendChild(t);
+  if (inputValue === '') {
+    alert("You must write something!");
+  } else {
+    document.getElementById("myUL").appendChild(li);
+  }
+  document.getElementById("myInput").value = "";
+
+  var span = document.createElement("SPAN");
+  var txt = document.createTextNode("\u00D7");
+  span.className = "close";
+  span.appendChild(txt);
+  li.appendChild(span);
+
+  for (i = 0; i < close.length; i++) {
+    close[i].onclick = function() {
+      var div = this.parentElement;
+      div.style.display = "none";
+    }
+  }
+}
