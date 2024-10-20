@@ -18,6 +18,7 @@
     cursor: pointer;
 
 }
+
 #veX-PopUp-Container{
     position: fixed; 
     top: 40%;        
@@ -25,21 +26,18 @@
     transform: translate(-50%, -50%); 
     z-index: 1000;   
     width: 80%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.5s ease; /* Smooth animation for the pop-up */
 }
 
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-header {
-  background-color: #333;
+.veX_header {
+  background-color: #1f1f1f;
   color: white;
   padding: 10px;
   text-align: center;
+  width: 100%;
+  height: 40px;
 }
 .veX_content-wrapper {
   display: flex;
@@ -128,6 +126,7 @@ ul li {
   background: #eee;
   font-size: 18px;
   transition: 0.2s;
+  border-radius: 10px;
 
   /* make the list items unselectable */
   -webkit-user-select: none;
@@ -178,4 +177,36 @@ ul li.checked::before {
 .close:hover {
   background-color: #f44336;
   color: white;
+}
+ .veX_footer
+{
+  display: block;
+  padding: 10px;
+  background-color: #333;
+} 
+#veX-PopUp-Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: flex-end; /* Align the popup at the bottom of the screen initially */
+  visibility: hidden; /* Hidden by default */
+  transition: visibility 0s, opacity 0.5s ease;
+  border: 5px solid black;
+}
+.veX_add_to-comment-btn,.veX_copy_done_items_btn {
+  background-color: #4987ee;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.veX_add_to-comment-btn:hover,.veX_copy_done_items_btn:hover{
+  opacity: .8;
 }
