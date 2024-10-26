@@ -6,7 +6,9 @@
   "permissions": [
     "webNavigation",
     "activeTab",
-    "scripting"
+    "scripting",
+    "contextMenus",
+    "tabs"
   ],
   "content_scripts": [
     {
@@ -17,10 +19,22 @@
   ],
   "action": {
     "default_popup": "main.html",
-    "default_icon":"icons/VE Extension.png",
     "default_title": "A VE Xtension"
   },
   "background": {
-    "service_worker": "./Scripts/background.js"
+    "service_worker": "./Scripts/background.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["definitions.json","Icons/close_42.png" ],
+      "matches": [ "https://*/*" ]
+    }
+  ],
+  "icons": {
+    "16": "Icons/fact_check_16.png",
+    "32": "Icons/fact_check_32.png",
+    "48": "Icons/fact_check_48.png",
+    "128": "Icons/fact_check_128.png"
   }
 }
