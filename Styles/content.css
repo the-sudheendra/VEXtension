@@ -3,9 +3,9 @@
   --veX-banner-BackgroundColor: rgb(255, 255, 255);
   --veX-common-BackgroundColor: #fff;
   --veX-common-fontColor: #000;
-  --vex-hoverColor:#e5f1fd;
-  --veX-borderColor:#dcdedf;
-  
+  --vex-hoverColor: #e5f1fd;
+  --veX-borderColor: #dcdedf;
+
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -56,18 +56,19 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 99999;
-  width: 60%;
+  width: 80%;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   transition: transform 0.6s ease;
   visibility: hidden;
 }
-.veX_pop_active
-{
+
+.veX_pop_active {
   transform: translateY(0);
 }
 
 .veX_banner {
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,8 +79,22 @@
   height: 50px;
   border: 1px solid var(--veX-borderColor);
 }
-.veX_header h3{
-  color: #555;
+
+.veX_header_tickedId, .veX_header_tickedName {
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 32px;
+  text-overflow: ellipsis;
+  text-wrap-mode: nowrap;
+  white-space-collapse: collapse;
+  color: rgb(85, 85, 85);
+  padding: 5px;
+  margin: 0px;
+}
+.veX_header_tickedName
+{
+
 }
 .veX_content-wrapper {
   display: flex;
@@ -216,7 +231,7 @@
   align-items: flex-end;
   visibility: hidden;
   transition: visibility 0s, opacity 0.5s ease;
-  border: 5px solid black;
+  border: 1px solid #ddd;
 }
 
 .veX_dod_labels_container {
