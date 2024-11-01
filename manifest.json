@@ -14,8 +14,12 @@
   "content_scripts": [
     {
       "matches": ["https://ot-internal.saas.microfocus.com/*"],
-      "js": ["./Scripts/content.js","./Scripts/utility.js","./Scripts/draggable.js"],
-      "css":["./Styles/content.css"]
+      "js": [
+        "./Scripts/content.js",
+        "./Scripts/utility.js",
+        "./Scripts/draggable.js"
+      ],
+      "css": ["./Styles/content.css"]
     }
   ],
   "action": {
@@ -28,8 +32,8 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["definitions.json","Icons/close_42.png" ],
-      "matches": [ "https://*/*" ]
+      "resources": ["definitions.json"],
+      "matches": ["https://*/*"]
     }
   ],
   "icons": {
