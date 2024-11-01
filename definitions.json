@@ -1,7 +1,6 @@
 {
   "Epic": {
     "title": "Epic",
-    "desc": "A large, overarching initiative that groups multiple related features and user stories to achieve a significant objective.",
     "categories": [
       {
         "name": "Planning",
@@ -21,15 +20,10 @@
           "Ensure alignment with product goals"
         ]
       }
-    ],
-    "metaData": {
-      "priority": "High",
-      "estimatedCompletion": "3-6 months"
-    }
+    ]
   },
   "Feature": {
     "title": "Feature",
-    "desc": "A standalone piece of functionality that provides specific value to users and supports an Epic’s goal.",
     "categories": [
       {
         "name": "Design",
@@ -49,15 +43,10 @@
           "Deploy to staging environment"
         ]
       }
-    ],
-    "metaData": {
-      "priority": "Medium",
-      "estimatedCompletion": "4-6 weeks"
-    }
+    ]
   },
   "Defect": {
     "title": "Defect",
-    "desc": "A bug or issue that causes incorrect or undesired functionality, impacting user experience or system performance.",
     "categories": [
       {
         "name": "Investigation",
@@ -77,15 +66,10 @@
           "Close defect after verification"
         ]
       }
-    ],
-    "metaData": {
-      "severity": "High",
-      "impactArea": "User Interface"
-    }
+    ]
   },
   "Enhancement": {
     "title": "Enhancement",
-    "desc": "A modification to improve functionality, usability, or performance of an existing feature.",
     "categories": [
       {
         "name": "Requirement Analysis",
@@ -105,15 +89,10 @@
           "Gather feedback on enhancement"
         ]
       }
-    ],
-    "metaData": {
-      "priority": "Low",
-      "expectedImpact": "User Satisfaction"
-    }
+    ]
   },
   "CPE Incident": {
     "title": "Support Request",
-    "desc": "A user or customer request for assistance with a product issue or inquiry about functionality.",
     "categories": [
       {
         "name": "Intake",
@@ -133,15 +112,10 @@
           "Close support ticket"
         ]
       }
-    ],
-    "metaData": {
-      "responseTimeTarget": "24 hours",
-      "satisfactionScore": "Pending"
-    }
+    ]
   },
   "User Story": {
     "title": "User Story",
-    "desc": "A brief, user-centered narrative describing a feature or function from the end user's perspective.",
     "categories": [
       {
         "name": "Definition",
@@ -151,25 +125,11 @@
           "Prioritize with product owner",
           "Estimate story effort"
         ]
-      },
-      {
-        "name": "Development and Testing",
-        "checkList": [
-          "Implement code changes",
-          "Run unit tests",
-          "Conduct code review",
-          "User acceptance testing (UAT)"
-        ]
-      }
-    ],
-    "metaData": {
-      "priority": "High",
-      "assignedSprint": "Sprint 12"
     }
+  ]
   },
   "Spike": {
     "title": "Spike",
-    "desc": "A research task to investigate or prototype a solution for a technical or design challenge.",
     "categories": [
       {
         "name": "Exploration",
@@ -189,15 +149,10 @@
           "Archive research notes"
         ]
       }
-    ],
-    "metaData": {
-      "priority": "Medium",
-      "timebox": "1 week"
-    }
+    ]
   },
   "Documentation": {
     "title": "Documentation",
-    "desc": "A task to create, update, or improve project documentation for reference and understanding.",
     "categories": [
       {
         "name": "Preparation",
@@ -217,10 +172,6 @@
           "Publish final version"
         ]
       }
-    ],
-    "metaData": {
-      "lastUpdated": "2023-08-14",
-      "targetAudience": "Developers and stakeholders"
-    }
+    ]
   }
 }

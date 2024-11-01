@@ -3,9 +3,10 @@
   --veX-banner-BackgroundColor: rgb(255, 255, 255);
   --veX-common-BackgroundColor: #fff;
   --veX-common-fontColor: #000;
-  --vex-hoverColor: #e5f1fd;
+  --vex-hoverColor: #f0f0f0;
+  /*#e5f1fd;*/
   --veX-borderColor: #dcdedf;
-
+  --veX-ticktColor: var(--veX-common-BackgroundColor);
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -31,6 +32,7 @@
 }
 
 
+
 .veX-Button {
   background-color: var(--veX-common-BackgroundColor);
   height: 39px;
@@ -45,9 +47,13 @@
   cursor: pointer;
 }
 
+.veX-Active-Button {
+  background-color: var(--vex-hoverColor) !important;
+  border-left: 5px solid var(--veX-ticktColor) !important;
+}
+
 .veX-Button:hover {
-  background-color: var(--vex-hoverColor);
-  border-left: 5px solid #0073e7;
+  border-left: 5px solid var(--veX-ticktColor);
 }
 
 #veX-PopUp-Container {
@@ -59,8 +65,8 @@
   width: 70%;
   border-radius: 10px;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-  transition: transform 0.6s ease;
   visibility: hidden;
+  border: 2px solid var(--veX-ticktColor);
 }
 
 .veX_pop_active {
@@ -87,18 +93,20 @@
   text-overflow: ellipsis;
   text-wrap-mode: nowrap;
   white-space-collapse: collapse;
-  color: rgb(85, 85, 85);
+  color: white;
   padding: 5px;
   margin: 0px;
 }
-.veX_header
-{
+
+.veX_header {
   display: block;
   text-align: left;
   border-radius: 8px 8px 0px 0px;
+  background-color: var(--veX-ticktColor);
   /* background: rgb(2,0,36);
   background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 68%, rgba(0,212,255,1) 100%); */
 }
+
 .veX_content_wrapper {
   display: flex;
   flex: 1;
@@ -139,8 +147,9 @@
 
 .veX_dod_title {
   margin-left: 20px;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 500;
+  ;
   color: #333;
   margin-bottom: 10px;
 }
@@ -166,7 +175,8 @@
   margin: 10px 0px;
   cursor: pointer;
   font-size: 14px;
-  padding: 12px 12px 12px 20px;
+  position: relative;
+  padding: 12px 8px 12px 40px;
   background: var(--veX-common-BackgroundColor);
   border-radius: 5px;
   -webkit-user-select: none;
@@ -180,6 +190,7 @@
 /* Darker background-color on hover */
 .veX_dod_list_container ul li:hover {
   background-color: var(--vex-hoverColor);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 /* When clicked on, add a background color and strike out text */
@@ -190,15 +201,18 @@
 }
 
 /* Add a "checked" mark when clicked on */
-/* .veX_dod_list_container ul li.checked::before {
+.veX_dod_list_container ul li.checked::before {
   content: '';
+  position: absolute;
   border-color: #fff;
   border-style: solid;
   border-width: 0 2px 2px 0;
+  top: 12px;
+  left: 16px;
   transform: rotate(45deg);
   height: 15px;
   width: 7px;
-} */
+} 
 
 
 /* Style the close button */
@@ -248,7 +262,7 @@
 }
 
 .veX_normal_btn {
-  background-color: #146ef5;
+  background-color: var(--veX-ticktColor);
   color: white;
   text-align: center;
   cursor: pointer;
@@ -259,10 +273,11 @@
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 
 }
-.veX_normal_btn:hover
-{
+
+.veX_normal_btn:hover {
   opacity: 0.8;
 }
+
 .veX_footer {
   border-radius: 0px 0px 8px 8px;
   background-color: rgb(247, 247, 248) !important;
