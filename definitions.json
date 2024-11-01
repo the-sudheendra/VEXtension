@@ -1,5 +1,5 @@
-[
-  {
+{
+  "Epic": {
     "title": "Epic",
     "desc": "A large, overarching initiative that groups multiple related features and user stories to achieve a significant objective.",
     "categories": [
@@ -27,7 +27,7 @@
       "estimatedCompletion": "3-6 months"
     }
   },
-  {
+  "Feature": {
     "title": "Feature",
     "desc": "A standalone piece of functionality that provides specific value to users and supports an Epic’s goal.",
     "categories": [
@@ -55,7 +55,7 @@
       "estimatedCompletion": "4-6 weeks"
     }
   },
-  {
+  "Defect": {
     "title": "Defect",
     "desc": "A bug or issue that causes incorrect or undesired functionality, impacting user experience or system performance.",
     "categories": [
@@ -83,7 +83,7 @@
       "impactArea": "User Interface"
     }
   },
-  {
+  "Enhancement": {
     "title": "Enhancement",
     "desc": "A modification to improve functionality, usability, or performance of an existing feature.",
     "categories": [
@@ -111,7 +111,7 @@
       "expectedImpact": "User Satisfaction"
     }
   },
-  {
+  "CPE Incident": {
     "title": "Support Request",
     "desc": "A user or customer request for assistance with a product issue or inquiry about functionality.",
     "categories": [
@@ -139,7 +139,7 @@
       "satisfactionScore": "Pending"
     }
   },
-  {
+  "User Story": {
     "title": "User Story",
     "desc": "A brief, user-centered narrative describing a feature or function from the end user's perspective.",
     "categories": [
@@ -167,7 +167,7 @@
       "assignedSprint": "Sprint 12"
     }
   },
-  {
+  "Spike": {
     "title": "Spike",
     "desc": "A research task to investigate or prototype a solution for a technical or design challenge.",
     "categories": [
@@ -195,7 +195,7 @@
       "timebox": "1 week"
     }
   },
-  {
+  "Documentation": {
     "title": "Documentation",
     "desc": "A task to create, update, or improve project documentation for reference and understanding.",
     "categories": [
@@ -223,4 +223,4 @@
       "targetAudience": "Developers and stakeholders"
     }
   }
-]
+}

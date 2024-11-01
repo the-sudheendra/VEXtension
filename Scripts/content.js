@@ -1,48 +1,35 @@
-//Start: Declaration
-const veXPopUpId = "veX-PopUp-Container"
-const veXPopUpOverlayId = "veX-PopUp-Overlay";
-const veXPopUpNode = document.createElement("div");
-const veXPopUpOverlay = document.createElement("div");
-const titleNode = document.head.querySelector('title');
-var isveXPopOpen = false;
+//**Declaration**
 var veXMutationObservers = {};
 var veXMutationObserversConfig = {};
-veXPopUpNode.id = veXPopUpId;
-var dodData;
-var dod;
-//End: Declaration
-
-
-
-//Start: UI for POP to show defination of dones
+var veXDODInfo = {};
+var veXEntityMetaData = {};
+var veXCurrentTicketInfo = {};
+var veXCurrentTicketDOD = {};
+var veXPopUpNode = document.createElement("div");
+var veXPopUpOverlay = document.createElement("div");
 var veXPopUI = `
 <header class="veX_header veX_banner">
-   <p class="veX_header_tickedId"></p>
-   <p class="veX_header_tickedName"></p>
+    <p class="veX_header_title"></p>
 </header>
-<div class="veX_content-wrapper">
-   <div class="veX_sidebar">
-   </div>
-   <div class="veX_main-content">
-      <div class="veX_dod_title"></div>
-      <div class="veX_dod_labels_container">
-        <span class="veX_label"></span>
-      </div>
-      <div class="veX_dod_desc">Desciption</div>
-      <div class="veX_dod_list_container">
-         <ul class="veX_dod_list">
-         </ul>
-      </div>
-   </div>
+<div class="veX_content_wrapper">
+    <div class="veX_sidebar">
+    </div>
+    <div class="veX_main_content">
+        <div class="veX_dod_title"></div>
+        <div class="veX_dod_list_container">
+            <ul class="veX_dod_list">
+            </ul>
+        </div>
+    </div>
 </div>
 <div class="veX_banner veX_footer">
-   <button class="veX_normal_btn">Leave a Comment</button>
-   <button class="veX_close"></button>
+    <button class="veX_normal_btn">Leave a Comment</button>
 </div>
 `;
-//End: UI for POP to show defination of dones
+//**Declaration**
 
-//Start: Initialising configured Observer
+
+//**Initialising configured Observer**
 function initMutationObservers() {
   Object.keys(this.veXMutationObserversConfig).forEach(
     key => {
@@ -56,8 +43,11 @@ function initMutationObservers() {
     }
   );
 }
+//**Initialising configured Observer**
 
-//End: Initialising configured Observer
+
+
+
 
 //**Utility Functions**
 
@@ -70,36 +60,26 @@ veXMutationObserversConfig =
     options: { attributes: true, childList: true, subtree: true },
     callback: (mutationList, observer) => {
       for (const mutation of mutationList) {
-        onTitleChange();
+        onTicketChange();
       }
     }
   }
 }
 
-function readTextFile(file, callback) {
-  var rawFile = new XMLHttpRequest();
-  rawFile.overrideMimeType("application/json");
-  rawFile.open("GET", file, true);
-  rawFile.onreadystatechange = function () {
-    if (rawFile.readyState === 4 && rawFile.status == "200") {
-      callback(rawFile.responseText);
-    }
-  }
-  rawFile.send(null);
-}
-
-function setIcons() {
-  document.querySelector(".veX_close").style.backgroundImage = `url('${chrome.runtime.getURL('Icons/close_42.png')}')`;
+function onError(error, info) {
+  this.veXCurrentTicketDOD={};
+  this.veXCurrentTicketInfo={};
+  console.error(`Error from 'VE Xtension'\n${info}\nError: ` + error);
 }
 
 function conciseText(text) {
-  if (text.length <= 80) return text;
-  return text.slice(0, 80) + "...";
+  if (text.length <= 150) return text;
+  return text.slice(0, 150) + "...";
 }
 
-function isThisVETicket() {
-  document.querySelector("[title='Global ID - This ID is unique across all Octane workspaces managed by the Software Factory']") ? true : false;
-}
+// function isThisVETicket() {
+//   document.querySelector("[title='Global ID - This ID is unique across all Octane workspaces managed by the Software Factory']") ? true : false;
+// }
 
 function addDoneListToComments() {
   try {
@@ -111,40 +91,41 @@ function addDoneListToComments() {
   catch (ex) {
     console.error("Exception occured: " + ex);
   }
-
 }
 
-function getVETicketInfo(title) {
+function getCurrentTicketInfo(title) {
+  if (!title) return;
   ticketArr = title.split(" ");
   if (ticketArr.length >= 2) {
     const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
     if (match) {
-      return {
-        ticketType: getExpandedTicketType(match[1]),
-        ticketID: match[2],
-        ticketTitle: title.slice(ticketArr[0].length + 1)
-      };
-    } else {
-      return null;
+      let ticketType = (document.querySelector('[ng-if="header.shouldShowEntityLabel"]').innerText).toUpperCase();
+      this.veXCurrentTicketInfo =
+      {
+        type: veXEntityMetaData[ticketType].name,
+        id: match[2],
+        color: veXEntityMetaData[ticketType].colorHex,
+        title: title.slice(ticketArr[0].length + 1)
+      }
+    }
+    else
+    {
+      this.veXCurrentTicketInfo={};
     }
   }
   else
-    return null;
-}
-
-function getExpandedTicketType(ticketType) {
-  switch (ticketType) {
-    case 'US':
-      return 'userstory';
-    default: return 'ticket';
+  {
+    this.veXCurrentTicketInfo={};
   }
 }
 
-function setHeaderTextForPopUp(ticketInfo) {
-  if (veXPopUpNode) {
-    veXPopUpNode.querySelector(".veX_header_tickedId").innerText = ticketInfo.ticketID;
-    veXPopUpNode.querySelector(".veX_header_tickedName").innerText = conciseText(ticketInfo.ticketTitle);
-  }
+function setup() {
+  this.veXPopUpNode.id = "veX-PopUp-Container";
+  this.veXPopUpOverlay.id = "veX-PopUp-Overlay";
+  this.veXPopUpNode.innerHTML = veXPopUI;
+  document.body.appendChild(veXPopUpNode);
+  document.body.appendChild(veXPopUpOverlay);
+  veXPopUpOverlay.addEventListener("click", closeveXPopUp);
 }
 
 function addToComments() {
@@ -154,49 +135,73 @@ function addToComments() {
   document.querySelectorAll('ng-click="comments.onAddNewCommentClicked()"');
 }
 
-function updateView(ticketInfo) {
-  try
-  {
-    if (!dodData) return;
-    if (!ticketInfo.ticketType && !dodData[ticketInfo.ticketType]) {
-      dod = dodData;
-      return;
-    }
-    setHeaderTextForPopUp(ticketInfo);
-    let titleNode = veXPopUpNode.querySelector('.veX_dod_title');
-    let descNode = veXPopUpNode.querySelector('.veX_dod_desc');
-    let sidebarNode = veXPopUpNode.querySelector('.veX_sidebar');
-    let listNode = veXPopUpNode.querySelector('.veX_dod_list');
-    dod = dodData[ticketInfo.ticketType];
-    if(dod)
-    {
-      titleNode.innerHTML = dod.title;
-      descNode.innerHTML = dod.desc;
-      updateCategories(sidebarNode,listNode, dod["categories"]);
-    }
+function initView() {
+  try {
+    this.veXPopUpNode.querySelector(".veX_header_title").innerText = conciseText(this.veXCurrentTicketInfo.title);
+    initSidebarView(this.veXCurrentTicketDOD.categories);
+    updateMainContentView(0);
+    initStyle();
   }
-  catch(ex)
-  {
-    console.error("Failed to update the view");
+  catch (err) {
+    onError(err, "error while initiating view");
   }
-  
 }
 
-function updateCategories(sidebarNode,listNode,categories) {
+function updateList(checkList) {
+  let listParentNode = veXPopUpNode.querySelector('.veX_dod_list');
+  listParentNode.innerHTML = "";
+  checkList.forEach(
+    (list) => {
+      let listItem = document.createElement('li');
+      listItem.addEventListener('click',onListItemClick)
+      listItem.textContent = list;
+      listParentNode.appendChild(listItem);
+    }
+  )
+}
+
+function initSidebarView(categories) {
+  let sidebarParentNode = veXPopUpNode.querySelector('.veX_sidebar');
+  sidebarParentNode.innerHTML="";
+  let index=0;
   categories.forEach(
     (category) => {
-      let sideBarItem = document.createElement('div');
-      sidebarNode.appendChild(listItem);
-      sideBarItem.textContent = category.name;
-      categories.checkList.forEach(
-        (list)=>{
-          let listItem = document.createElement('li');
-          listItem.textContent=list;
-          listNode.appendChild(listItem)
-        }
-      )
+      let sideBarItemNode = document.createElement('button');
+      sideBarItemNode.className = "veX-Button";
+      sideBarItemNode.setAttribute('categoryIndex',index)
+      sideBarItemNode.addEventListener('click',(event)=>{
+        updateMainContentView(event.target.getAttribute('categoryIndex'));
+      });
+      sidebarParentNode.appendChild(sideBarItemNode);
+      sidebarParentNode.appendChild(sideBarItemNode);
+      sideBarItemNode.textContent = category.name;
+      index++;
     }
+    
   );
+
+}
+function updateMainContentView(categoryIndex) {
+  let currentCategory = this.veXCurrentTicketDOD.categories[categoryIndex];
+  let titleNode = veXPopUpNode.querySelector('.veX_dod_title');
+  titleNode.innerText = currentCategory.name;
+  updateList(currentCategory.checkList);
+}
+
+function initStyle() {
+  veXPopUpNode.querySelector(".veX_header").style.backgroundColor = this.veXCurrentTicketInfo.color;
+  veXPopUpNode.querySelector(".veX_normal_btn").style.backgroundColor = this.veXCurrentTicketInfo.color;
+  veXPopUpNode.querySelector(".veX_header_title").style.color = "white";
+}
+function isEmptyObject(obj) {
+  if(obj)
+  {
+    return  Object.keys(obj).length === 0;
+  }
+  return true;
+}
+function notify(message) {
+  console.info(message);
 }
 //**Utility Functions**
 
@@ -214,19 +219,35 @@ function openVexPopUp() {
   veXPopUpNode.classList.add(".veX_pop_active")
 
 }
+function onListItemClick(event)
+{
+  event.target.classList.toggle('checked');
+}
 
-function onTitleChange() {
-  let newTitle = document.head.querySelector('title').innerText;
-  let ticketInfo = getVETicketInfo(newTitle);
-  if (ticketInfo) {
-    //TODO
-    //enableVEXButton();
-
-    updateView(ticketInfo.ticketType);
+function onTicketChange() {
+  try {
+    if (isEmptyObject(this.veXDODInfo) && isEmptyObject(this.veXEntityMetaData)) return;
+    let newTitle = document.head.querySelector('title').innerText;
+    getCurrentTicketInfo(newTitle);
+    if (!isEmptyObject(this.veXCurrentTicketInfo)) {
+      this.veXCurrentTicketDOD = veXDODInfo[veXCurrentTicketInfo.type];
+      if (!isEmptyObject(this.veXCurrentTicketDOD)) {
+        initView();
+      }
+      else {
+        notify("Unable to find the current ticket information in the definitions. Please update it.");
+      }
+    }
+    else {
+      //TODO 
+      //disableVEXButton();
+      this.veXCurrentTicketDOD={};
+      this.veXCurrentTicketInfo={};
+    }
   }
-  else {
-    //TODO 
-    //disableVEXButton();
+  catch (ex) {
+    onError(ex, "error at OnTicketChange Handler");
+    
   }
 }
 
@@ -241,45 +262,28 @@ function addClickEventForSideBarTab() {
     );
   });
 }
-//**Event Handlers**
-
-readTextFile(chrome.runtime.getURL("definitions.json"), function (text) {
-  var dodData = JSON.parse(text);
-});
-veXPopUpNode.innerHTML = veXPopUI;
-document.body.appendChild(veXPopUpNode);
-document.body.appendChild(veXPopUpOverlay);
-veXPopUpOverlay.id = veXPopUpOverlayId;
-veXPopUpOverlay.addEventListener("click", closeveXPopUp);
-document.querySelector(".veX_close").addEventListener('click', closeveXPopUp);
-setIcons();
-addClickEventForSideBarTab();
-initMutationObservers();
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//   if (request.openVEXPop) {
-//     openVexPopUp();
-//     console.log("Service worker received message from sender %s", sender.id, request);
-//   }
-// });
-chrome.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.type === "FROM_VEX_SERVICE_WORKER") {
-
-      if (request.payload && request.payload.openVexPopUp) {
-        openVexPopUp();
-      }
-
-      sendResponse({ message: "Message received in content script!" });
-
-      // You can also send a new message back to service worker
-      chrome.runtime.sendMessage({
-        type: "FROM_CONTENT_SCRIPT",
-        payload: "Hello from content script!"
-      }, function (response) {
-        console.log("Response from service worker:", response);
-      });
-    }
-    // Return true to indicate you want to send a response asynchronously
-    return true;
+function handleMessage(request, sender, sendResponse) {
+  switch (request) {
+    case "openVexPopUp":
+      if(!isEmptyObject(this.veXCurrentTicketDOD) && !isEmptyObject(this.veXCurrentTicketInfo))
+      openVexPopUp();
+      break;
   }
-);
+  return true;
+}
+//**Event Handlers**
+(async () => {
+  if (isEmptyObject(veXEntityMetaData)) {
+    veXEntityMetaData = await chrome.runtime.sendMessage('getveXEntityMetaData');
+  }
+})();
+
+(async () => {
+  if (isEmptyObject(veXDODInfo)) {
+    veXDODInfo = await chrome.runtime.sendMessage('loadveXDefinationsData');
+  }
+})();
+
+setup();
+initMutationObservers();
+chrome.runtime.onMessage.addListener(handleMessage);
