@@ -50,10 +50,7 @@
   border-left: 5px solid var(--veX-ticktColor) !important;
 }
 
-.veX-Button:hover {
-  background-color: var(--vex-hoverColor) !important;
-  border-left: 5px solid var(--veX-common-BackgroundColor)
-}
+
 
 #veX-PopUp-Container {
   position: fixed;
