@@ -6,8 +6,8 @@ var veXEntityMetaData = {};
 var veXCurrentTicketInfo = {};
 var veXCurrentTicketDOD = {};
 var veXCheckedItems = {};
-var veXTotalCheckedItems=0;
-var veXTotalItems=0;
+var veXTotalCheckedItems = 0;
+var veXTotalItems = 0;
 var veXPopUpNode = document.createElement("div");
 var veXPopUpOverlay = document.createElement("div");
 var root = document.querySelector(':root');
@@ -172,15 +172,12 @@ function initSidebarView(categories) {
   );
 
 }
-function initCheckedItems()
-{
-  for(let i=0;i<this.veXCurrentTicketDOD.categories.length;i++)
-  {
-    this.veXCheckedItems[i]=[];
-    let curCategory=this.veXCurrentTicketDOD.categories[i];
-    for(let j=0;j<curCategory.checkList.length;j++)
-    {
-      this.veXCheckedItems[i][j]=0;
+function initCheckedItems() {
+  for (let i = 0; i < this.veXCurrentTicketDOD.categories.length; i++) {
+    this.veXCheckedItems[i] = [];
+    let curCategory = this.veXCurrentTicketDOD.categories[i];
+    for (let j = 0; j < curCategory.checkList.length; j++) {
+      this.veXCheckedItems[i][j] = 0;
       veXTotalItems++;
     }
   }
@@ -190,7 +187,7 @@ function updateMainContentView(categoryIndex) {
   let titleNode = veXPopUpNode.querySelector('.veX_dod_title');
   titleNode.innerText = currentCategory.name;
 
-  veXPopUpNode.querySelectorAll('.veX-Button').forEach((buttonNode)=>{
+  veXPopUpNode.querySelectorAll('.veX-Button').forEach((buttonNode) => {
     buttonNode.classList.remove("veX-Active-Button");
   });
   veXPopUpNode.querySelector('.veX_sidebar').querySelector(`[categoryIndex="${categoryIndex}"]`).classList.add("veX-Active-Button");
@@ -218,7 +215,7 @@ function updateList(checkList, categoryIndex) {
   )
 }
 
-function initStyle() { 
+function initStyle() {
   root.style.setProperty('--veX-ticktColor', veXCurrentTicketInfo.color);
 }
 function isEmptyObject(obj) {
@@ -252,17 +249,14 @@ function onListItemClick(event) {
   let listIndex = event.target.getAttribute('listIndex')
   event.target.classList.toggle('checked');
   if (event.target.classList.contains('checked')) {
-      veXCheckedItems[catIndex][listIndex]=1;
-      veXTotalCheckedItems++;
+    veXCheckedItems[catIndex][listIndex] = 1;
+    veXTotalCheckedItems++;
   }
-  else
-  {
-   veXCheckedItems[catIndex][listIndex]=0;
-   veXTotalCheckedItems--;
+  else {
+    veXCheckedItems[catIndex][listIndex] = 0;
+    veXTotalCheckedItems--;
   }
-  root.style.setProperty('--veX-checkedItemsPercentage', `${(100-(veXTotalCheckedItems/veXTotalItems)*100)}%`);
-  console.log(getComputedStyle(root).getPropertyValue('--veX-checkedItemsPercentage'));
-
+  root.style.setProperty('--veX-checkedItemsPercentage', `${(100 - (veXTotalCheckedItems / veXTotalItems) * 100)}%`);
 }
 
 function onTicketChange() {
@@ -311,13 +305,12 @@ function handleMessage(request, sender, sendResponse) {
   }
   return true;
 }
-function reset()
-{
-  veXCheckedItems={};
-  veXCurrentTicketDOD={};
-  veXCurrentTicketInfo={};
-  veXTotalCheckedItems=0;
-  veXTotalItems=0;
+function reset() {
+  veXCheckedItems = {};
+  veXCurrentTicketDOD = {};
+  veXCurrentTicketInfo = {};
+  veXTotalCheckedItems = 0;
+  veXTotalItems = 0;
 }
 //**Event Handlers**
 (async () => {

@@ -6,8 +6,8 @@
   --vex-hoverColor: #f0f0f0;
   --veX-borderColor: #dcdedf;
   --veX-ticktColor: var(--veX-common-BackgroundColor);
-  --veX-successColor:#22BB33;
-  --veX-checkedItemsPercentage:100%;
+  --veX-successColor: #22BB33;
+  --veX-checkedItemsPercentage: 100%;
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -101,7 +101,8 @@
   text-align: left;
   border-radius: 8px 8px 0px 0px;
   background: rgb(2, 0, 36);
-  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 100%, var(--veX-ticktColor) var(--veX-checkedItemsPercentage,100%)); /*var(--veX-checkedItemsPercentage,100%));*/
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 100%, var(--veX-ticktColor) var(--veX-checkedItemsPercentage, 100%));
+  /*var(--veX-checkedItemsPercentage,100%));*/
 }
 
 .veX_content_wrapper {

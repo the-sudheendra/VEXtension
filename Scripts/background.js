@@ -52,7 +52,7 @@ const veXEntityMetaData = {
   }
 
 }
-var veXDODInfo={
+var veXDODInfo = {
   "Epic": {
     "title": "Epic",
     "desc": "A large, overarching initiative that groups multiple related features and user stories to achieve a significant objective.",
@@ -298,8 +298,8 @@ var veXDODInfo={
 
 //**Utility Functions**
 async function readJsonFile(file) {
-  await fetch(file).then((response)=>response.json().then(function(data) {
-    veXDODInfo=data;
+  await fetch(file).then((response) => response.json().then(function (data) {
+    veXDODInfo = data;
   }));
 }
 //**Utility Functions**
@@ -316,7 +316,7 @@ async function onInstalled() {
     );
   });
   await readJsonFile(chrome.runtime.getURL("definitions.json"));
-  chrome.storage.sync.set({veXDoneDefinations:veXDODInfo},()=>{console.info("Successfully Saved definations..")});
+  chrome.storage.sync.set({ veXDoneDefinations: veXDODInfo }, () => { console.info("Successfully Saved definations..") });
 
 }
 async function handleMessages(request, sender, sendResponse) {
@@ -327,7 +327,7 @@ async function handleMessages(request, sender, sendResponse) {
     case 'loadveXDefinationsData':
       sendResponse(veXDODInfo);
       break;
-  }   
+  }
 }
 function onContextMenuClick(info, tab) {
   if (info.menuItemId === "veXDoneCheckListMenu") {
@@ -336,10 +336,8 @@ function onContextMenuClick(info, tab) {
     });
   }
 }
-async function getveXDefinations()
-{
-  if(Object.keys(veXDODInfo).length == 0)
-  {
+async function getveXDefinations() {
+  if (Object.keys(veXDODInfo).length == 0) {
     veXDODInfo = await chrome.storage.sync.get("veXDoneDefinations");
   }
   return veXDODInfo;
