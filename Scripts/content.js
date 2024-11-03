@@ -6,8 +6,11 @@ var veXEntityMetaData = {};
 var veXCurrentTicketInfo = {};
 var veXCurrentTicketDOD = {};
 var veXCheckedItems = {};
+var veXTotalCheckedItems=0;
+var veXTotalItems=0;
 var veXPopUpNode = document.createElement("div");
 var veXPopUpOverlay = document.createElement("div");
+var root = document.querySelector(':root');
 var veXPopUI = `
 <header class="veX_header veX_banner">
     <p class="veX_header_title"></p>
@@ -178,6 +181,7 @@ function initCheckedItems()
     for(let j=0;j<curCategory.checkList.length;j++)
     {
       this.veXCheckedItems[i][j]=0;
+      veXTotalItems++;
     }
   }
 }
@@ -214,14 +218,8 @@ function updateList(checkList, categoryIndex) {
   )
 }
 
-function initStyle() {
-  let root = document.querySelector(':root');
+function initStyle() { 
   root.style.setProperty('--veX-ticktColor', veXCurrentTicketInfo.color);
-  //veXPopUpNode.querySelector(".veX_header").style.backgroundColor = this.veXCurrentTicketInfo.color;
-  //veXPopUpNode.querySelector(".veX_normal_btn").style.backgroundColor = this.veXCurrentTicketInfo.color;
-  //veXPopUpNode.querySelector(".veX_header_title").style.color = "white";
-  //veXPopUpNode.style.border = "2px solid " + this.veXCurrentTicketInfo.color;
-  //veXPopUpNode.querySelector(".veX-Button").style=""
 }
 function isEmptyObject(obj) {
   if (obj) {
@@ -255,11 +253,16 @@ function onListItemClick(event) {
   event.target.classList.toggle('checked');
   if (event.target.classList.contains('checked')) {
       veXCheckedItems[catIndex][listIndex]=1;
+      veXTotalCheckedItems++;
   }
   else
   {
    veXCheckedItems[catIndex][listIndex]=0;
+   veXTotalCheckedItems--;
   }
+  root.style.setProperty('--veX-checkedItemsPercentage', `${(100-(veXTotalCheckedItems/veXTotalItems)*100)}%`);
+  console.log(getComputedStyle(root).getPropertyValue('--veX-checkedItemsPercentage'));
+
 }
 
 function onTicketChange() {
@@ -313,6 +316,8 @@ function reset()
   veXCheckedItems={};
   veXCurrentTicketDOD={};
   veXCurrentTicketInfo={};
+  veXTotalCheckedItems=0;
+  veXTotalItems=0;
 }
 //**Event Handlers**
 (async () => {
