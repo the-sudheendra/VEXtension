@@ -14,8 +14,8 @@ var root = document.querySelector(':root');
 var veXPopUI = `
 <header class="veX_header veX_banner">
     <p class="veX_header_title"></p>
-    <div class="veX_done_status"></div>
 </header>
+<div class="veX_done_status"></div>
 <div class="veX_content_wrapper">
     <div class="veX_sidebar">
     </div>

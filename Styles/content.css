@@ -65,6 +65,7 @@
   visibility: hidden;
   border: 1.5px solid var(--veX-ticktColor);
   border-top: none;
+  background-color: var(--veX-common-BackgroundColor);
 }
 
 .veX_pop_active {
