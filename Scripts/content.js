@@ -88,13 +88,19 @@ function conciseText(text) {
 
 function addDoneListToComments() {
   try {
-    document.querySelectorAll(".mqm-new-comment-div")[0].childNodes[2].click();
-    document.querySelectorAll(".mqm-new-comment-div")[0].childNodes[2].click();
-    document.querySelectorAll(".fr-wrapper")[2].childNodes[0].innerHTML = '<h1>hi<h1>'
-    document.querySelectorAll('ng-click="comments.onAddNewCommentClicked()"');
+    document.querySelector("[data-aid='panel-item-label-commentsPanel']").click();
+    setTimeout(() => {
+      document.querySelectorAll(".mqm-new-comment-div")[0].childNodes[2].click();
+      setTimeout(() => {
+        document.querySelectorAll(".fr-wrapper")[2].childNodes[0].innerHTML = draftCheckedItems().innerHTML;
+        setTimeout(() => {
+          document.querySelector("[ng-click='comments.onAddNewCommentClicked()']").click();
+        }, 100);
+      }, 100);
+    }, 100);
   }
   catch (ex) {
-    console.error("Exception occured: " + ex);
+    onError(ex,"An exception occurred while trying to open comments in response to a click event.")
   }
 }
 
@@ -121,6 +127,43 @@ function getCurrentTicketInfo(title) {
     this.veXCurrentTicketInfo = {};
   }
 }
+function draftCheckedItems() {
+  try {
+    let commentDraft = document.createElement('div');
+    let commentHeader = document.createElement("p");
+    commentHeader.innerHTML = "<strong>**Done Checklist**</strong>";
+    commentHeader.style.color = "#22BB33";
+    commentDraft.appendChild(commentHeader);
+    for (categoryIndex in veXCheckedItems) {
+      let categoryName = veXCurrentTicketDOD.categories[categoryIndex].name;
+      let checkList = veXCurrentTicketDOD.categories[categoryIndex].checkList;
+      let checkedItems = veXCheckedItems[categoryIndex];
+      let currList = [];
+      for (let i = 0; i < checkedItems.length; i++) {
+        if (checkedItems[i] == 1) {
+          currList.push(checkList[i]);
+        }
+      }
+      if (currList.length == 0)
+        break;
+      let categoryNameNode = document.createElement("p")
+      categoryNameNode.innerHTML = `<b>${categoryName}</b>`;
+      let checkedListNode = document.createElement("ul");
+      currList.forEach((item) => {
+        let itemNode = document.createElement("li");
+        itemNode.innerHTML = `[✔]${item}`
+        checkedListNode.appendChild(itemNode);
+      });
+      commentDraft.appendChild(categoryNameNode);
+      commentDraft.appendChild(checkedListNode);
+    }
+    return commentDraft;
+  }
+  catch (ex) {
+    onError(ex, "error while drafting for comments")
+  }
+
+}
 
 function setup() {
   this.veXPopUpNode.id = "veX-PopUp-Container";
@@ -128,15 +171,10 @@ function setup() {
   this.veXPopUpNode.innerHTML = veXPopUI;
   document.body.appendChild(veXPopUpNode);
   document.body.appendChild(veXPopUpOverlay);
+  veXPopUpNode.querySelector(".veX_normal_btn").addEventListener("click", addDoneListToComments);
   veXPopUpOverlay.addEventListener("click", closeveXPopUp);
 }
 
-function addToComments() {
-  document.querySelectorAll(".mqm-new-comment-div")[0].childNodes[2].click();
-  document.querySelectorAll(".mqm-new-comment-div")[0].childNodes[2].click();
-  document.querySelectorAll(".fr-wrapper")[2].childNodes[0].innerHTML = '<h1>hi<h1>'
-  document.querySelectorAll('ng-click="comments.onAddNewCommentClicked()"');
-}
 
 function initView() {
   try {
@@ -169,7 +207,6 @@ function initSidebarView(categories) {
       sideBarItemNode.textContent = category.name;
       index++;
     }
-
   );
 
 }

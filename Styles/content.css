@@ -113,7 +113,7 @@
   position: relative;
   overflow: hidden;
   background-color: var(--veX-successColor);
-  transition: width 0.5s ease;
+  transition: width 0.5s linear;
 }
 
 /* .veX_done_status:before {

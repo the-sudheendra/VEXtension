@@ -309,7 +309,7 @@ async function onInstalled() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'veXDoneCheckListMenu',
-      title: 'Done Definition',
+      title: 'View Done Checklist',
       documentUrlPatterns: ["https://ot-internal.saas.microfocus.com/*"],
       contexts: ['page']
     }
