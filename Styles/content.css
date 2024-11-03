@@ -11,7 +11,7 @@
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar-track {
@@ -21,7 +21,7 @@
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
-  width: 10px;
+  width: 5px;
   background-color: #fff;
   border-radius: 10px;
 }
@@ -137,7 +137,6 @@
 }
 
 .veX_dod_title {
-  margin-left: 20px;
   font-size: 20px;
   font-weight: 500;
   color: #333;
@@ -151,13 +150,13 @@
   margin-bottom: 15px;
 }
 
-.veX_dod_list_container {
-  padding-left: 20px;
-}
+.veX_dod_list_container {}
 
 .veX_dod_list_container ul {
   margin: 0;
   padding: 0;
+  counter-reset: item;
+  list-style-type: none;
 }
 
 .veX_dod_list_container ul li {
@@ -177,13 +176,24 @@
 
 .veX_dod_list_container ul li:hover {
   background-color: var(--vex-hoverColor);
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .veX_dod_list_container ul li.checked {
   background: var(--veX-successColor);
   color: #fff;
   text-decoration: line-through;
+}
+
+
+.veX_dod_list_container ul li::before {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  counter-increment: item;
+  content: counter(item) ". ";
+  font-weight: bold;
+  box-shadow: none;
+  border: none;
 }
 
 /* Add a "checked" mark when clicked on */
