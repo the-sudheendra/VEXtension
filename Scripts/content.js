@@ -14,6 +14,7 @@ var root = document.querySelector(':root');
 var veXPopUI = `
 <header class="veX_header veX_banner">
     <p class="veX_header_title"></p>
+    <div class="veX_done_status"></div>
 </header>
 <div class="veX_content_wrapper">
     <div class="veX_sidebar">
@@ -256,7 +257,7 @@ function onListItemClick(event) {
     veXCheckedItems[catIndex][listIndex] = 0;
     veXTotalCheckedItems--;
   }
-  root.style.setProperty('--veX-checkedItemsPercentage', `${(100 - (veXTotalCheckedItems / veXTotalItems) * 100)}%`);
+  root.style.setProperty('--veX-checkedItemsPercentage', `${((veXTotalCheckedItems / veXTotalItems) * 100)}%`);
 }
 
 function onTicketChange() {
@@ -311,7 +312,7 @@ function reset() {
   veXCurrentTicketInfo = {};
   veXTotalCheckedItems = 0;
   veXTotalItems = 0;
-  root.style.setProperty('--veX-checkedItemsPercentage', `100%`);
+  root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
 }
 //**Event Handlers**
 (async () => {
