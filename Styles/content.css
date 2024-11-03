@@ -101,8 +101,8 @@
   text-align: left;
   border-radius: 8px 8px 0px 0px;
   background: rgb(2, 0, 36);
-  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 100%, var(--veX-ticktColor) var(--veX-checkedItemsPercentage, 100%));
-  /*var(--veX-checkedItemsPercentage,100%));*/
+  background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, var(--veX-ticktColor) var(--veX-checkedItemsPercentage, 100%));
+  transition: background 2s linear;
 }
 
 .veX_content_wrapper {
