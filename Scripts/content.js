@@ -311,6 +311,7 @@ function reset() {
   veXCurrentTicketInfo = {};
   veXTotalCheckedItems = 0;
   veXTotalItems = 0;
+  root.style.setProperty('--veX-checkedItemsPercentage', `100%`);
 }
 //**Event Handlers**
 (async () => {
