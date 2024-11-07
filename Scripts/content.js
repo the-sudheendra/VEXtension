@@ -11,6 +11,7 @@ var veXTotalItems = 0;
 var veXPopUpNode = document.createElement("div");
 var veXPopUpOverlay = document.createElement("div");
 var root = document.querySelector(':root');
+
 var veXPopUI = `
 <header class="veX_header veX_banner">
     <p class="veX_header_title"></p>
@@ -51,9 +52,6 @@ function initMutationObservers() {
 //**Initialising configured Observer**
 
 
-
-
-
 //**Utility Functions**
 
 veXMutationObserversConfig =
@@ -71,10 +69,14 @@ veXMutationObserversConfig =
   }
 }
 
+//Common Error Handler 
 function onError(error, info) {
-  this.veXCurrentTicketDOD = {};
-  this.veXCurrentTicketInfo = {};
-  console.error(`Error from 'VE Xtension'\n${info}\nError: ` + error);
+  if (!info) {
+    notify("Something went wrong, please try again");
+  } else {
+    notify((`Error from 'VE Xtension':\n${info}\n`));
+  }
+  console.info(error);
 }
 
 function conciseText(text) {
@@ -88,19 +90,29 @@ function conciseText(text) {
 
 function addDoneListToComments() {
   try {
-    document.querySelector("[data-aid='panel-item-label-commentsPanel']").click();
+    let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-label-commentsPanel']")
+    if (rightSidebarCommentButton)
+      rightSidebarCommentButton.click();
     setTimeout(() => {
-      document.querySelectorAll(".mqm-new-comment-div")[0].childNodes[2].click();
+      let dummyAddNewCommentBox = document.querySelector("[data-aid='comments-pane-add-new-comment-placeholder-state']")
+      if (dummyAddNewCommentBox)
+        dummyAddNewCommentBox.click();
       setTimeout(() => {
-        document.querySelectorAll(".fr-wrapper")[2].childNodes[0].innerHTML = draftCheckedItems().innerHTML;
+        let commentBox = document.querySelector(".mqm-writing-new-comment-div").querySelector(".fr-wrapper").childNodes[0];
+        if (commentBox)
+          commentBox.innerHTML = draftCommentForCheckedItems();
         setTimeout(() => {
-          document.querySelector("[ng-click='comments.onAddNewCommentClicked()']").click();
+          let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
+          if (commentSubmitButton) {
+            commentSubmitButton.removeAttribute("disabled");
+            commentSubmitButton.click();
+          }
         }, 100);
       }, 100);
     }, 100);
   }
   catch (ex) {
-    onError(ex,"An exception occurred while trying to open comments in response to a click event.")
+    onError(ex, "An exception occurred while trying to open comments in response to a click event.")
   }
 }
 
@@ -127,13 +139,14 @@ function getCurrentTicketInfo(title) {
     this.veXCurrentTicketInfo = {};
   }
 }
-function draftCheckedItems() {
+
+function draftCommentForCheckedItems() {
   try {
-    let commentDraft = document.createElement('div');
-    let commentHeader = document.createElement("p");
-    commentHeader.innerHTML = "<strong>**Done Checklist**</strong>";
-    commentHeader.style.color = "#22BB33";
-    commentDraft.appendChild(commentHeader);
+    let CommentDraftNode = document.createElement('div');
+    let CommentHeaderNode = document.createElement("p");
+    CommentHeaderNode.innerHTML = "<strong>**Done Checklist**</strong>";
+    CommentHeaderNode.style.color = "#22BB33";
+    CommentDraftNode.appendChild(CommentHeaderNode);
     for (categoryIndex in veXCheckedItems) {
       let categoryName = veXCurrentTicketDOD.categories[categoryIndex].name;
       let checkList = veXCurrentTicketDOD.categories[categoryIndex].checkList;
@@ -149,15 +162,18 @@ function draftCheckedItems() {
       let categoryNameNode = document.createElement("p")
       categoryNameNode.innerHTML = `<b>${categoryName}</b>`;
       let checkedListNode = document.createElement("ul");
+      checkedListNode.style.listStyleType = "none";
       currList.forEach((item) => {
         let itemNode = document.createElement("li");
         itemNode.innerHTML = `[✔]${item}`
         checkedListNode.appendChild(itemNode);
       });
-      commentDraft.appendChild(categoryNameNode);
-      commentDraft.appendChild(checkedListNode);
+      CommentDraftNode.appendChild(categoryNameNode);
+      CommentDraftNode.appendChild(checkedListNode);
     }
-    return commentDraft;
+    let finalComment = CommentDraftNode.innerHTML;
+    CommentDraftNode.remove();
+    return finalComment;
   }
   catch (ex) {
     onError(ex, "error while drafting for comments")
@@ -173,6 +189,7 @@ function setup() {
   document.body.appendChild(veXPopUpOverlay);
   veXPopUpNode.querySelector(".veX_normal_btn").addEventListener("click", addDoneListToComments);
   veXPopUpOverlay.addEventListener("click", closeveXPopUp);
+  initMutationObservers();
 }
 
 
@@ -185,10 +202,9 @@ function initView() {
     initStyle();
   }
   catch (err) {
-    onError(err, "error while initiating view");
+    onError(err, "Error while initiating view");
   }
 }
-
 
 function initSidebarView(categories) {
   let sidebarParentNode = veXPopUpNode.querySelector('.veX_sidebar');
@@ -208,8 +224,8 @@ function initSidebarView(categories) {
       index++;
     }
   );
-
 }
+
 function initCheckedItems() {
   for (let i = 0; i < this.veXCurrentTicketDOD.categories.length; i++) {
     this.veXCheckedItems[i] = [];
@@ -220,6 +236,7 @@ function initCheckedItems() {
     }
   }
 }
+
 function updateMainContentView(categoryIndex) {
   let currentCategory = this.veXCurrentTicketDOD.categories[categoryIndex];
   let titleNode = veXPopUpNode.querySelector('.veX_dod_title');
@@ -265,6 +282,7 @@ function isEmptyObject(obj) {
 
 function notify(message) {
   console.info(message);
+  alert(message);
 }
 //**Utility Functions**
 
@@ -273,15 +291,13 @@ function notify(message) {
 function closeveXPopUp() {
   veXPopUpOverlay.style.visibility = "hidden";
   veXPopUpNode.style.visibility = 'hidden';
-  veXPopUpNode.classList.remove("veX_pop_active");
 }
 
 function openVexPopUp() {
   veXPopUpOverlay.style.visibility = "visible";
   veXPopUpNode.style.visibility = "visible";
-  veXPopUpNode.classList.add(".veX_pop_active")
-
 }
+
 function onListItemClick(event) {
   let catIndex = event.target.getAttribute('categoryIndex')
   let listIndex = event.target.getAttribute('listIndex')
@@ -301,14 +317,20 @@ function onTicketChange() {
   try {
     if (isEmptyObject(this.veXDODInfo) && isEmptyObject(this.veXEntityMetaData)) return;
     let newTitle = document.head.querySelector('title').innerText;
-    getCurrentTicketInfo(newTitle);
+    reset();
+    getCurrentTicketInfo(newTitle); 
     if (!isEmptyObject(this.veXCurrentTicketInfo)) {
+      (async () => {
+        if (isEmptyObject(veXDODInfo)) {
+          veXDODInfo = await chrome.runtime.sendMessage('loadveXDefinationsData');
+        }
+      })()
       this.veXCurrentTicketDOD = veXDODInfo[veXCurrentTicketInfo.type];
       if (!isEmptyObject(this.veXCurrentTicketDOD)) {
         initView();
       }
       else {
-        notify("Unable to find the current ticket information in the definitions. Please update it.");
+        reset();
       }
     }
     else {
@@ -319,7 +341,6 @@ function onTicketChange() {
   }
   catch (ex) {
     onError(ex, "error at OnTicketChange Handler");
-
   }
 }
 
@@ -334,15 +355,23 @@ function addClickEventForSideBarTab() {
     );
   });
 }
+
 function handleMessage(request, sender, sendResponse) {
   switch (request) {
     case "openVexPopUp":
       if (!isEmptyObject(this.veXCurrentTicketDOD) && !isEmptyObject(this.veXCurrentTicketInfo))
         openVexPopUp();
+      else if (!isEmptyObject(this.veXCurrentTicketInfo) && isEmptyObject(this.veXCurrentTicketDOD)) {
+        notify(`Unable to find the '${veXCurrentTicketInfo.type}' Defination of Done. Please update it.`);
+      }
+      else if (isEmptyObject(this.veXCurrentTicketInfo))
+        notify("Please open a VE ticket to see the Done checklist")
+      else
+        onError();
       break;
   }
-  return true;
 }
+
 function reset() {
   veXCheckedItems = {};
   veXCurrentTicketDOD = {};
@@ -350,7 +379,9 @@ function reset() {
   veXTotalCheckedItems = 0;
   veXTotalItems = 0;
   root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
+  root.style.setProperty('--veX-ticktColor', `#fff`);
 }
+
 //**Event Handlers**
 (async () => {
   if (isEmptyObject(veXEntityMetaData)) {
@@ -365,5 +396,4 @@ function reset() {
 })();
 
 setup();
-initMutationObservers();
 chrome.runtime.onMessage.addListener(handleMessage);
