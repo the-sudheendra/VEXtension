@@ -284,6 +284,7 @@ function initSidebarView(categories) {
 }
 
 function initCheckedItems() {
+  veXTotalItems=0;
   for (let i = 0; i < veXCurrentTicketDOD.categories.length; i++) {
     veXCheckedItems[i] = [];
     let curCategory = veXCurrentTicketDOD.categories[i];
