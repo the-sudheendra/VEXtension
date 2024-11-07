@@ -25,6 +25,11 @@ const veXEntityMetaData = {
     'name': 'CPE Incident',
     'colorHex': '#ff404b'
   },
+  'I':
+  {
+    'name': 'CPE Incident',
+    'colorHex': '#ff404b'
+  },
   'US':
   {
     'name': 'User Story',
@@ -52,7 +57,7 @@ const veXEntityMetaData = {
   }
 }
 
-var veXDODInfo={};
+var veXDODInfo = {};
 //**Declaration**
 
 //**Utility Functions**
@@ -68,14 +73,19 @@ async function onInstalled() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'veXDoneCheckListMenu',
-      title: 'View Done Checklist',
+      title: 'Done Checklist',
       documentUrlPatterns: ["https://ot-internal.saas.microfocus.com/*"],
       contexts: ['page']
     }
     );
   });
+
   await readJsonFile(chrome.runtime.getURL("definitions.json"));
-  chrome.storage.sync.set({ veXDoneDefinations: veXDODInfo }, () => { console.info("Successfully Saved definations..") });
+  Object.keys(veXDODInfo).forEach(async (ticketEntityName) => {
+    let keyValue = {};
+    keyValue[ticketEntityName] = veXDODInfo[ticketEntityName];
+    await chrome.storage.sync.set(keyValue);
+  });
 }
 
 async function handleMessages(request, sender, sendResponse) {
@@ -91,7 +101,7 @@ async function handleMessages(request, sender, sendResponse) {
 function onContextMenuClick(info, tab) {
   if (info.menuItemId === "veXDoneCheckListMenu") {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, "openVexPopUp");
+      chrome.tabs.sendMessage(tabs[0].id, "openVexDODPopup");
     });
   }
 }
