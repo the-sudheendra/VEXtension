@@ -2,7 +2,6 @@
 var veXMutationObservers = {};
 var veXMutationObserversConfig = {};
 var veXDODInfo = {};
-var veXEntityMetaData = {};
 var veXCurrentTicketInfo = {};
 var veXCurrentTicketDOD = {};
 var veXCheckedItems = {};
@@ -11,6 +10,67 @@ var veXTotalItems = 0;
 var veXPopUpNode = document.createElement("div");
 var veXPopUpOverlay = document.createElement("div");
 var root = document.querySelector(':root');
+var veXCategoryTitleNode;//veXPopUpNode.querySelector('.veX_dod_title')
+var veXsidebarParentNode;//veXPopUpNode.querySelector('.veX_sidebar')
+var veXChecklistParentNode;//veXPopUpNode.querySelector('.veX_dod_list')
+var veXHeaderTitleNode;// veXPopUpNode.querySelector(".veX_header_title")
+const veXEntityMetaData = {
+  'E':
+  {
+    'name': 'Epic',
+    'colorHex': '#7425ad'
+  },
+  'F':
+  {
+    'name': 'Feature',
+    'colorHex': '#e57828'
+  },
+  'D':
+  {
+    'name': 'Defect',
+    'colorHex': '#b5224f'
+  },
+  'ER':
+  {
+    'name': 'Enhancement',
+    'colorHex': '#5555cf'
+  },
+  'IM':
+  {
+    'name': 'CPE Incident',
+    'colorHex': '#ff404b'
+  },
+  'I':
+  {
+    'name': 'CPE Incident',
+    'colorHex': '#ff404b'
+  },
+  'US':
+  {
+    'name': 'User Story',
+    'colorHex': '#ffaa00'
+  },
+  'INT':
+  {
+    'name': 'Internal',
+    'colorHex': '#be52e4'
+  },
+  'SK':
+  {
+    'name': 'Spike',
+    'colorHex': '#0baaf3'
+  },
+  'QS':
+  {
+    'name': 'Quality Story',
+    'colorHex': '#2fc07e'
+  },
+  'T':
+  {
+    'name': 'Task',
+    'colorHex': '#1365c0'
+  }
+}
 
 var vexDODUI = `
 <header class="veX_header veX_banner">
@@ -53,7 +113,6 @@ function initMutationObservers() {
 
 
 //**Utility Functions**
-
 veXMutationObserversConfig =
 {
   titleObserver:
@@ -123,26 +182,19 @@ function addDoneListToComments() {
 function getCurrentTicketInfo(title) {
   if (!title) return;
   ticketArr = title.split(" ");
-  if (ticketArr.length >= 2) {
-    const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
-    if (match) {
-      let ticketType = (document.querySelector('[ng-if="header.shouldShowEntityLabel"]').innerText).toUpperCase();
-      veXCurrentTicketInfo =
-      {
-        type: veXEntityMetaData[ticketType].name,
-        id: match[2],
-        color: veXEntityMetaData[ticketType].colorHex,
-        title: title.slice(ticketArr[0].length + 1)
-      }
-    }
-    else {
-      veXCurrentTicketInfo = {};
-    }
-  }
-  else {
-    veXCurrentTicketInfo = {};
+  if (ticketArr.length < 2) return;
+  const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
+  if (match.length == 0) return;
+  let ticketType = (document.querySelector('[ng-if="header.shouldShowEntityLabel"]').innerText).toUpperCase();
+  veXCurrentTicketInfo =
+  {
+    type: veXEntityMetaData[ticketType].name,
+    id: match[2],
+    color: veXEntityMetaData[ticketType].colorHex,
+    title: title.slice(ticketArr[0].length + 1)
   }
 }
+
 
 function draftCommentForCheckedItems() {
   try {
@@ -193,12 +245,15 @@ function setup() {
   veXPopUpNode.querySelector(".veX_normal_btn").addEventListener("click", addDoneListToComments);
   veXPopUpOverlay.addEventListener("click", closeveXPopUp);
   initMutationObservers();
+  veXCategoryTitleNode = veXPopUpNode.querySelector('.veX_dod_title');
+  veXsidebarParentNode=veXPopUpNode.querySelector('.veX_sidebar');
+  veXChecklistParentNode=veXPopUpNode.querySelector('.veX_dod_list');
+  veXHeaderTitleNode=veXPopUpNode.querySelector(".veX_header_title");
 }
-
 
 function initView() {
   try {
-    veXPopUpNode.querySelector(".veX_header_title").innerText = conciseText(veXCurrentTicketInfo.title);
+    veXHeaderTitleNode.innerText = conciseText(veXCurrentTicketInfo.title);
     initSidebarView(veXCurrentTicketDOD.categories);
     initCheckedItems();
     updateMainContentView(0);
@@ -210,8 +265,7 @@ function initView() {
 }
 
 function initSidebarView(categories) {
-  let sidebarParentNode = veXPopUpNode.querySelector('.veX_sidebar');
-  sidebarParentNode.innerHTML = "";
+  veXsidebarParentNode.innerHTML = "";
   let index = 0;
   categories.forEach(
     (category) => {
@@ -221,8 +275,8 @@ function initSidebarView(categories) {
       sideBarItemNode.addEventListener('click', (event) => {
         updateMainContentView(event.target.getAttribute('categoryIndex'));
       });
-      sidebarParentNode.appendChild(sideBarItemNode);
-      sidebarParentNode.appendChild(sideBarItemNode);
+      veXsidebarParentNode.appendChild(sideBarItemNode);
+      veXsidebarParentNode.appendChild(sideBarItemNode);
       sideBarItemNode.textContent = category.name;
       index++;
     }
@@ -242,20 +296,17 @@ function initCheckedItems() {
 
 function updateMainContentView(categoryIndex) {
   let currentCategory = veXCurrentTicketDOD.categories[categoryIndex];
-  let titleNode = veXPopUpNode.querySelector('.veX_dod_title');
-  titleNode.innerText = currentCategory.name;
-
+  veXCategoryTitleNode.innerText = currentCategory.name;
   veXPopUpNode.querySelectorAll('.veX-Button').forEach((buttonNode) => {
     buttonNode.classList.remove("veX-Active-Button");
   });
-  veXPopUpNode.querySelector('.veX_sidebar').querySelector(`[categoryIndex="${categoryIndex}"]`).classList.add("veX-Active-Button");
+  veXsidebarParentNode.querySelector(`[categoryIndex="${categoryIndex}"]`).classList.add("veX-Active-Button");
   updateList(currentCategory.checkList, categoryIndex);
 }
 
 function updateList(checkList, categoryIndex) {
   let currentCheckList = veXCheckedItems[categoryIndex];
-  let listParentNode = veXPopUpNode.querySelector('.veX_dod_list');
-  listParentNode.innerHTML = "";
+  veXChecklistParentNode.innerHTML = "";
   let index = 0;
   checkList.forEach(
     (itemValue) => {
@@ -264,7 +315,7 @@ function updateList(checkList, categoryIndex) {
       listItem.setAttribute('categoryIndex', categoryIndex);
       listItem.addEventListener('click', onListItemClick);
       listItem.textContent = itemValue;
-      listParentNode.appendChild(listItem);
+      veXChecklistParentNode.appendChild(listItem);
       if (currentCheckList[index] == 1) {
         listItem.classList.add('checked');
       }
@@ -334,13 +385,13 @@ async function onTicketChange() {
   }
 }
 
-function handleMessage(request, sender, sendResponse) {
+function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   switch (request) {
     case "openVexDODPopup":
       if (!(isEmptyObject(veXCurrentTicketDOD) || isEmptyObject(veXCurrentTicketInfo)))
         openVexDODPopup();
       else if (!isEmptyObject(veXCurrentTicketInfo) && isEmptyObject(veXCurrentTicketDOD)) {
-        notify(`Unable to find the '${veXCurrentTicketInfo.type}' Defination of Done. Please update it.`);
+        notify(`Unable to find the Done Definition for '${veXCurrentTicketInfo.type}'`);
       }
       else if (isEmptyObject(veXCurrentTicketInfo))
         notify("Please open a VE ticket to see the Done checklist")
@@ -361,10 +412,5 @@ function reset() {
 }
 
 //**Event Handlers**
-(async () => {
-  if (isEmptyObject(veXEntityMetaData)) {
-    veXEntityMetaData = await chrome.runtime.sendMessage('getveXEntityMetaData');
-  }
-})();
 setup();
-chrome.runtime.onMessage.addListener(handleMessage);
+chrome.runtime.onMessage.addListener(handleMessagesFromServiceWorker);

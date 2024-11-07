@@ -16,8 +16,7 @@
       "matches": ["https://ot-internal.saas.microfocus.com/*"],
       "js": [
         "./Scripts/content.js",
-        "./Scripts/utility.js",
-        "./Scripts/draggable.js"
+        "./Scripts/utility.js"
       ],
       "css": ["./Styles/content.css"]
     }
