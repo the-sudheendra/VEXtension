@@ -1,61 +1,26 @@
 {
   "Epic": {
+    "title": "Epic",
     "categories": [
       {
-        "name": "Acceptance Criteria",
+        "name": "Planning",
         "checkList": [
-          "Clear acceptance criteria are defined and agreed upon.",
-          "Acceptance criteria are reviewed and signed off by the product owner."
-        ]
+          "Define the overall objective",
+          "Identify necessary features",
+          "Prioritize tasks within the Epic",
+          "Allocate resources"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       },
       {
-        "name": "Requirements",
+        "name": "Tracking",
         "checkList": [
-          "All functional and non-functional requirements are captured.",
-          "The scope of the Epic is clearly defined and documented."
-        ]
-      },
-      {
-        "name": "Design Review",
-        "checkList": [
-          "Initial wireframes or design mockups are reviewed by the design team.",
-          "Feedback from stakeholders has been incorporated into the design."
-        ]
-      },
-      {
-        "name": "Stakeholder Approval",
-        "checkList": [
-          "The Epic is reviewed and approved by key stakeholders.",
-          "Sign-off has been documented and logged in the system."
-        ]
-      },
-      {
-        "name": "Dependencies",
-        "checkList": [
-          "Dependencies with other Epics or stories are identified.",
-          "A plan is created to manage these dependencies."
-        ]
-      },
-      {
-        "name": "Technical Review",
-        "checkList": [
-          "Technical feasibility has been evaluated by the development team.",
-          "Potential risks and challenges are documented and mitigation strategies outlined."
-        ]
-      },
-      {
-        "name": "Documentation",
-        "checkList": [
-          "All relevant documentation (e.g., technical specs, user stories) is completed.",
-          "Documentation is stored in an accessible repository for future reference."
-        ]
-      },
-      {
-        "name": "Readiness for Implementation",
-        "checkList": [
-          "The Epic is marked as ‘Ready for Development’ by the project manager.",
-          "All team members are briefed on the Epic's objectives and scope."
-        ]
+          "Monitor feature progress",
+          "Adjust timelines as needed",
+          "Communicate updates to stakeholders",
+          "Ensure alignment with product goals"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   },
@@ -63,67 +28,24 @@
     "title": "Feature",
     "categories": [
       {
-        "name": "Requirement Analysis",
+        "name": "Design",
         "checkList": [
-          "Feature request is documented with a clear description and purpose.",
-          "All relevant requirements, including functional and non-functional, are captured."
-        ]
+          "Outline user flow",
+          "Create wireframes or prototypes",
+          "Review designs with stakeholders",
+          "Finalize design requirements"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       },
       {
-        "name": "Feasibility Assessment",
+        "name": "Development",
         "checkList": [
-          "The development team has conducted a technical feasibility assessment.",
-          "Risks and constraints associated with the feature are identified and noted."
-        ]
-      },
-      {
-        "name": "Stakeholder Input",
-        "checkList": [
-          "Feedback from stakeholders has been gathered and reviewed.",
-          "The feature has been prioritized based on business value and urgency."
-        ]
-      },
-      {
-        "name": "Design Validation",
-        "checkList": [
-          "Initial design or wireframes are created and shared with the design team.",
-          "Design review feedback is incorporated, ensuring alignment with UX/UI standards."
-        ]
-      },
-      {
-        "name": "Acceptance Criteria",
-        "checkList": [
-          "Clear and specific acceptance criteria are defined and agreed upon by stakeholders.",
-          "Acceptance criteria are documented in the feature request ticket."
-        ]
-      },
-      {
-        "name": "Documentation",
-        "checkList": [
-          "Supporting documentation (e.g., user stories, technical specs) is completed.",
-          "Documentation is linked or stored in an accessible location."
-        ]
-      },
-      {
-        "name": "Dependency Check",
-        "checkList": [
-          "Dependencies with other features, components, or external systems are identified.",
-          "A plan is in place to address dependencies and potential conflicts."
-        ]
-      },
-      {
-        "name": "Approval and Sign-Off",
-        "checkList": [
-          "Feature request has been reviewed and approved by the product owner or relevant stakeholders.",
-          "Approval is logged in the system for traceability."
-        ]
-      },
-      {
-        "name": "Ready for Development",
-        "checkList": [
-          "All preparatory work is completed and marked as ready for development.",
-          "Development team has been briefed on the feature request details."
-        ]
+          "Write feature code",
+          "Conduct code reviews",
+          "Integrate with existing systems",
+          "Deploy to staging environment"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   },
@@ -131,67 +53,29 @@
     "title": "Defect",
     "categories": [
       {
-        "name": "Reproduction Steps",
+        
+        "name": "Investigation",
         "checkList": [
-          "Clear and detailed steps to reproduce the defect are documented.",
-          "Screenshots, logs, or any relevant evidence are attached to illustrate the issue."
-        ]
+          "Reproduce the issue",
+          "Gather logs and screenshots",
+          "Determine root cause",
+          "Document findings",
+          "Reproduce the issue",
+          "Gather logs and screenshots",
+          "Determine root cause",
+          "Document findings"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       },
       {
-        "name": "Root Cause Analysis",
+        "name": "Resolution",
         "checkList": [
-          "The root cause of the defect has been identified by the development team.",
-          "Notes on how the issue occurred and potential implications are documented."
-        ]
-      },
-      {
-        "name": "Impact Assessment",
-        "checkList": [
-          "The impact on the application, users, or system performance is evaluated.",
-          "Severity and priority levels are assigned based on the impact analysis."
-        ]
-      },
-      {
-        "name": "Fix Implementation",
-        "checkList": [
-          "Code changes have been implemented to resolve the defect.",
-          "The code has been reviewed and approved by a peer or lead developer."
-        ]
-      },
-      {
-        "name": "Testing",
-        "checkList": [
-          "The defect fix has been tested in a development or staging environment.",
-          "Automated or manual test cases have been executed to verify the fix."
-        ]
-      },
-      {
-        "name": "Regression Testing",
-        "checkList": [
-          "Regression testing has been conducted to ensure no new issues were introduced.",
-          "All related components or areas that could be affected have been tested."
-        ]
-      },
-      {
-        "name": "Documentation",
-        "checkList": [
-          "Relevant documentation, such as release notes or change logs, is updated.",
-          "Any changes to technical or user documentation are completed and shared."
-        ]
-      },
-      {
-        "name": "Approval",
-        "checkList": [
-          "The fix has been approved by the QA team or relevant stakeholders.",
-          "Sign-off from the product owner or a responsible party is documented."
-        ]
-      },
-      {
-        "name": "Deployment Readiness",
-        "checkList": [
-          "The defect fix is included in a build marked ready for deployment.",
-          "The deployment process has been reviewed and planned with the operations team."
-        ]
+          "Implement fix",
+          "Run regression tests",
+          "Confirm issue resolution",
+          "Close defect after verification"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   },
@@ -201,154 +85,47 @@
       {
         "name": "Requirement Analysis",
         "checkList": [
-          "The specific improvement and scope of the enhancement are clearly defined.",
-          "Any existing limitations or issues that the enhancement addresses are documented."
-        ]
+          "Identify enhancement goals",
+          "Review user feedback",
+          "Determine scope of changes",
+          "Get approvals from stakeholders"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       },
       {
-        "name": "Feasibility Review",
+        "name": "Implementation",
         "checkList": [
-          "The development team has reviewed the technical feasibility of the enhancement.",
-          "Potential risks or challenges have been noted, and mitigation strategies are proposed."
-        ]
-      },
-      {
-        "name": "Stakeholder Feedback",
-        "checkList": [
-          "Feedback from users or stakeholders regarding the current feature has been collected.",
-          "The proposed enhancement has been reviewed and aligned with stakeholder needs."
-        ]
-      },
-      {
-        "name": "Design Update",
-        "checkList": [
-          "Design updates (wireframes, mockups, etc.) have been created and shared.",
-          "Feedback from the design team has been incorporated into the updated design."
-        ]
-      },
-      {
-        "name": "Acceptance Criteria",
-        "checkList": [
-          "Clear and updated acceptance criteria are defined for the enhancement.",
-          "Acceptance criteria are approved by relevant stakeholders."
-        ]
-      },
-      {
-        "name": "Documentation",
-        "checkList": [
-          "Existing documentation has been reviewed and updated to reflect the enhancement.",
-          "New documentation (if needed) has been created and linked to the enhancement ticket."
-        ]
-      },
-      {
-        "name": "Testing Plan",
-        "checkList": [
-          "A comprehensive testing plan is prepared to cover both the new enhancement and any affected areas.",
-          "Test cases have been written and are ready for execution."
-        ]
-      },
-      {
-        "name": "Dependency Check",
-        "checkList": [
-          "Any dependencies on other features, modules, or teams have been identified.",
-          "A plan to handle dependencies or avoid conflicts has been documented."
-        ]
-      },
-      {
-        "name": "Approval",
-        "checkList": [
-          "The enhancement proposal has been reviewed and approved by the product owner.",
-          "Sign-off has been documented for traceability."
-        ]
-      },
-      {
-        "name": "Ready for Development",
-        "checkList": [
-          "All preparatory work, including analysis and documentation, is completed.",
-          "The development team is briefed and ready to begin work on the enhancement."
-        ]
+          "Modify existing code",
+          "Run unit and integration tests",
+          "Deploy to staging",
+          "Gather feedback on enhancement"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   },
   "CPE Incident": {
-    "title": "Support Request",
+    "title": "CPE Incident",
     "categories": [
       {
-        "name": "Incident Documentation",
+        "name": "Intake",
         "checkList": [
-          "A detailed description of the incident is documented, including error messages, screenshots, or logs.",
-          "Relevant metadata (e.g., incident timestamp, affected environment, severity level) is included."
-        ]
+          "Log support ticket",
+          "Identify user issue",
+          "Classify urgency and assign priority",
+          "Assign to support team"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       },
       {
-        "name": "Impact Assessment",
+        "name": "Resolution",
         "checkList": [
-          "The impact on the customer or business is evaluated and documented.",
-          "The urgency and priority of the incident are clearly defined."
-        ]
-      },
-      {
-        "name": "Reproduction Steps",
-        "checkList": [
-          "Clear steps to reproduce the incident are provided.",
-          "Any attempts to reproduce the incident have been documented."
-        ]
-      },
-      {
-        "name": "Initial Troubleshooting",
-        "checkList": [
-          "Basic troubleshooting has been performed and logged.",
-          "Relevant findings or logs from initial analysis are attached."
-        ]
-      },
-      {
-        "name": "Communication",
-        "checkList": [
-          "Initial acknowledgment of the incident has been sent to the customer or stakeholder.",
-          "Regular updates have been scheduled or provided to keep stakeholders informed."
-        ]
-      },
-      {
-        "name": "Resolution Strategy",
-        "checkList": [
-          "A plan for resolving the incident has been created and documented.",
-          "Potential workarounds or temporary solutions have been proposed if applicable."
-        ]
-      },
-      {
-        "name": "Fix Implementation",
-        "checkList": [
-          "The issue has been resolved and verified in a controlled environment.",
-          "Code changes, if necessary, have been peer-reviewed and approved."
-        ]
-      },
-      {
-        "name": "Testing",
-        "checkList": [
-          "The fix has been tested to confirm the issue is resolved and does not impact other areas.",
-          "Regression testing has been performed to ensure system stability."
-        ]
-      },
-      {
-        "name": "Customer Confirmation",
-        "checkList": [
-          "The resolution has been communicated to the customer or stakeholder.",
-          "Feedback from the customer confirming the fix has been received and documented."
-        ]
-      },
-      {
-        "name": "Documentation Update",
-        "checkList": [
-          "Internal documentation, such as incident logs or knowledge base articles, has been updated.",
-          "Lessons learned from the incident have been documented for future reference."
-        ]
-      },
-      {
-        "name": "Closure",
-        "checkList": [
-          "The incident is marked as resolved and closed after final verification.",
-          "All related parties have been informed of the incident closure."
-        ]
+          "Provide solution or workaround",
+          "Communicate with user",
+          "Confirm issue resolution",
+          "Close support ticket"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   },
@@ -356,74 +133,14 @@
     "title": "User Story",
     "categories": [
       {
-        "name": "Description and Context",
+        "name": "Definition",
         "checkList": [
-          "A clear and concise description of the user story is provided.",
-          "The 'who', 'what', and 'why' are outlined to provide context (e.g., 'As a [user], I want [feature], so that [benefit]')."
-        ]
-      },
-      {
-        "name": "Acceptance Criteria",
-        "checkList": [
-          "Well-defined acceptance criteria are listed to ensure clear expectations.",
-          "Criteria are reviewed and approved by the product owner or relevant stakeholders."
-        ]
-      },
-      {
-        "name": "Priority and Estimation",
-        "checkList": [
-          "The user story has been assigned a priority level.",
-          "Effort estimation (story points or time-based) is completed and agreed upon by the team."
-        ]
-      },
-      {
-        "name": "Task Breakdown",
-        "checkList": [
-          "The user story is broken down into subtasks for easier tracking and assignment.",
-          "Each subtask has a clear owner and an estimated completion time."
-        ]
-      },
-      {
-        "name": "Dependencies and Blockers",
-        "checkList": [
-          "Dependencies on other user stories, tasks, or external factors are identified.",
-          "Blockers are documented, and a plan for addressing them is noted."
-        ]
-      },
-      {
-        "name": "Design and Mockups",
-        "checkList": [
-          "Any required design or UI mockups are created and attached to the user story.",
-          "The design has been reviewed and approved by the design team, if applicable."
-        ]
-      },
-      {
-        "name": "Documentation",
-        "checkList": [
-          "Any relevant documentation, such as user guides or technical notes, is linked or attached.",
-          "The documentation is stored in an accessible location for team reference."
-        ]
-      },
-      {
-        "name": "Stakeholder Review",
-        "checkList": [
-          "The user story has been reviewed by stakeholders to ensure alignment with goals.",
-          "Feedback from stakeholders has been incorporated as needed."
-        ]
-      },
-      {
-        "name": "Readiness for Development",
-        "checkList": [
-          "The user story is marked as 'Ready for Development' with all necessary information completed.",
-          "Team members are briefed on the story’s details and objectives."
-        ]
-      },
-      {
-        "name": "Testing Plan",
-        "checkList": [
-          "A testing plan or criteria for validating the completion of the user story is defined.",
-          "QA has been briefed on the expected outcomes and any specific testing requirements."
-        ]
+          "Write user story in standard format",
+          "Define acceptance criteria",
+          "Prioritize with product owner",
+          "Estimate story effort"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   },
@@ -431,74 +148,24 @@
     "title": "Spike",
     "categories": [
       {
-        "name": "Objective and Description",
+        "name": "Exploration",
         "checkList": [
-          "A clear objective for the spike is documented, explaining what needs to be researched or analyzed.",
-          "A detailed description is included, outlining the problem or question the spike aims to address."
-        ]
+          "Identify technical questions",
+          "Review relevant documentation",
+          "Build simple prototype",
+          "Evaluate technical feasibility"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       },
       {
-        "name": "Scope Definition",
+        "name": "Conclusion",
         "checkList": [
-          "The scope of the spike is defined to avoid open-ended research.",
-          "Clear deliverables or outcomes are specified (e.g., findings, prototypes, reports)."
-        ]
-      },
-      {
-        "name": "Timebox",
-        "checkList": [
-          "The spike is timeboxed with a set duration (e.g., one sprint or a specific number of hours).",
-          "The team agrees on the time limit to maintain focus and avoid scope creep."
-        ]
-      },
-      {
-        "name": "Research Plan",
-        "checkList": [
-          "A plan or approach for conducting the spike is outlined (e.g., data collection methods, tools to be used).",
-          "Initial resources and references are identified to guide the investigation."
-        ]
-      },
-      {
-        "name": "Dependencies and Resources",
-        "checkList": [
-          "Any dependencies or required resources (e.g., access to specific environments, data, or stakeholders) are identified.",
-          "A plan to acquire or coordinate these resources is documented."
-        ]
-      },
-      {
-        "name": "Collaboration and Stakeholders",
-        "checkList": [
-          "Stakeholders or team members involved in the spike are listed.",
-          "Roles and responsibilities for collaboration are outlined."
-        ]
-      },
-      {
-        "name": "Documentation of Findings",
-        "checkList": [
-          "A document or report summarizing the findings of the spike is created.",
-          "Key insights, potential solutions, and recommendations are included in the findings."
-        ]
-      },
-      {
-        "name": "Review and Approval",
-        "checkList": [
-          "The findings of the spike are reviewed by the team or relevant stakeholders.",
-          "Feedback from the review is incorporated as necessary."
-        ]
-      },
-      {
-        "name": "Outcome Decision",
-        "checkList": [
-          "A decision based on the findings of the spike is made (e.g., go/no-go for a feature, direction to proceed).",
-          "The decision and next steps are documented and communicated to the team."
-        ]
-      },
-      {
-        "name": "Closure",
-        "checkList": [
-          "The spike is marked as completed and closed after all findings are documented and shared.",
-          "Any related tasks or follow-up stories are created based on the outcomes of the spike."
-        ]
+          "Summarize findings",
+          "Present results to the team",
+          "Document next steps",
+          "Archive research notes"
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   },
@@ -512,7 +179,8 @@
           "Gather necessary resources",
           "Set documentation standards",
           "Outline key topics"
-        ]
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       },
       {
         "name": "Writing and Review",
@@ -521,143 +189,8 @@
           "Conduct peer review",
           "Revise based on feedback",
           "Publish final version"
-        ]
-      }
-    ]
-  },
-  "Task": {
-    "title": "Task",
-    "categories": [
-      {
-        "name": "Clear Objective",
-        "checkList": [
-          "The subtask has a clear objective that aligns with the parent task or user story.",
-          "A concise description explaining the purpose and scope of the subtask is provided."
-        ]
-      },
-      {
-        "name": "Assignment and Ownership",
-        "checkList": [
-          "The subtask is assigned to a specific team member for accountability.",
-          "The assignee understands their role and the expectations for completing the subtask."
-        ]
-      },
-      {
-        "name": "Dependencies",
-        "checkList": [
-          "Any dependencies related to other subtasks or external tasks are identified.",
-          "A plan is documented to address dependencies or potential blockers."
-        ]
-      },
-      {
-        "name": "Acceptance Criteria",
-        "checkList": [
-          "Acceptance criteria are defined to confirm the completion of the subtask.",
-          "The criteria are clear, actionable, and reviewed by the team."
-        ]
-      },
-      {
-        "name": "Effort Estimation",
-        "checkList": [
-          "The subtask has an estimated time or effort required for completion.",
-          "The estimate has been agreed upon and reviewed by the team."
-        ]
-      },
-      {
-        "name": "Documentation",
-        "checkList": [
-          "Relevant documentation, links, or references are attached if needed.",
-          "Any notes or updates related to the subtask are included for transparency."
-        ]
-      },
-      {
-        "name": "Progress Updates",
-        "checkList": [
-          "Regular progress updates are added to keep the team informed.",
-          "Any issues or challenges encountered are logged and addressed promptly."
-        ]
-      },
-      {
-        "name": "Review and Completion",
-        "checkList": [
-          "The completed subtask is reviewed to ensure it meets the acceptance criteria.",
-          "Feedback from the review is applied if changes are needed."
-        ]
-      },
-      {
-        "name": "Closure",
-        "checkList": [
-          "The subtask is marked as complete after verification by the assigned reviewer.",
-          "The parent task or user story is updated to reflect the progress or completion of the subtask."
-        ]
-      }
-    ]
-  },
-  "Quality Story": {
-    "title": "Quality Story",
-    "categories": [
-      {
-        "name": "Objective and Scope",
-        "checkList": [
-          "A clear objective for the quality story is documented, specifying the feature or functionality to be tested.",
-          "The scope of the quality story is defined, including what will be covered in testing and any specific areas of focus."
-        ]
-      },
-      {
-        "name": "Test Plan Creation",
-        "checkList": [
-          "A comprehensive test plan outlining the testing strategy and approach is created.",
-          "The test plan includes types of tests to be executed (e.g., functional, regression, performance)."
-        ]
-      },
-      {
-        "name": "Test Case Development",
-        "checkList": [
-          "Test cases are written for all new features or changes to be verified.",
-          "Each test case includes clear steps, expected results, and any prerequisites."
-        ]
-      },
-      {
-        "name": "Verification and Validation",
-        "checkList": [
-          "Testing is conducted to verify that the feature meets acceptance criteria.",
-          "Any issues or defects identified during testing are documented and communicated to the development team."
-        ]
-      },
-      {
-        "name": "Documentation of Testing Results",
-        "checkList": [
-          "Test results are documented, including pass/fail status for each test case.",
-          "Any discrepancies or additional findings are noted for review."
-        ]
-      },
-      {
-        "name": "Feature Documentation Review",
-        "checkList": [
-          "Feature documentation is created or updated to reflect the testing outcomes and any changes made.",
-          "Documentation is reviewed for accuracy and completeness."
-        ]
-      },
-      {
-        "name": "Stakeholder Communication",
-        "checkList": [
-          "Results and findings from the quality story are communicated to relevant stakeholders.",
-          "Any necessary follow-up actions or decisions are documented and tracked."
-        ]
-      },
-      {
-        "name": "Closure and Retrospective",
-        "checkList": [
-          "The quality story is marked as complete once all tests have been executed and documentation is finalized.",
-          "Lessons learned and feedback from the testing process are gathered for future improvement."
-        ]
-      },
-      {
-        "name": "Integration into Agile Backlog",
-        "checkList": [
-          "The quality story is included in the agile backlog, ensuring visibility and prioritization.",
-          "Quality engineers are assigned to the story to ensure accountability."
-        ]
+        ],
+        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
   }
