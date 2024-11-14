@@ -206,7 +206,7 @@ function veXReset() {
 
 function initView() {
   try {
-    veXHeaderTitleNode.innerText = veXCurrentTicketInfo.title;
+    veXHeaderTitleNode.innerText = "Done CheckList";
     initSidebarView();
     initCheckedItems();
     updateMainContentView(0);
@@ -443,10 +443,6 @@ function onTicketPhaseChange(mutation) {
   let newPhase = mutation.target.innerText;
   let reminderMessage = `Before moving to "${newPhase}" phase, please ensure the checklist for current phase is completed.`;
   veXHeaderTitleNode.innerText = reminderMessage;
-  setTimeout(() => {
-    veXHeaderTitleNode.innerText = veXCurrentTicketInfo.title;
-  }, 5000)
-  
   openVexDODPopup();
 }
 
@@ -463,7 +459,7 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
         notify(`Unable to find the Done checklist for '${veXCurrentTicketInfo.type}'`);
       }
       else if (isEmptyObject(veXCurrentTicketInfo))
-        notify("To access the 'Done checklist', please open a ticket")
+        notify("To see the 'Done checklist', please open a ticket")
       else
         notify("Something went wrong");
       break;

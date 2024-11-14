@@ -84,7 +84,7 @@
 
 .veX_header {
   display: flex;
-  justify-content: left;
+  justify-content: center;
   align-items: center;
   background-color: var(--veX-ticktColor);
 }
@@ -110,6 +110,8 @@
   background-color: var(--veX-successColor);
   transition: width 0.5s ease;
   margin-bottom: 5px;
+  background: white;
+  background: linear-gradient(90deg, white 0%, var(--veX-successColor) var(--veX-checkedItemsPercentage));
 }
 
 .veX_content_wrapper {
@@ -201,7 +203,7 @@
   padding: 10px;
 }
 
-.veX_ticket_phase_txt::after {
+/* .veX_ticket_phase_txt::after {
   content: "";
   position: absolute;
   transform: translateY(-50%);
@@ -212,7 +214,7 @@
   border-top: 5px solid #333;
   right: 13px;
   top: 53%;
-}
+} */
 
 .veX_dod_categories button {
   width: 100%;
