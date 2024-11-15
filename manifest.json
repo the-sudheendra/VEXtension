@@ -1,6 +1,6 @@
 {
   "name": "VE Xtension",
-  "description": "A Value Edege Chrome EXtension",
+  "description": "A browser extension that enhances the OpenText ValueEdge platform with additional features for teams.",
   "version": "1.0.0",
   "manifest_version": 3,
   "permissions": [
