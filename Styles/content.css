@@ -10,6 +10,9 @@
   --veX-common-fontSize: 14px;
   --veX-header-fontSize: 20px;
   --veX-common-borderRadius: 6px;
+  --veX-whiteColor: #FFFFFF;
+  --veX-blackColor: #000000;
+  --veX-fontColorForTicketColor: var(--veX-blackColor);
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -42,7 +45,7 @@
   cursor: pointer;
   width: 100%;
   text-align: left;
-  color: var(--veX-common-fontColor);
+  color: var(--veX-blackColor);
   cursor: pointer;
   display: inline-block;
   white-space: normal;
@@ -84,7 +87,7 @@
 
 .veX_header {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   background-color: var(--veX-ticktColor);
 }
@@ -96,7 +99,7 @@
   text-overflow: ellipsis;
   text-wrap-mode: nowrap;
   white-space-collapse: collapse;
-  color: white;
+  color: var(--veX-fontColorForTicketColor);
   padding: 5px;
   margin: 0px;
 }
@@ -110,8 +113,8 @@
   background-color: var(--veX-successColor);
   transition: width 0.5s ease;
   margin-bottom: 5px;
-  background: white;
-  background: linear-gradient(90deg, white 0%, var(--veX-successColor) var(--veX-checkedItemsPercentage));
+  background: var(--veX-whiteColor);
+  background: linear-gradient(90deg, var(--veX-whiteColor) 0%, var(--veX-successColor) var(--veX-checkedItemsPercentage));
 }
 
 .veX_content_wrapper {
@@ -153,7 +156,7 @@
   align-items: center;
 }
 
-.veX_all_ticket_phase {
+.veX_all_phases {
   display: none;
   display: flex;
   flex-direction: column;
@@ -271,7 +274,7 @@
 
 .veX_dod_list_container ul li.checked {
   background: var(--veX-successColor);
-  color: white;
+  color: var(--veX-whiteColor);
   text-decoration: line-through;
 }
 
@@ -319,7 +322,7 @@
 
 .veX_common_btn {
   background-color: var(--veX-ticktColor);
-  color: white;
+  color: var(--veX-fontColorForTicketColor);
   text-align: center;
   cursor: pointer;
   border-radius: var(--veX-common-borderRadius);

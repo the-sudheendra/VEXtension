@@ -3,6 +3,7 @@ var veXDODInfo = {};
 var veXCurrentTicketInfo = {};
 var veXCurrentTicketDOD = {};
 var veXCheckedItems = {};
+var veXPhaseMap = {};
 var veXTotalCheckedItems = 0;
 var veXTotalItems = 0;
 var veXPopUpNode = document.createElement("div");
@@ -17,6 +18,7 @@ var veXTicketTitleMutationObserver;
 var veXTicketPhaseTextNode;
 var veXDonePercentageNode;
 var veXTicketPhaseNode;
+var veXIsViewInitialised = false;
 var root = document.querySelector(':root');
 
 const veXEntityMetaData = {
@@ -86,20 +88,16 @@ var vexDODUI = `
     <div class="veX_sidebar">
         <div class="veX_sidebar_header">
             <div class="veX_ticket_phase">
-                <p class="veX_ticket_phase_txt"></p>
-                <div class="veX_all_ticket_phase">
-                    <div>New</div>
-                    <div>In Progress</div>
-                    <div>Done</div>
+                <p class="veX_ticket_phase_txt">Not Available</p>
+                <div class="veX_all_phases">
                 </div>
             </div>
-            <div class="veX_done_percentage">
-            </div>
+            <div class="veX_done_percentage">0%</div>
         </div>
-        <div class="veX_dod_categories"></div>
+        <div class="veX_dod_categories">No Item</div>
     </div>
     <div class="veX_main_content">
-        <div class="veX_dod_title"></div>
+        <div class="veX_dod_title">No Item</div>
         <div class="veX_dod_list_container">
             <ul class="veX_dod_list"></ul>
         </div>
@@ -112,7 +110,6 @@ var vexDODUI = `
 //<-veX Objects Declarations
 
 //->Initialising Mutation Observers
-
 function initTicketTitleMutationObserver() {
   let targetNode = document.head.querySelector('title');
   if (!targetNode) return;
@@ -145,15 +142,19 @@ function initTicketPhaseMutationObserver() {
 
 //->Utility Functions
 function veXSetup() {
-  veXPopUpNode.id = "veX-PopUp-Container";
-  veXPopUpOverlay.id = "veX-PopUp-Overlay";
-  veXPopUpNode.innerHTML = vexDODUI;
-  document.body.appendChild(veXPopUpNode);
-  document.body.appendChild(veXPopUpOverlay);
-  veXPopUpNode.querySelector(".veX_common_btn").addEventListener("click", addDoneListToComments);
-  veXPopUpOverlay.addEventListener("click", closeveXPopUp);
-  initTicketTitleMutationObserver();
-  initVEXNodes();
+  try {
+    veXPopUpNode.id = "veX-PopUp-Container";
+    veXPopUpOverlay.id = "veX-PopUp-Overlay";
+    veXPopUpNode.innerHTML = vexDODUI;
+    document.body.appendChild(veXPopUpNode);
+    document.body.appendChild(veXPopUpOverlay);
+    veXPopUpNode.querySelector(".veX_common_btn").addEventListener("click", addDoneListToComments);
+    veXPopUpOverlay.addEventListener("click", closeveXPopUp);
+    initTicketTitleMutationObserver();
+    initVEXNodes();
+  } catch (err) {
+    onError(err, "An error occurred during the VE Xtension setup.");
+  }
 }
 
 function initVEXNodes() {
@@ -180,13 +181,24 @@ function getCurrentTicketInfo(title) {
       type: veXEntityMetaData[ticketType].name,
       id: match[2],
       color: veXEntityMetaData[ticketType].colorHex,
-      title: title.slice(ticketArr[0].length + 1),
+      title: modifyTicketTitle(title.slice(ticketArr[0].length + 1)),
       phase: getCurrentTicketPhase()
     }
   }
   catch (err) {
-    onError(err);
-    throw err;
+    onError(err, "An error occurred while attempting to retrieve the current ticket information.");
+  }
+}
+
+function modifyTicketTitle(title) {
+  try {
+    if (title.endsWith("- Core Software Delivery Platform")) {
+      let x = "- Core Software Delivery Platform".length;
+      title = title.slice(0, -x);
+    }
+  }
+  finally {
+    return title;
   }
 }
 
@@ -201,102 +213,165 @@ function veXReset() {
     veXTicketPhaseMutationObserver = undefined;
   }
   root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
+  root.style.setProperty('--veX-fontColorForTicketColor', `#000000`);
   root.style.setProperty('--veX-ticktColor', `#fff`);
 }
 
 function initView() {
   try {
-    veXHeaderTitleNode.innerText = "Done CheckList";
-    initSidebarView();
-    initCheckedItems();
+    initHeaderView();
+    initSidebarHeaderView();
+    initCategoriesView();
     updateMainContentView(0);
     initStyle();
+    return true;
   }
   catch (err) {
-    onError(err, "Error while initiating view");
+    onError(err, "An error occurred while initiating the view.");
+    return false;
   }
+}
+
+function initHeaderView() {
+  veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
 }
 
 function initStyle() {
   root.style.setProperty('--veX-ticktColor', veXCurrentTicketInfo.color);
+  root.style.setProperty('--veX-fontColorForTicketColor', "#FFFFFF");
 }
 
-function initSidebarView() {
-  veXDonePercentageNode.innerText = "0%";
-  veXTicketPhaseTextNode.innerText = veXCurrentTicketInfo.phase;
-  veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
-  veXPopUpNode.querySelector(".veX_all_ticket_phase").style.display = "none";
-  initCategoriesView();
+function initSidebarHeaderView() {
+  try {
+    veXDonePercentageNode.innerHTML = "0%";
+    veXTicketPhaseTextNode.innerHTML = veXCurrentTicketInfo.phase;
+    veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
+    veXPopUpNode.querySelector(".veX_all_phases").style.display = "none";
+  }
+  catch (err) {
+    onError(err, "An error occurred while initializing the sidebar header view.");
+    throw err;
+  }
 }
 
 function initCategoriesView() {
   let index = 0;
-  let categories = veXCurrentTicketDOD.categories;
-  if (!categories && categories.length == 0) {
-    throw new Error("No Categories found in this ticket done definition");
-  };
   veXDODcategoriesNode.innerHTML = "";
-  categories.forEach(
-    (category) => {
-      let sideBarItemNode = document.createElement('button');
-      sideBarItemNode.className = "veX-Button";
-      sideBarItemNode.setAttribute('categoryIndex', index);
-      sideBarItemNode.addEventListener('click', (event) => {
-        updateMainContentView(event.target.getAttribute('categoryIndex'));
-      });
-      veXDODcategoriesNode.appendChild(sideBarItemNode);
-      sideBarItemNode.textContent = category.name;
-      index++;
-    }
-  );
+  try {
+    let categories = veXCurrentTicketDOD.categories;
+    if (isEmptyArray(categories)) {
+      veXDODcategoriesNode.innerHTML = "No Item";
+      return;
+    };
+    categories.forEach(
+      (category) => {
+        let phases = category["phases"];
+        if (!isEmptyArray(phases)) {
+          phases.forEach((phase) => {
+            if (phase in veXPhaseMap) {
+              veXPhaseMap[phase].push(index);
+            }
+            else {
+              veXPhaseMap[phase] = [];
+              veXPhaseMap[phase].push(index);
+            }
+          });
+        }
+        let sideBarItemNode = document.createElement('button');
+        sideBarItemNode.className = "veX-Button";
+        sideBarItemNode.setAttribute('categoryIndex', index);
+        sideBarItemNode.addEventListener('click', (event) => {
+          updateMainContentView(event.target.getAttribute('categoryIndex'));
+        });
+        veXDODcategoriesNode.appendChild(sideBarItemNode);
+        sideBarItemNode.textContent = category.name;
+        index++;
+      }
+    );
+  }
+  catch (err) {
+    onError(err, "An error occurred while initializing the categories view.");
+    throw err;
+  }
 }
 
 function updateMainContentView(categoryIndex) {
-  let currentCategory = veXCurrentTicketDOD.categories[categoryIndex];
-  veXCategoryTitleNode.innerText = currentCategory.name;
-  veXPopUpNode.querySelectorAll('.veX-Button').forEach((buttonNode) => {
-    buttonNode.classList.remove("veX-Active-Button");
-  });
-  veXSidebarParentNode.querySelector(`[categoryIndex="${categoryIndex}"]`).classList.add("veX-Active-Button");
-  updateList(currentCategory.checkList, categoryIndex);
+  try {
+    if (isEmptyArray(veXCurrentTicketDOD.categories)) {
+      veXCategoryTitleNode.innerHTML = "No Item";
+      veXChecklistParentNode.innerHTML = "No Item";
+      return;
+    }
+    let currentCategory = veXCurrentTicketDOD.categories[categoryIndex];
+    if (isEmptyObject(currentCategory)) {
+      veXCategoryTitleNode.innerHTML = "No Item";
+      veXChecklistParentNode.innerHTML = "No Item";
+      return;
+    }
+    veXCategoryTitleNode.innerHTML = currentCategory.name;
+    veXPopUpNode.querySelectorAll('.veX-Button').forEach((buttonNode) => {
+      buttonNode.classList.remove("veX-Active-Button");
+    });
+    veXSidebarParentNode.querySelector(`[categoryIndex="${categoryIndex}"]`).classList.add("veX-Active-Button");
+    updateCheckList(currentCategory.checkList, categoryIndex);
+  } catch (err) {
+    onError(err, "An error occurred while updating main content view.");
+  }
 }
 
-function updateList(checkList, categoryIndex) {
-  let currentCheckList = veXCheckedItems[categoryIndex];
+function updateCheckList(checkList, categoryIndex) {
   veXChecklistParentNode.innerHTML = "";
-  let index = 0;
-  checkList.forEach(
-    (itemValue) => {
-      let listItem = document.createElement('li');
-      listItem.setAttribute('listIndex', index);
-      listItem.setAttribute('categoryIndex', categoryIndex);
-      listItem.addEventListener('click', onListItemClick);
-      listItem.textContent = itemValue;
-      veXChecklistParentNode.appendChild(listItem);
-      if (currentCheckList[index] == 1) {
-        listItem.classList.add('checked');
-      }
-      index++;
+  try {
+    if (isEmptyArray(checkList)) {
+      return;
     }
-  )
+    let currentCheckList = veXCheckedItems[categoryIndex];
+    let index = 0;
+    checkList.forEach(
+      (itemValue) => {
+        let listItem = document.createElement('li');
+        listItem.setAttribute('listIndex', index);
+        listItem.setAttribute('categoryIndex', categoryIndex);
+        listItem.addEventListener('click', onListItemClick);
+        listItem.textContent = itemValue;
+        veXChecklistParentNode.appendChild(listItem);
+        if (currentCheckList[index] == 1) {
+          listItem.classList.add('checked');
+        }
+        index++;
+      }
+    );
+  } catch (err) {
+    onError(err, "An error occurred while updating checkList");
+  }
 }
 
 function initCheckedItems() {
   veXTotalItems = 0;
-  for (let i = 0; i < veXCurrentTicketDOD.categories.length; i++) {
-    veXCheckedItems[i] = [];
-    let curCategory = veXCurrentTicketDOD.categories[i];
-    for (let j = 0; j < curCategory.checkList.length; j++) {
-      veXCheckedItems[i][j] = 0;
-      veXTotalItems++;
+  veXCheckedItems = [];
+  try {
+    if (isEmptyArray(veXCurrentTicketDOD.categories)) {
+      notify("No category found.");
+      return;
     }
+    for (let i = 0; i < veXCurrentTicketDOD.categories.length; i++) {
+      veXCheckedItems[i] = [];
+      let curCategory = veXCurrentTicketDOD.categories[i];
+      if (isEmptyArray(curCategory.checkList)) return;
+      for (let j = 0; j < curCategory.checkList.length; j++) {
+        veXCheckedItems[i][j] = 0;
+        veXTotalItems++;
+      }
+    }
+  } catch (err) {
+    onError(err, "An error occurred while initializing the CheckedItems Array.")
   }
 }
 
 function addDoneListToComments() {
   try {
     if (veXTotalCheckedItems == 0) {
-      notify("To enable commenting, please mark at least one item as complete");
+      notify("To enable commenting, please mark at least one item as complete", true);
       return;
     }
     let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-label-commentsPanel']")
@@ -366,21 +441,26 @@ function draftCommentForCheckedItems() {
 }
 
 function isEmptyObject(obj) {
-  if (obj) {
-    return Object.keys(obj).length === 0;
-  }
-  return true;
+  return obj == null || (typeof obj === 'object' && Object.keys(obj).length === 0)
 }
 
-function notify(message) {
-  alert(message);
+function isEmptyArray(arr) {
+  return !Array.isArray(arr) || arr.length === 0;
+}
+
+function notify(message, display = false) {
+  let _message = `Message from veXtension:${message}`;
+  if (display == true) {
+    alert(message)
+  }
+  else {
+    console.info(_message);
+  }
 }
 
 function onError(error, info = "Something went wrong in veXtension.Check Logs for More Details", display = false) {
-  if (display) {
-    notify(info);
-  }
-  console.info("Error From veXtension: " + error);
+  notify(info, display);
+  console.dir(error);
 }
 
 function getCurrentTicketPhase() {
@@ -401,20 +481,25 @@ function openVexDODPopup() {
 }
 
 function onListItemClick(event) {
-  let catIndex = event.target.getAttribute('categoryIndex')
-  let listIndex = event.target.getAttribute('listIndex')
-  event.target.classList.toggle('checked');
-  if (event.target.classList.contains('checked')) {
-    veXCheckedItems[catIndex][listIndex] = 1;
-    veXTotalCheckedItems++;
+  try {
+    let catIndex = event.target.getAttribute('categoryIndex')
+    let listIndex = event.target.getAttribute('listIndex')
+    event.target.classList.toggle('checked');
+    if (event.target.classList.contains('checked')) {
+      veXCheckedItems[catIndex][listIndex] = 1;
+      veXTotalCheckedItems++;
+    }
+    else {
+      veXCheckedItems[catIndex][listIndex] = 0;
+      veXTotalCheckedItems--;
+    }
+    let donePercentage = ((veXTotalCheckedItems / veXTotalItems).toFixed(2) * 100).toFixed(0);
+    veXDonePercentageNode.innerHTML = `${donePercentage}%`;
+    root.style.setProperty('--veX-checkedItemsPercentage', `${donePercentage}%`);
+  } catch (err) {
+    onError(err, "An error occurred while processing the click event.")
   }
-  else {
-    veXCheckedItems[catIndex][listIndex] = 0;
-    veXTotalCheckedItems--;
-  }
-  let donePercentage = ((veXTotalCheckedItems / veXTotalItems).toFixed(2) * 100).toFixed(0);
-  veXDonePercentageNode.innerText = `${donePercentage}%`;
-  root.style.setProperty('--veX-checkedItemsPercentage', `${donePercentage}%`);
+
 }
 
 async function onTicketTitleChange(mutation) {
@@ -430,7 +515,8 @@ async function onTicketTitleChange(mutation) {
     }
     if (!isEmptyObject(veXCurrentTicketDOD)) {
       initTicketPhaseMutationObserver();
-      initView();
+      initCheckedItems();
+      veXIsViewInitialised = initView();
     }
   }
   catch (ex) {
@@ -442,12 +528,12 @@ function onTicketPhaseChange(mutation) {
   if (!mutation.target) return;
   let newPhase = mutation.target.innerText;
   let reminderMessage = `Before moving to "${newPhase}" phase, please ensure the checklist for current phase is completed.`;
-  veXHeaderTitleNode.innerText = reminderMessage;
+  veXHeaderTitleNode.innerHTML = reminderMessage;
   openVexDODPopup();
 }
 
 function OnTicketPhaseClick() {
-  veXPopUpNode.querySelector(".veX_all_ticket_phase").classList.toggle("show_all_phases");
+  veXPopUpNode.querySelector(".veX_all_phases").classList.toggle("show_all_phases");
 }
 
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {
@@ -456,18 +542,19 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
       if (!(isEmptyObject(veXCurrentTicketDOD) || isEmptyObject(veXCurrentTicketInfo)))
         openVexDODPopup();
       else if (!isEmptyObject(veXCurrentTicketInfo) && isEmptyObject(veXCurrentTicketDOD)) {
-        notify(`Unable to find the Done checklist for '${veXCurrentTicketInfo.type}'`);
+        notify(`Unable to find the Done checklist for '${veXCurrentTicketInfo.type}'`, true);
       }
       else if (isEmptyObject(veXCurrentTicketInfo))
-        notify("To see the 'Done checklist', please open a ticket")
+        notify("To see the 'Done checklist', please open a ticket", true)
+      else if (veXIsViewInitialised === false) {
+        notify("Something went wrong while initializing the view. Please check the logs for more details.", true)
+      }
       else
-        notify("Something went wrong");
+        notify("Something went wrong", true);
       break;
   }
 }
 
-
 //<-Event Handlers
-
 veXSetup();
 chrome.runtime.onMessage.addListener(handleMessagesFromServiceWorker);
