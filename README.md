@@ -1,5 +1,5 @@
 # VE Xtension
-A browser extension that enhances the OpenText ValueEdge platform experience with additional features for teams and Scrum Masters.
+A browser extension that enhances the OpenText ValueEdge platform with additional features for teams.
 
 ## Features
 - Displays relevant DoD items based on the currently opened ticket and its status.
