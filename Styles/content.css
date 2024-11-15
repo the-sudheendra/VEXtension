@@ -106,15 +106,26 @@
 
 
 .veX_done_status {
-  width: var(--veX-checkedItemsPercentage);
+  width:calc(var(--veX-checkedItemsPercentage) - 10px);
   height: 5px;
   position: relative;
-  overflow: hidden;
   background-color: var(--veX-successColor);
   transition: width 0.5s ease;
   margin-bottom: 5px;
   background: var(--veX-whiteColor);
   background: linear-gradient(90deg, var(--veX-whiteColor) 0%, var(--veX-successColor) var(--veX-checkedItemsPercentage));
+}
+.veX_done_status::after {
+  content: '🚀';
+  height: 10px;
+  width: 10px;
+  position: absolute;
+  right: -10px;
+  bottom: -2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotate(42deg);
 }
 
 .veX_content_wrapper {
