@@ -213,7 +213,7 @@ function veXReset() {
     veXTicketPhaseMutationObserver = undefined;
   }
   root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
-  root.style.setProperty('--veX-fontColorForTicketColor', `#000000`);
+  root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);
   root.style.setProperty('--veX-ticktColor', `#fff`);
 }
 
@@ -238,7 +238,7 @@ function initHeaderView() {
 
 function initStyle() {
   root.style.setProperty('--veX-ticktColor', veXCurrentTicketInfo.color);
-  root.style.setProperty('--veX-fontColorForTicketColor', "#FFFFFF");
+  root.style.setProperty('--veX-fontColorAgainstTicketColor', "#FFFFFF");
 }
 
 function initSidebarHeaderView() {

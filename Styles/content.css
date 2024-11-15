@@ -12,7 +12,7 @@
   --veX-common-borderRadius: 6px;
   --veX-whiteColor: #FFFFFF;
   --veX-blackColor: #000000;
-  --veX-fontColorForTicketColor: var(--veX-blackColor);
+  --veX-fontColorAgainstTicketColor: var(--veX-blackColor);
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -99,7 +99,7 @@
   text-overflow: ellipsis;
   text-wrap-mode: nowrap;
   white-space-collapse: collapse;
-  color: var(--veX-fontColorForTicketColor);
+  color: var(--veX-fontColorAgainstTicketColor);
   padding: 5px;
   margin: 0px;
 }
@@ -322,7 +322,7 @@
 
 .veX_common_btn {
   background-color: var(--veX-ticktColor);
-  color: var(--veX-fontColorForTicketColor);
+  color: var(--veX-fontColorAgainstTicketColor);
   text-align: center;
   cursor: pointer;
   border-radius: var(--veX-common-borderRadius);
