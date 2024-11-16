@@ -23,7 +23,7 @@
   ],
   "action": {
     "default_popup": "main.html",
-    "default_title": "A VE Xtension"
+    "default_title": "VE Xtension"
   },
   "background": {
     "service_worker": "./Scripts/background.js",
@@ -31,7 +31,12 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["definitions.json","alert-sound.mp3"],
+      "resources": ["definitions.json","alert-sound.mp3",
+      "Icons/fact_check_16.png",
+"Icons/fact_check_32.png",
+"Icons/fact_check_48.png",
+ "Icons/fact_check_128.png"
+    ],
       "matches": ["https://*/*"]
     }
   ],
@@ -40,5 +45,9 @@
     "32": "Icons/fact_check_32.png",
     "48": "Icons/fact_check_48.png",
     "128": "Icons/fact_check_128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
   }
 }

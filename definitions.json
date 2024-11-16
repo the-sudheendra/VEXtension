@@ -59,10 +59,6 @@
           "Reproduce the issue",
           "Gather logs and screenshots",
           "Determine root cause",
-          "Document findings",
-          "Reproduce the issue",
-          "Gather logs and screenshots",
-          "Determine root cause",
           "Document findings"
         ],
         "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]

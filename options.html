@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Definition of Done</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+        }
+
+        p {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 20px;
+        }
+
+        .veX_container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 2px solid #dcdedf;
+            border-radius: 6px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -70%);
+            width: 80%;
+
+        }
+
+        .veX_file_upload {
+            margin-bottom: 20px;
+        }
+
+        .veX_file_upload label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .veX_file_upload input[type="file"] {
+            padding: 10px;
+            border: 2px dashed #dcdedf;
+            border-radius: 6px;
+        }
+
+        .veX_submit_btn {
+            display: block;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .veX_submit_btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="veX_container">
+        <p>Definition Of Done (DoD)</p>
+        <div class="veX_file_upload">
+            <label for="veX_dod_file">Choose a JSON file:</label>
+            <input type="file" id="veX_dod_file" name="veX_dod_file" accept=".json" required>
+        </div>
+    </div>
+    <script src="./Scripts/options.js"></script>
+</body>
+</html>

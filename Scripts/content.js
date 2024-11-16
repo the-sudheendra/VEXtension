@@ -81,6 +81,9 @@ const veXEntityMetaData = {
 
 var vexDODUI = `
 <header class="veX_header veX_banner">
+    <div class="veX_logo_container">
+        <img class="veX_logo" alt="veX-Logo">
+    </div>
     <p class="veX_header_title"></p>
 </header>
 <div class="veX_done_status"></div>
@@ -232,7 +235,9 @@ function initView() {
   }
 }
 
-function initHeaderView() {
+async function initHeaderView() {
+
+  veXPopUpNode.querySelector('.veX_logo').src = await chrome.runtime.getURL("Icons/fact_check_48.png");
   veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
 }
 
