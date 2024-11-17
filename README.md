@@ -28,7 +28,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 
 
 
-```http
+```
   categories
 ```
 
@@ -42,11 +42,11 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 ## Example DoD
 
 ```JSON
+{
 "Defect": {
     "title": "Defect",
     "categories": [
       {
-        
         "name": "Investigation",
         "checkList": [
           "Reproduce the issue",
@@ -65,4 +65,29 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
         ]
       }
     ]
+},
+"Spike": {
+    "title": "Spike",
+    "categories": [
+      {
+        "name": "Exploration",
+        "checkList": [
+          "Identify technical questions",
+          "Review relevant documentation",
+          "Build simple prototype",
+          "Evaluate technical feasibility"
+        ]
+      },
+      {
+        "name": "Conclusion",
+        "checkList": [
+          "Summarize findings",
+          "Present results to the team",
+          "Document next steps",
+          "Archive research notes"
+        ]
+      }
+    ]
+  }
+}
 ```
