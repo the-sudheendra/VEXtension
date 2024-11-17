@@ -550,10 +550,10 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
       if (!(isEmptyObject(veXCurrentTicketDOD) || isEmptyObject(veXCurrentTicketInfo)))
         openVexPopup();
       else if (!isEmptyObject(veXCurrentTicketInfo) && isEmptyObject(veXCurrentTicketDOD)) {
-        notify(`Unable to find the Done checklist for '${veXCurrentTicketInfo.type}'`, true);
+        notify(`Unable to find the DoD checklist for '${veXCurrentTicketInfo.type}'`, true);
       }
       else if (isEmptyObject(veXCurrentTicketInfo))
-        notify("To see the 'Done checklist', please open a ticket", true)
+        notify("To see the 'DoD checklist', please open a ticket", true)
       else if (veXIsViewInitialised === false) {
         notify("Something went wrong while initializing the view. Please check the logs for more details.", true)
       }
