@@ -1,5 +1,6 @@
 
 const fileInput = document.getElementById('veX_dod_file');
+const validVETickets=["Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Task"];
 
 function isEmptyObject(obj) {
     return obj == null || (typeof obj === 'object' && Object.keys(obj).length === 0)
@@ -56,6 +57,12 @@ function validateDoD(veXDODInfo) {
         let entityDOD = veXDODInfo[ticketEntityName];
         if (isEmptyObject(entityDOD)) {
             notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, true);
+            return false;
+        }
+        
+        if(!validVETickets.some(item => item === ticketEntityName))
+        {
+            notify(`The '${ticketEntityName}' is not a valid Edge Ticket value. Please enter a valid ticket name.`, true);
             return false;
         }
         if (!entityDOD.hasOwnProperty("title")) {

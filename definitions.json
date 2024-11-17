@@ -164,30 +164,5 @@
         "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
       }
     ]
-  },
-  "Documentation": {
-    "title": "Documentation",
-    "categories": [
-      {
-        "name": "Preparation",
-        "checkList": [
-          "Identify documentation goals",
-          "Gather necessary resources",
-          "Set documentation standards",
-          "Outline key topics"
-        ],
-        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
-      },
-      {
-        "name": "Writing and Review",
-        "checkList": [
-          "Draft initial documentation",
-          "Conduct peer review",
-          "Revise based on feedback",
-          "Publish final version"
-        ],
-        "Applicable Phases":["New","Ready","In Progress","Code Review","Implemented","In Testing","Tested","Done","Cancelled"]
-      }
-    ]
   }
 }
