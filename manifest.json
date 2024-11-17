@@ -14,10 +14,7 @@
   "content_scripts": [
     {
       "matches": ["https://ot-internal.saas.microfocus.com/*"],
-      "js": [
-        "./Scripts/content.js",
-        "./Scripts/utility.js"
-      ],
+      "js": ["./Scripts/content.js"],
       "css": ["./Styles/content.css"]
     }
   ],
@@ -31,14 +28,16 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["definitions.json","alert-sound.mp3",
-      "Icons/fact_check_16.png",
-"Icons/fact_check_32.png",
-"Icons/fact_check_48.png",
- "Icons/fact_check_128.png",
- "Icons/fact_check_48_FFFFFF.png"
-    ],
-      "matches": ["https://*/*"]
+      "resources": [
+        "definitions.json",
+        "alert-sound.mp3",
+        "Icons/fact_check_16.png",
+        "Icons/fact_check_32.png",
+        "Icons/fact_check_48.png",
+        "Icons/fact_check_128.png",
+        "Icons/fact_check_48_FFFFFF.png"
+      ],
+      "matches": ["https://ot-internal.saas.microfocus.com/*"]
     }
   ],
   "icons": {
