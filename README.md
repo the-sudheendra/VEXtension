@@ -13,4 +13,4 @@ A browser extension that enhances the OpenText ValueEdge platform with additiona
 ## How to Upload a DoD File
 Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (must be in JSON format).
 
-![alt text](Optionpage.png)
+![Screenshot for optionpage](Screenshots/Optionpage.png)
