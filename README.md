@@ -12,7 +12,7 @@ A browser extension that enhances the OpenText ValueEdge platform with additiona
 
 ## How to Upload a Definition of Done (DoD) File:
 Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the required schema).
-![Screenshot for optionpage](Screenshots/Optionpage.png)
+![Screenshot for optionpage](Screenshots/OptionPage.png)
 
 ## Definition of Done (DoD) Schema 
 
@@ -36,7 +36,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 | :-------- | :------- | :-------------------------------- |
 | `categories`      | `array` | **Required** A list of categories for the entity, each containing specific checklists (*required*).categories |
 
-#### Please note that the schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
+#### **Please note** that the schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 
 
 ## Example DoD
