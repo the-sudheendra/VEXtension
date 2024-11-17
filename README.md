@@ -1,5 +1,5 @@
 # VE Xtension
-A browser extension that enhances the OpenText ValueEdge platform with additional features for teams.
+A browser extension that enhances the [OpenText](https://www.opentext.com/) [ValueEdge](https://admhelp.microfocus.com/octane/en/16.0.100-16.0.400/Online/Content/GetStarted/valueedge-intro-1.htm) platform with additional features for teams.
 
 ## Features
 - Displays relevant DoD checkList based on the currently opened ticket and its status.
