@@ -35,7 +35,8 @@
       "Icons/fact_check_16.png",
 "Icons/fact_check_32.png",
 "Icons/fact_check_48.png",
- "Icons/fact_check_128.png"
+ "Icons/fact_check_128.png",
+ "Icons/fact_check_48_FFFFFF.png"
     ],
       "matches": ["https://*/*"]
     }

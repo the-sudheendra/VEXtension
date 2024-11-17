@@ -63,18 +63,21 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -60%);
   z-index: 99999;
   width: 70%;
+  transform: translate(-50%, -60%);
+  transition: opacity 0.5s ease, transform 0.5s ease;
   border-radius: var(--veX-common-borderRadius);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-  visibility: hidden;
-  transition: opacity 0.5s ease, transform 0.5s ease;
   border: 2px solid var(--veX-ticktColor);
   background-color: var(--veX-common-backgroundColor);
-  opacity: 0;
 }
-
+.veX_pop_deactive
+{
+  opacity: 0 !important;
+  transform: translate(-50%, -60%) !important;
+  visibility: hidden !important;
+}
 .veX_pop_active {
   opacity: 1 !important;
   transform: translate(-50%, -50%) !important;

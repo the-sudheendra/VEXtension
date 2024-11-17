@@ -18,7 +18,7 @@ async function handleMessages(request, sender, sendResponse) {
 function onContextMenuClick(info, tab) {
   if (info.menuItemId === "veXDoneCheckListMenu") {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, "openVexDODPopup");
+      chrome.tabs.sendMessage(tabs[0].id, "openVexPopup");
     });
   }
 }

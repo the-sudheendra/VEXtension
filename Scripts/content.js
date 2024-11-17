@@ -147,6 +147,7 @@ function initTicketPhaseMutationObserver() {
 function veXSetup() {
   try {
     veXPopUpNode.id = "veX-PopUp-Container";
+    veXPopUpNode.classList.add("veX_pop_deactive");
     veXPopUpOverlay.id = "veX-PopUp-Overlay";
     veXPopUpNode.innerHTML = vexDODUI;
     document.body.appendChild(veXPopUpNode);
@@ -237,7 +238,7 @@ function initView() {
 
 async function initHeaderView() {
 
-  veXPopUpNode.querySelector('.veX_logo').src = await chrome.runtime.getURL("Icons/fact_check_48.png");
+  veXPopUpNode.querySelector('.veX_logo').src = await chrome.runtime.getURL("Icons/fact_check_48_FFFFFF.png");
   veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
 }
 
@@ -478,11 +479,13 @@ function getCurrentTicketPhase() {
 function closeveXPopUp() {
   veXPopUpOverlay.style.visibility = "hidden";
   veXPopUpNode.classList.remove("veX_pop_active");
+  veXPopUpNode.classList.add("veX_pop_deactive");
 }
 
-function openVexDODPopup() {
+function openVexPopup() {
   veXPopUpOverlay.style.visibility = "visible";
   veXPopUpNode.classList.add("veX_pop_active");
+  veXPopUpNode.classList.remove("veX_pop_deactive");
 }
 
 function onListItemClick(event) {
@@ -534,7 +537,7 @@ function onTicketPhaseChange(mutation) {
   let newPhase = mutation.target.innerText;
   let reminderMessage = `Before moving to "${newPhase}" phase, please ensure the checklist for current phase is completed.`;
   veXHeaderTitleNode.innerHTML = reminderMessage;
-  openVexDODPopup();
+  openVexPopup();
 }
 
 function OnTicketPhaseClick() {
@@ -543,9 +546,9 @@ function OnTicketPhaseClick() {
 
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   switch (request) {
-    case "openVexDODPopup":
+    case "openVexPopup":
       if (!(isEmptyObject(veXCurrentTicketDOD) || isEmptyObject(veXCurrentTicketInfo)))
-        openVexDODPopup();
+        openVexPopup();
       else if (!isEmptyObject(veXCurrentTicketInfo) && isEmptyObject(veXCurrentTicketDOD)) {
         notify(`Unable to find the Done checklist for '${veXCurrentTicketInfo.type}'`, true);
       }
