@@ -23,32 +23,42 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 
 ![Screenshot for optionpage](Screenshots/OptionPage.png)
 
-## Definition of Done (DoD) Schema 
-
-### Keys
-
+## Ticket Entity Schema 
+```json
+{
+  "<entityName>": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "The title representing the type of ticket (e.g., Defect, Epic)"
+      },
+      "categories": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the category."
+            },
+            "checkList": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "description": "An individual checklist item."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 ```
-  entityName
-```
+#### Supported Entity Types: `"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Task"`
 
-| Key | Type     | Description                | Supported Entity Types|
-| :-------- | :------- | :------------------------- |:------------------------- |
-| `entityName` | `string` | **Required** .The name of the entity associated with the DoD Example: "User Story", "Spike"  | `"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Task"`
-
-
-
-```
-  categories
-```
-
-| Key | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `categories`      | `array` | **Required** A list of categories for the entity, each containing specific checklists (*required*).categories |
-
-#### **Please note** that the schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
-
-
-## Sample DoD
+## Example DoD Json
 
 ```JSON
 {
@@ -100,3 +110,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
   }
 }
 ```
+#### Please note that the schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
+
+
+
