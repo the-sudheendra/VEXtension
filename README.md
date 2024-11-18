@@ -15,9 +15,11 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) [Val
 * Right-click anywhere on the page.
 * In the context menu, you will see an option called "DoD Checklist".
 
-![Screenshot for DoDcheckList](Screenshots/DoDCheckList.png)
+![Screenshot for DoDcheckList](Screenshots/DoDCheckListContextMenu.png)
 > Click on "DoD Checklist" to open a pop-up displaying the Done Checklist for the ticket.
 
+![Screenshot for DoDcheckList](Screenshots/DoDChecklist.png)
+> DoD CheckList
 ## How to Upload a Definition of Done (DoD) File:
 ![Screenshot for optionpage](Screenshots/OptionPage.png)
 
