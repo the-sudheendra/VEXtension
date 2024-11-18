@@ -1,6 +1,6 @@
 
 const fileInput = document.getElementById('veX_dod_file');
-const validVETickets=["Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Task"];
+const validVETickets=["Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"];
 
 function isEmptyObject(obj) {
     return obj == null || (typeof obj === 'object' && Object.keys(obj).length === 0)
