@@ -2,7 +2,7 @@
 A browser extension that enhances the [OpenText](https://www.opentext.com/) ValueEdge platform with additional features.
 
 ## Features
-- Displays relevant DoD checkList based on the currently opened ticket and its status.
+- Displays relevant Definition of Done (DoD) checkList based on the currently opened ticket and its status.
 
 - Reminds users to review and complete DoD checkList when changing ticket phases.
 
@@ -19,8 +19,8 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
 > Click on "DoD Checklist" to open a pop-up displaying the Done Checklist for the ticket.
 
 ![Screenshot for DoDcheckList](Screenshots/DoDCheckList.png)
-> DoD CheckList
-## How to Upload a Definition of Done (DoD) File:
+> Example DoD CheckList
+## How to Upload Definition of Done (DoD) File:
 ![Screenshot for optionpage](Screenshots/OptionPage.png)
 
 > Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
