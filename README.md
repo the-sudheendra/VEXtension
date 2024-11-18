@@ -1,5 +1,5 @@
 # VE Xtension
-A browser extension that enhances the [OpenText](https://www.opentext.com/) [ValueEdge](https://admhelp.microfocus.com/octane/en/16.0.100-16.0.400/Online/Content/GetStarted/valueedge-intro-1.htm) platform with additional features.
+A browser extension that enhances the [OpenText](https://www.opentext.com/) ValueEdge platform with additional features.
 
 ## Features
 - Displays relevant DoD checkList based on the currently opened ticket and its status.
@@ -18,7 +18,7 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) [Val
 ![Screenshot for DoDcheckList](Screenshots/DoDCheckListContextMenu.png)
 > Click on "DoD Checklist" to open a pop-up displaying the Done Checklist for the ticket.
 
-![Screenshot for DoDcheckList](Screenshots/DoDChecklist.png)
+![Screenshot for DoDcheckList](Screenshots/DoDCheckList.png)
 > DoD CheckList
 ## How to Upload a Definition of Done (DoD) File:
 ![Screenshot for optionpage](Screenshots/OptionPage.png)
