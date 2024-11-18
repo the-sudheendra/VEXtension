@@ -19,7 +19,7 @@
     }
   ],
   "action": {
-    "default_popup": "main.html",
+    "default_popup": "./Views/popup.html",
     "default_title": "VE Xtension"
   },
   "background": {
@@ -29,8 +29,6 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "definitions.json",
-        "alert-sound.mp3",
         "Icons/fact_check_16.png",
         "Icons/fact_check_32.png",
         "Icons/fact_check_48.png",
@@ -47,7 +45,7 @@
     "128": "Icons/fact_check_128.png"
   },
   "options_ui": {
-    "page": "options.html",
+    "page": "./Views/options.html",
     "open_in_tab": true
   }
 }
