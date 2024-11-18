@@ -13,15 +13,15 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) [Val
 ## How to Use the Extension
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
-* In the context menu, you will see an option called "DoD Checklist."
-* Click on "DoD Checklist" to open a pop-up displaying the Done Checklist for the ticket.
+* In the context menu, you will see an option called "DoD Checklist".
 
 ![Screenshot for DoDcheckList](Screenshots/DoDCheckList.png)
+> Click on "DoD Checklist" to open a pop-up displaying the Done Checklist for the ticket.
 
 ## How to Upload a Definition of Done (DoD) File:
-Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema).
-
 ![Screenshot for optionpage](Screenshots/OptionPage.png)
+
+> Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
 
 ## Ticket Entity Schema 
 ```json
@@ -56,7 +56,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
   }
 }
 ```
-#### Supported Entity Types: `"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Task"`
+**Supported Entity Types:** ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
 
 ## Example DoD Json
 
