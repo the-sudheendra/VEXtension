@@ -1,24 +1,24 @@
 # VE Xtension
-A browser extension that enhances the [OpenText](https://www.opentext.com/) [ValueEdge](https://admhelp.microfocus.com/octane/en/16.0.100-16.0.400/Online/Content/GetStarted/valueedge-intro-1.htm) platform with additional features.
+A browser extension that enhances the [OpenText](https://www.opentext.com/) ValueEdge platform with additional features.
 
 ## Features
-- Displays relevant DoD checkList based on the currently opened ticket and its status.
+- Displays relevant Definition of Done (DoD) checkList based on the currently opened ticket and its status.
 
 - Reminds users to review and complete DoD checkList when changing ticket phases.
 
 - Allows users to add completed DoD checkList in comments to track and maintain a record of the completion status for each DoD item.
-
-- Currently available exclusively for Google Chrome. Plans for support of additional browsers in future releases
 
 ## How to Use the Extension
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
 * In the context menu, you will see an option called "DoD Checklist".
 
-![Screenshot for DoDcheckList](Screenshots/DoDCheckList.png)
+![Screenshot for DoDcheckList](Screenshots/DoDCheckListContextMenu.png)
 > Click on "DoD Checklist" to open a pop-up displaying the Done Checklist for the ticket.
 
-## How to Upload a Definition of Done (DoD) File:
+![Screenshot for DoDcheckList](Screenshots/DoDCheckList.png)
+> Example DoD CheckList
+## How to Upload Definition of Done (DoD) File:
 ![Screenshot for optionpage](Screenshots/OptionPage.png)
 
 > Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
@@ -110,7 +110,9 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) [Val
   }
 }
 ```
-#### Please note that the schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
+#### Please note:
+- The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
+- Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
 
 
 
