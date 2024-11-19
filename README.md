@@ -8,8 +8,6 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
 
 - Allows users to add completed DoD checkList in comments to track and maintain a record of the completion status for each DoD item.
 
-- Currently available exclusively for Google Chrome. Plans for support of additional browsers in future releases
-
 ## How to Use the Extension
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
@@ -112,7 +110,9 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
   }
 }
 ```
-#### Please note that the schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
+#### Please note:
+- The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
+- Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
 
 
 
