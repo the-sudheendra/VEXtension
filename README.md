@@ -23,7 +23,8 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 ![Screenshot for Upload Checklist](screenshots/UploadChecklist.png)
 > Upload CheckList
 
-## Ticket Entity Schema 
+## Ticket Entity Schema
+
 ```json
 {
   "<entityName>": {
@@ -56,7 +57,8 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
   }
 }
 ```
-**Supported Entity Types:** ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
+**Supported Entity Types**
+ ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
 
 ## Example JSON File
 
@@ -111,7 +113,8 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 }
 ```
 
-## Contributing
+## Contributing 🤝
+
 We welcome contributions from everyone! Here's how you can get involved:
 
 - **Report Issues**: Encounter a bug? Have a feature request? Open an issue on our GitHub repository to let us know.
@@ -120,6 +123,7 @@ We welcome contributions from everyone! Here's how you can get involved:
 - **Enhance Documentation**: Improve our documentation by fixing errors, adding clarity, or creating new guides. Submit a pull request to our documentation repository.
 - **Share Sample Checklists**: Contribute sample checklists to our repository to help others.
 
-### Please note:
+### Please note ⚠️
+
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
