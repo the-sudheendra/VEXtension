@@ -1,5 +1,5 @@
 # VE Checklist
-The Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
+Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 
 ## Features
 - Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) checkList based on the currently opened ticket and its status.
@@ -15,6 +15,7 @@ The Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
 ![Screenshot for DoDcheckList](screenshots/DoDCheckList.png)
+
 > Example DoD CheckList
 **Upload Checklist**:
 
