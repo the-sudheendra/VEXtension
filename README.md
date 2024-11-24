@@ -15,11 +15,12 @@ Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
 ![Screenshot for DoDcheckList](screenshots/DoDChecklist.png)
-
-> Example DoD CheckList
+> DoD CheckList
 **Upload Checklist**:
 
 Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
+![Screenshot for Upload Checklist](screenshots/UploadChecklist.png)
+> Upload CheckList
 
 ## Ticket Entity Schema 
 ```json
