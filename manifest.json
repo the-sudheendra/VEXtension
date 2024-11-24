@@ -1,51 +1,55 @@
 {
-  "name": "VE Xtension",
-  "description": "A browser extension that enhances the OpenText ValueEdge.",
+  "name": "VE Checklist",
+  "description": "The Checklist Tool for OpenText ValueEdge",
   "version": "1.0.0",
   "manifest_version": 3,
   "permissions": [
-    "webNavigation",
-    "activeTab",
-    "scripting",
     "contextMenus",
-    "tabs",
     "storage"
   ],
   "content_scripts": [
     {
       "matches": ["https://ot-internal.saas.microfocus.com/*"],
-      "js": ["./Scripts/content.js"],
-      "css": ["./Styles/content.css"]
+      "js": ["./src/DoD/DoD.js"],
+      "css": ["./src/DoD/DoD.css", "./src/Notification/Notification.css"]
     }
   ],
   "action": {
-    "default_popup": "./Views/popup.html",
-    "default_title": "VE Xtension"
+    "default_popup": "./src/Popup/popup.html",
+    "default_title": "Fulfill"
   },
   "background": {
-    "service_worker": "./Scripts/background.js",
+    "service_worker": "./src/Utility/background.js",
     "type": "module"
   },
   "web_accessible_resources": [
     {
       "resources": [
-        "Icons/fact_check_16.png",
-        "Icons/fact_check_32.png",
-        "Icons/fact_check_48.png",
-        "Icons/fact_check_128.png",
-        "Icons/fact_check_48_FFFFFF.png"
+        "icons/fact_check_16.png",
+        "icons/fact_check_32.png",
+        "icons/fact_check_48.png",
+        "icons/fact_check_128.png",
+        "icons/fact_check_48_FFFFFF.png",
+        "src/DoD/DoD.js",
+        "src/Options/options.js",
+        "src/Utility/util.js",
+        "src/Notification/Notification.js",
+        "icons/check_circle_24.png",
+        "icons/error_24.png",
+        "icons/info_24.png",
+        "icons/warning_24.png"
       ],
       "matches": ["https://ot-internal.saas.microfocus.com/*"]
     }
   ],
   "icons": {
-    "16": "Icons/fact_check_16.png",
-    "32": "Icons/fact_check_32.png",
-    "48": "Icons/fact_check_48.png",
-    "128": "Icons/fact_check_128.png"
+    "16": "icons/fact_check_16.png",
+    "32": "icons/fact_check_32.png",
+    "48": "icons/fact_check_48.png",
+    "128": "icons/fact_check_128.png"
   },
   "options_ui": {
-    "page": "./Views/options.html",
+    "page": "./src/Options/options.html",
     "open_in_tab": true
   }
 }

@@ -1,0 +1,55 @@
+@import url("../Utility/common.css");
+
+body
+{
+    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(34,116,181,1) 75%);
+}
+.veX_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    width: 600px;
+    height: 300px;
+    margin: 0 auto;
+    border: 2px solid rgba(34,116,181,1);
+    border-radius: 6px;
+    position: fixed;
+    left: 30%;
+    top: 30%;
+    padding: 40px;
+    background: var(--veX-common-backgroundColor);
+}
+.veX_container p{
+    font-size: xx-large;
+} 
+.veX_file_upload {
+    margin-bottom: 20px;
+    font-size: large;
+}
+
+.veX_file_upload label {
+    display: block;
+    font-weight: bold;
+    font-size: var(--veX-common-fontSize);
+    margin-bottom: 5px;
+}
+
+.veX_file_upload input[type="file"] {
+    padding: 10px;
+    border: 2px dashed var(--veX-borderColor);
+    border-radius: var(--veX-common-borderRadius);
+}
+
+.veX_submit_btn {
+    display: block;
+    padding: 10px;
+    background-color: var(--veX-common-backgroundColor);
+    color: var(--veX-common-fontColor);
+    border: none;
+    border-radius: var(--veX-common-borderRadius);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: medium;
+    background-color: var(--vex-hoverColor);
+}

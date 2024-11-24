@@ -1,4 +1,4 @@
-//->veX Objects Declarations
+//-->veX Objects Declarations
 var veXDODInfo = {};
 var veXCurrentTicketInfo = {};
 var veXCurrentTicketDOD = {};
@@ -18,9 +18,14 @@ var veXTicketTitleMutationObserver;
 var veXTicketPhaseTextNode;
 var veXDonePercentageNode;
 var veXTicketPhaseNode;
+var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var root = document.querySelector(':root');
-
+var utilAPI;
+(async () => {
+  const utilURL = chrome.runtime.getURL("src/Utility/util.js");
+  utilAPI = await import(utilURL);
+})();
 const veXEntityMetaData = {
   'E':
   {
@@ -82,7 +87,7 @@ const veXEntityMetaData = {
 var vexDODUI = `
 <header class="veX_header veX_banner">
     <div class="veX_logo_container">
-        <img class="veX_logo" alt="veX-Logo">
+        <img class="veX_logo" alt="Logo">
     </div>
     <p class="veX_header_title"></p>
 </header>
@@ -110,21 +115,26 @@ var vexDODUI = `
     <button class="veX_common_btn">Leave a Comment</button>
 </div>
 `;
-//<-veX Objects Declarations
+//<-- veX Objects Declarations
 
-//->Initialising Mutation Observers
+//->Initialising Mutation Observers to notify whenever DOM changes.
 function initTicketTitleMutationObserver() {
-  let targetNode = document.head.querySelector('title');
-  if (!targetNode) return;
-  let options = { attributes: true, childList: true, subtree: true };
-  veXTicketTitleMutationObserver = new MutationObserver(
-    (mutationList, observer) => {
-      for (const mutation of mutationList) {
-        onTicketTitleChange(mutation);
+  try {
+    let targetNode = document.head.querySelector('title');
+    if (!targetNode) return;
+    let options = { attributes: true, childList: true, subtree: true };
+    veXTicketTitleMutationObserver = new MutationObserver(
+      (mutationList, observer) => {
+        for (const mutation of mutationList) {
+          onTicketTitleChange(mutation);
+        }
       }
-    }
-  );
-  veXTicketTitleMutationObserver.observe(targetNode, options);
+    );
+    veXTicketTitleMutationObserver.observe(targetNode, options);
+  }
+  catch (err) {
+    utilAPI.onError(err, "An error occurred during the setup.");
+  }
 }
 
 function initTicketPhaseMutationObserver() {
@@ -157,7 +167,7 @@ function veXSetup() {
     initTicketTitleMutationObserver();
     initVEXNodes();
   } catch (err) {
-    onError(err, "An error occurred during the VE Xtension setup.");
+    utilAPI.onError(err, "An error occurred during the setup.");
   }
 }
 
@@ -190,7 +200,7 @@ function getCurrentTicketInfo(title) {
     }
   }
   catch (err) {
-    onError(err, "An error occurred while attempting to retrieve the current ticket information.");
+    utilAPI.onError(err, "An error occurred while attempting to retrieve the current ticket information.");
   }
 }
 
@@ -231,15 +241,20 @@ function initView() {
     return true;
   }
   catch (err) {
-    onError(err, "An error occurred while initiating the view.");
+    utilAPI.onError(err, "An error occurred while initiating the view.");
     return false;
   }
 }
 
 async function initHeaderView() {
-
-  veXPopUpNode.querySelector('.veX_logo').src = await chrome.runtime.getURL("Icons/fact_check_48_FFFFFF.png");
-  veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
+  try {
+    veXPopUpNode.querySelector('.veX_logo').src = await chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png");
+    veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
+  }
+  catch (err) {
+    utilAPI.onError(err, "An error occurred while initializing the header view.");
+    throw err;
+  }
 }
 
 function initStyle() {
@@ -255,7 +270,7 @@ function initSidebarHeaderView() {
     veXPopUpNode.querySelector(".veX_all_phases").style.display = "none";
   }
   catch (err) {
-    onError(err, "An error occurred while initializing the sidebar header view.");
+    utilAPI.onError(err, "An error occurred while initializing the sidebar header view.");
     throw err;
   }
 }
@@ -265,14 +280,14 @@ function initCategoriesView() {
   veXDODcategoriesNode.innerHTML = "";
   try {
     let categories = veXCurrentTicketDOD.categories;
-    if (isEmptyArray(categories)) {
+    if (utilAPI.isEmptyArray(categories)) {
       veXDODcategoriesNode.innerHTML = "No Item";
       return;
     };
     categories.forEach(
       (category) => {
         let phases = category["phases"];
-        if (!isEmptyArray(phases)) {
+        if (!utilAPI.isEmptyArray(phases)) {
           phases.forEach((phase) => {
             if (phase in veXPhaseMap) {
               veXPhaseMap[phase].push(index);
@@ -296,20 +311,20 @@ function initCategoriesView() {
     );
   }
   catch (err) {
-    onError(err, "An error occurred while initializing the categories view.");
+    utilAPI.onError(err, "An error occurred while initializing the categories view.");
     throw err;
   }
 }
 
 function updateMainContentView(categoryIndex) {
   try {
-    if (isEmptyArray(veXCurrentTicketDOD.categories)) {
+    if (utilAPI.isEmptyArray(veXCurrentTicketDOD.categories)) {
       veXCategoryTitleNode.innerHTML = "No Item";
       veXChecklistParentNode.innerHTML = "No Item";
       return;
     }
     let currentCategory = veXCurrentTicketDOD.categories[categoryIndex];
-    if (isEmptyObject(currentCategory)) {
+    if (utilAPI.isEmptyObject(currentCategory)) {
       veXCategoryTitleNode.innerHTML = "No Item";
       veXChecklistParentNode.innerHTML = "No Item";
       return;
@@ -319,16 +334,16 @@ function updateMainContentView(categoryIndex) {
       buttonNode.classList.remove("veX-Active-Button");
     });
     veXSidebarParentNode.querySelector(`[categoryIndex="${categoryIndex}"]`).classList.add("veX-Active-Button");
-    updateCheckList(currentCategory.checkList, categoryIndex);
+    updateCheckList(currentCategory.checklist, categoryIndex);
   } catch (err) {
-    onError(err, "An error occurred while updating main content view.");
+    utilAPI.onError(err, "An error occurred while updating main content view.", true);
   }
 }
 
 function updateCheckList(checkList, categoryIndex) {
   veXChecklistParentNode.innerHTML = "";
   try {
-    if (isEmptyArray(checkList)) {
+    if (utilAPI.isEmptyArray(checkList)) {
       return;
     }
     let currentCheckList = veXCheckedItems[categoryIndex];
@@ -348,7 +363,7 @@ function updateCheckList(checkList, categoryIndex) {
       }
     );
   } catch (err) {
-    onError(err, "An error occurred while updating checkList");
+    utilAPI.onError(err, "An error occurred while updating checklist", true);
   }
 }
 
@@ -356,28 +371,28 @@ function initCheckedItems() {
   veXTotalItems = 0;
   veXCheckedItems = [];
   try {
-    if (isEmptyArray(veXCurrentTicketDOD.categories)) {
-      notify("No category found.");
+    if (utilAPI.isEmptyArray(veXCurrentTicketDOD.categories)) {
+      utilAPI.notify("No category found.");
       return;
     }
     for (let i = 0; i < veXCurrentTicketDOD.categories.length; i++) {
       veXCheckedItems[i] = [];
       let curCategory = veXCurrentTicketDOD.categories[i];
-      if (isEmptyArray(curCategory.checkList)) return;
-      for (let j = 0; j < curCategory.checkList.length; j++) {
+      if (utilAPI.isEmptyArray(curCategory.checklist)) return;
+      for (let j = 0; j < curCategory.checklist.length; j++) {
         veXCheckedItems[i][j] = 0;
         veXTotalItems++;
       }
     }
   } catch (err) {
-    onError(err, "An error occurred while initializing the CheckedItems Array.")
+    utilAPI.onError(err, "An error occurred while initializing the CheckedItems Array.")
   }
 }
 
 function addDoneListToComments() {
   try {
     if (veXTotalCheckedItems == 0) {
-      notify("To enable commenting, please mark at least one item as complete", true);
+      utilAPI.notify("Mark at least one item as complete to enable commenting.", "warning", true);
       return;
     }
     let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-label-commentsPanel']")
@@ -395,14 +410,14 @@ function addDoneListToComments() {
           let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
           if (commentSubmitButton) {
             commentSubmitButton.removeAttribute("disabled");
-            setTimeout(() => { commentSubmitButton.click(); }, 2000);
+            setTimeout(() => { commentSubmitButton.click(); }, 1000);
           }
         }, 100);
       }, 100);
     }, 100);
   }
   catch (ex) {
-    onError(ex, "An exception occurred while trying to open comments in response to a click event", true)
+    utilAPI.onError(ex, "An exception occurred while trying to open comments in response to a click event", true)
   }
 }
 
@@ -415,7 +430,7 @@ function draftCommentForCheckedItems() {
     CommentDraftNode.appendChild(CommentHeaderNode);
     for (categoryIndex in veXCheckedItems) {
       let categoryName = veXCurrentTicketDOD.categories[categoryIndex].name;
-      let checkList = veXCurrentTicketDOD.categories[categoryIndex].checkList;
+      let checkList = veXCurrentTicketDOD.categories[categoryIndex].checklist;
       let checkedItems = veXCheckedItems[categoryIndex];
       let currList = [];
       for (let i = 0; i < checkedItems.length; i++) {
@@ -442,50 +457,42 @@ function draftCommentForCheckedItems() {
     return finalComment;
   }
   catch (ex) {
-    onError(ex, "Error while drafting for comments")
+    utilAPI.onError(ex, "An error occurred while drafting your comment. Please report the issue", true);
   }
 }
 
-function isEmptyObject(obj) {
-  return obj == null || (typeof obj === 'object' && Object.keys(obj).length === 0)
-}
-
-function isEmptyArray(arr) {
-  return !Array.isArray(arr) || arr.length === 0;
-}
-
-function notify(message, display = false) {
-  let _message = `Message from veXtension:${message}`;
-  if (display == true) {
-    alert(message)
-  }
-  else {
-    console.info(_message);
-  }
-}
-
-function onError(error, info = "Something went wrong in veXtension.Check Logs for More Details", display = false) {
-  notify(info, display);
-  console.dir(error);
-}
 
 function getCurrentTicketPhase() {
-  return document.querySelector("[data-aid='entity-life-cycle-widget-phase']").childNodes[3].innerText;
+  try {
+    return document.querySelector("[data-aid='entity-life-cycle-widget-phase']").childNodes[3].innerText;
+  }
+  catch (err) {
+    utilAPI.onError(err, undefined, false);
+  }
 }
 //<-Utility Functions
 
 
 //->Event Handlers
 function closeveXPopUp() {
-  veXPopUpOverlay.style.visibility = "hidden";
-  veXPopUpNode.classList.remove("veX_pop_active");
-  veXPopUpNode.classList.add("veX_pop_deactive");
+  try {
+    veXPopUpOverlay.style.visibility = "hidden";
+    veXPopUpNode.classList.remove("veX_pop_active");
+    veXPopUpNode.classList.add("veX_pop_deactive");
+  }
+  catch (err) {
+    utilAPI.onError(err, undefined, true);
+  }
 }
 
 function openVexPopup() {
-  veXPopUpOverlay.style.visibility = "visible";
-  veXPopUpNode.classList.add("veX_pop_active");
-  veXPopUpNode.classList.remove("veX_pop_deactive");
+  try {
+    veXPopUpOverlay.style.visibility = "visible";
+    veXPopUpNode.classList.add("veX_pop_active");
+    veXPopUpNode.classList.remove("veX_pop_deactive");
+  } catch (err) {
+    utilAPI.onError(err, undefined, true);
+  }
 }
 
 function onListItemClick(event) {
@@ -505,61 +512,75 @@ function onListItemClick(event) {
     veXDonePercentageNode.innerHTML = `${donePercentage}%`;
     root.style.setProperty('--veX-checkedItemsPercentage', `${donePercentage}%`);
   } catch (err) {
-    onError(err, "An error occurred while processing the click event.")
+    utilAPI.onError(err, "An error occurred while processing the click event.", true);
   }
-
 }
 
 async function onTicketTitleChange(mutation) {
   try {
     veXReset();
     getCurrentTicketInfo(document.head.querySelector('title').innerText);
-    if (isEmptyObject(veXCurrentTicketInfo)) {
+    if (utilAPI.isEmptyObject(veXCurrentTicketInfo)) {
       return;
     }
     let tempDOD = await chrome.storage.sync.get(veXCurrentTicketInfo.type);
-    if (!isEmptyObject(tempDOD)) {
+    if (!utilAPI.isEmptyObject(tempDOD)) {
       veXCurrentTicketDOD = tempDOD[veXCurrentTicketInfo.type];
     }
-    if (!isEmptyObject(veXCurrentTicketDOD)) {
+    if (!utilAPI.isEmptyObject(veXCurrentTicketDOD)) {
       initTicketPhaseMutationObserver();
       initCheckedItems();
       veXIsViewInitialised = initView();
     }
   }
-  catch (ex) {
-    onError(ex, "Error at onTicketTitleChange Event Handler");
+  catch (err) {
+    utilAPI.onError(err);
   }
 }
 
 function onTicketPhaseChange(mutation) {
-  if (!mutation.target) return;
-  let newPhase = mutation.target.innerText;
-  let reminderMessage = `Before moving to "${newPhase}" phase, please ensure the checklist for current phase is completed.`;
-  veXHeaderTitleNode.innerHTML = reminderMessage;
-  openVexPopup();
+  try {
+    if (!mutation.target) return;
+    let newPhase = mutation.target.innerText;
+    let reminderMessage = `Before moving to "${newPhase}" phase, please ensure the checklist for current phase is completed.`;
+    utilAPI.notify(reminderMessage, "info", true);
+    openVexPopup();
+  }
+  catch (err) {
+    utilAPI.onError(err, undefined, true);
+  }
 }
 
 function OnTicketPhaseClick() {
-  veXPopUpNode.querySelector(".veX_all_phases").classList.toggle("show_all_phases");
+  try {
+    veXPopUpNode.querySelector(".veX_all_phases").classList.toggle("show_all_phases");
+  }
+  catch (err) {
+    utilAPI.onError(err, undefined, true);
+  }
 }
 
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {
-  switch (request) {
-    case "openVexPopup":
-      if (!(isEmptyObject(veXCurrentTicketDOD) || isEmptyObject(veXCurrentTicketInfo)))
-        openVexPopup();
-      else if (!isEmptyObject(veXCurrentTicketInfo) && isEmptyObject(veXCurrentTicketDOD)) {
-        notify(`Unable to find the DoD checklist for '${veXCurrentTicketInfo.type}'`, true);
-      }
-      else if (isEmptyObject(veXCurrentTicketInfo))
-        notify("To see the 'DoD checklist', please open a ticket", true)
-      else if (veXIsViewInitialised === false) {
-        notify("Something went wrong while initializing the view. Please check the logs for more details.", true)
-      }
-      else
-        notify("Something went wrong", true);
-      break;
+  try {
+    switch (request) {
+      case "openVexPopup":
+        if (!(utilAPI.isEmptyObject(veXCurrentTicketDOD) || utilAPI.isEmptyObject(veXCurrentTicketInfo)))
+          openVexPopup();
+        else if (!utilAPI.isEmptyObject(veXCurrentTicketInfo) && utilAPI.isEmptyObject(veXCurrentTicketDOD)) {
+          utilAPI.notify(`Unable to find the checklist for '${veXCurrentTicketInfo.type}'`, "info", true);
+        }
+        else if (utilAPI.isEmptyObject(veXCurrentTicketInfo))
+          utilAPI.notify("To see the checklist, please open a ticket", "info", true)
+        else if (veXIsViewInitialised === false) {
+          utilAPI.notify("Something went wrong while initializing the view. Please check the logs for more details.", "warning", true)
+        }
+        else
+          utilAPI.notify("Something went wrong", "warning", true);
+        break;
+    }
+  }
+  catch (err) {
+    utilAPI.onError(err, undefined, true);
   }
 }
 

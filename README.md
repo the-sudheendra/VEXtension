@@ -1,27 +1,24 @@
-# VE Xtension
-A browser extension that enhances the [OpenText](https://www.opentext.com/) ValueEdge platform with additional features.
+# VE Checklist
+The Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 
 ## Features
-- Displays relevant Definition of Done (DoD) checkList based on the currently opened ticket and its status.
+- Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) checkList based on the currently opened ticket and its status.
+- Reminds users to review and complete checkList when changing ticket phases.
+- Users can create their own customized checklists based on their project requirements.
+- Allows users to add completed checkList in comments to track and maintain a record of the completion status for each item.
 
-- Reminds users to review and complete DoD checkList when changing ticket phases.
-
-- Allows users to add completed DoD checkList in comments to track and maintain a record of the completion status for each DoD item.
-
-## How to Use the Extension
+## How to ?
+**Use the Extension**
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
-* In the context menu, you will see an option called "DoD Checklist".
+* In the context menu, you will see an option called "DoD Checklists".
+* Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
-![Screenshot for DoDcheckList](Screenshots/DoDCheckListContextMenu.png)
-> Click on "DoD Checklist" to open a pop-up displaying the Done Checklist for the ticket.
-
-![Screenshot for DoDcheckList](Screenshots/DoDCheckList.png)
+![Screenshot for DoDcheckList](screenshots/DoDCheckList.png)
 > Example DoD CheckList
-## How to Upload Definition of Done (DoD) File:
-![Screenshot for optionpage](Screenshots/OptionPage.png)
+**Upload Checklist**:
 
-> Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
+Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
 
 ## Ticket Entity Schema 
 ```json
@@ -42,7 +39,7 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
               "type": "string",
               "description": "The name of the category."
             },
-            "checkList": {
+            "checklist": {
               "type": "array",
               "items": {
                 "type": "string",
@@ -58,7 +55,7 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
 ```
 **Supported Entity Types:** ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
 
-## Example DoD Json
+## Example JSON File
 
 ```JSON
 {
@@ -67,7 +64,7 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
     "categories": [
       {
         "name": "Investigation",
-        "checkList": [
+        "checklist": [
           "Reproduce the issue",
           "Gather logs and screenshots",
           "Determine root cause",
@@ -76,7 +73,7 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
       },
       {
         "name": "Resolution",
-        "checkList": [
+        "checklist": [
           "Implement fix",
           "Run regression tests",
           "Confirm issue resolution",
@@ -90,7 +87,7 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
     "categories": [
       {
         "name": "Exploration",
-        "checkList": [
+        "checklist": [
           "Identify technical questions",
           "Review relevant documentation",
           "Build simple prototype",
@@ -99,7 +96,7 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
       },
       {
         "name": "Conclusion",
-        "checkList": [
+        "checklist": [
           "Summarize findings",
           "Present results to the team",
           "Document next steps",
@@ -110,9 +107,16 @@ A browser extension that enhances the [OpenText](https://www.opentext.com/) Valu
   }
 }
 ```
-#### Please note:
+
+## Contributing
+We welcome contributions from everyone! Here's how you can get involved:
+
+- **Report Issues**: Encounter a bug? Have a feature request? Open an issue on our GitHub repository to let us know.
+- **Contribute Code**: Want to dive into the codebase? Check out our open issues and pull requests.Fork the repository, make your changes, and submit a pull request.
+- **Suggest Improvements**: Have ideas for new features or enhancements? Share them in a new issue. Discuss potential improvements with the community.
+- **Enhance Documentation**: Improve our documentation by fixing errors, adding clarity, or creating new guides. Submit a pull request to our documentation repository.
+- **Share Sample Checklists**: Contribute sample checklists to our repository to help others.
+
+### Please note:
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
-
-
-

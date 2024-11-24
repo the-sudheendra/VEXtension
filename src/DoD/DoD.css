@@ -1,3 +1,4 @@
+@import url("../Utility/common.css");
 :root {
   --veX-banner-backgroundColor: rgb(255, 255, 255);
   --veX-common-backgroundColor: #fff;
@@ -14,7 +15,6 @@
   --veX-blackColor: #000000;
   --veX-fontColorAgainstTicketColor: var(--veX-blackColor);
 }
-
 #veX-PopUp-Container ::-webkit-scrollbar {
   width: 5px;
 }
@@ -120,7 +120,6 @@
   margin: 0px;
 }
 
-
 .veX_done_status {
   width: var(--veX-checkedItemsPercentage);
   height: 5px;
@@ -129,8 +128,10 @@
   transition: width 0.5s ease;
   margin-bottom: 5px;
   background: var(--veX-whiteColor);
-  background: linear-gradient(90deg, var(--veX-whiteColor) 0%, #e2335e var(--veX-checkedItemsPercentage));
+  background: linear-gradient(90deg, var(--veX-whiteColor) 0%, var(--veX-successColor) var(--veX-checkedItemsPercentage));
+  border-radius: var(--veX-common-borderRadius);
 }
+
 
 /* .veX_done_status::after {
   content: '🔴';
@@ -176,6 +177,36 @@
   cursor: pointer;
 }
 
+.veX_phase_dropdown
+{
+  position: absolute;
+  top: 3rem;
+  margin-top: 0.5rem;
+  width: 14rem;
+  opacity: 0;
+  visibility: hidden;
+  transform-origin: top right;
+  border-radius: var(--veX-common-borderRadius);
+  background: var(--veX-whiteColor);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+.veX_phase_dropdown.active
+{
+  opacity: 1;
+  visibility: visible;
+}
+.veX_phase_dropdown_option {
+  display: block;
+  padding: 0.5rem 1rem;
+  font-size: var(--veX-common-fontSize);
+  line-height: 1.25rem;
+  color: var(--veX-common-fontColor);
+  width: 100%;
+}
+.veX_phase_dropdown_option:hover {
+  color: #111827;
+  background: #f1f1f1;
+}
 .veX_sidebar_header {
   display: flex;
   width: 100%;
@@ -184,7 +215,7 @@
   align-items: center;
 }
 
-.veX_all_phases {
+.veX_phase_dropdown {
   display: none;
   display: flex;
   flex-direction: column;
@@ -234,7 +265,7 @@
   padding: 10px;
 }
 
-/* .veX_ticket_phase_txt::after {
+.veX_ticket_phase_txt::after {
   content: "";
   position: absolute;
   transform: translateY(-50%);
@@ -245,7 +276,7 @@
   border-top: 5px solid #333;
   right: 13px;
   top: 53%;
-} */
+}
 
 .veX_dod_categories button {
   width: 100%;

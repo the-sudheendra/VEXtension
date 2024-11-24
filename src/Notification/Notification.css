@@ -1,0 +1,152 @@
+:root {
+  --veX-notification-primary: black;
+}
+
+#veX_toast {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  padding: 10px 14px;
+  position: absolute;
+  border-radius: 5px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  z-index: 99999;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  visibility: hidden;
+}
+
+#veX_icon_wrapper {
+  width: 30px;
+  height: 30px;
+  background: var(--veX-notification-primary);
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#veX_icon {
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  object-fit: cover;
+}
+
+
+#veX_toast_message {
+  padding: 5px 20px 5px 10px;
+}
+
+#veX_toast_message h4{
+  margin: 0;
+  line-height: 1.2em;
+}
+
+#veX_toast_message h4 {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .05em;
+  color: #404040;
+}
+
+#veX_toast_close {
+  position: relative;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.2s ease-in-out;
+}
+
+#veX_toast_close:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#veX_toast_close::before,
+#veX_toast_close::after {
+  position: absolute;
+  content: '';
+  height: 12px;
+  width: 1px;
+  border-radius: 5px;
+  background: #606060;
+  top: 50%;
+  left: 50%;
+  transition: background 0.2s ease-in-out;
+}
+
+#veX_toast_close:hover::before,
+#veX_toast_close:hover::after {
+  background: #404040;
+}
+
+#veX_toast_close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#veX_toast_close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+@keyframes close {
+  from {
+    top: 5px;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    visibility: visible;
+  }
+  to {
+    top: -25px;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+    visibility: hidden;
+  }
+}
+
+@keyframes open {
+  from {
+    top: -25px;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+    visibility: hidden;
+  }
+
+  to {
+    top: 5px;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    visibility: visible;
+  }
+}
+
+#veX_timer {
+  width: 0%;
+  height: 4px;
+  background: var(--veX-notification-primary);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top-right-radius: 5px;
+  box-shadow: 0 0 8px var(--veX-notification-primary);
+}
+
+.veX_timer_animation {
+  animation: countdown 4s linear forwards;
+}
+
+@keyframes countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
