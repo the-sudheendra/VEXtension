@@ -1,6 +1,6 @@
 {
   "name": "VE Checklist",
-  "description": "The Checklist Tool for OpenText ValueEdge",
+  "description": "Checklist Tool for OpenText ValueEdge",
   "version": "1.0.0",
   "manifest_version": 3,
   "permissions": [
