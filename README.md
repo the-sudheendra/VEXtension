@@ -14,7 +14,7 @@ Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 * In the context menu, you will see an option called "DoD Checklists".
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
-![Screenshot for DoDcheckList](screenshots/DoDCheckList.png)
+![Screenshot for DoDcheckList](screenshots/DoDChecklist.png)
 
 > Example DoD CheckList
 **Upload Checklist**:
