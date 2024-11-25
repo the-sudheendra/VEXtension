@@ -2,8 +2,16 @@
   <img width = "10%" height="10%" src="https://media.tenor.com/00XAJzV4AqAAAAAM/checklist.gif" alt="Checklist.gif">
 </div>
 
+
 # VE Checklist
 Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
+
+<div align="left">
+  <img width = "15%" src="https://img.shields.io/badge/Google_chrome-4285F4?style=for-the-badge&logo=Google-chrome&logoColor=white">
+<img width = "15%" src="https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white">
+</div>
+
+
 
 ## Features 🚀
 - Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) checkList based on the currently opened ticket and its status.
