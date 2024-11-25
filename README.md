@@ -1,14 +1,14 @@
 # VE Checklist
 Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 
-## Features
+## Features 🚀
 - Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) checkList based on the currently opened ticket and its status.
 - Reminds users to review and complete checkList when changing ticket phases.
 - Users can create their own customized checklists based on their project requirements.
 - Allows users to add completed checkList in comments to track and maintain a record of the completion status for each item.
 
-## How to ?
-**Use the Extension**
+## How to 💡
+**Use the Extension?**
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
 * In the context menu, you will see an option called "DoD Checklists".
@@ -17,13 +17,14 @@ Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 ![Screenshot for DoDcheckList](screenshots/DoDChecklist.png)
 > DoD CheckList
 
-**Upload Checklist**:
+**Upload Checklist?**
 
 Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
 ![Screenshot for Upload Checklist](screenshots/UploadChecklist.png)
 > Upload CheckList
 
-## Ticket Entity Schema 
+## Ticket Entity Schema
+
 ```json
 {
   "<entityName>": {
@@ -56,7 +57,8 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
   }
 }
 ```
-**Supported Entity Types:** ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
+**Supported Entity Types**
+ ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
 
 ## Example JSON File
 
@@ -227,7 +229,8 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 
 ```
 
-## Contributing
+## Contributing 🤝
+
 We welcome contributions from everyone! Here's how you can get involved:
 
 - **Report Issues**: Encounter a bug? Have a feature request? Open an issue on our GitHub repository to let us know.
@@ -236,6 +239,7 @@ We welcome contributions from everyone! Here's how you can get involved:
 - **Enhance Documentation**: Improve our documentation by fixing errors, adding clarity, or creating new guides. Submit a pull request to our documentation repository.
 - **Share Sample Checklists**: Contribute sample checklists to our repository to help others.
 
-### Please note:
+### Please note ⚠️
+
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
