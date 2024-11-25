@@ -266,7 +266,7 @@ function initSidebarHeaderView() {
   try {
     veXDonePercentageNode.innerHTML = "0%";
     veXTicketPhaseTextNode.innerHTML = veXCurrentTicketInfo.phase;
-    veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
+    //veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
     veXPopUpNode.querySelector(".veX_all_phases").style.display = "none";
   }
   catch (err) {
@@ -552,12 +552,12 @@ function onTicketPhaseChange(mutation) {
 }
 
 function OnTicketPhaseClick() {
-  try {
-    veXPopUpNode.querySelector(".veX_all_phases").classList.toggle("show_all_phases");
-  }
-  catch (err) {
-    utilAPI.onError(err, undefined, true);
-  }
+  // try {
+  //   veXPopUpNode.querySelector(".veX_all_phases").classList.toggle("show_all_phases");
+  // }
+  // catch (err) {
+  //   utilAPI.onError(err, undefined, true);
+  // }
 }
 
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {

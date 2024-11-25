@@ -16,6 +16,7 @@ Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 
 ![Screenshot for DoDcheckList](screenshots/DoDChecklist.png)
 > DoD CheckList
+
 **Upload Checklist**:
 
 Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
@@ -61,53 +62,169 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 
 ```JSON
 {
-"Defect": {
-    "title": "Defect",
-    "categories": [
-      {
-        "name": "Investigation",
-        "checklist": [
-          "Reproduce the issue",
-          "Gather logs and screenshots",
-          "Determine root cause",
-          "Document findings"
-        ]
-      },
-      {
-        "name": "Resolution",
-        "checklist": [
-          "Implement fix",
-          "Run regression tests",
-          "Confirm issue resolution",
-          "Close defect after verification"
-        ]
-      }
-    ]
-},
-"Spike": {
-    "title": "Spike",
-    "categories": [
-      {
-        "name": "Exploration",
-        "checklist": [
-          "Identify technical questions",
-          "Review relevant documentation",
-          "Build simple prototype",
-          "Evaluate technical feasibility"
-        ]
-      },
-      {
-        "name": "Conclusion",
-        "checklist": [
-          "Summarize findings",
-          "Present results to the team",
-          "Document next steps",
-          "Archive research notes"
-        ]
-      }
-    ]
-  }
+   "Epic": {
+      "title": "Epic",
+      "categories": [
+         {
+            "name": "Planning",
+            "checklist": [
+               "Define the overall objective",
+               "Identify necessary features",
+               "Prioritize tasks within the Epic",
+               "Allocate resources"
+            ]
+         },
+         {
+            "name": "Tracking",
+            "checklist": [
+               "Monitor feature progress",
+               "Adjust timelines as needed",
+               "Communicate updates to stakeholders",
+               "Ensure alignment with product goals"
+            ]
+         }
+      ]
+   },
+   "Feature": {
+      "title": "Feature",
+      "categories": [
+         {
+            "name": "Design",
+            "checklist": [
+               "Outline user flow",
+               "Create wireframes or prototypes",
+               "Review designs with stakeholders",
+               "Finalize design requirements"
+            ]
+         },
+         {
+            "name": "Development",
+            "checklist": [
+               "Write feature code",
+               "Conduct code reviews",
+               "Integrate with existing systems",
+               "Deploy to staging environment"
+            ]
+         }
+      ]
+   },
+   "Defect": {
+      "title": "Defect",
+      "categories": [
+         {
+            "name": "Investigation",
+            "checklist": [
+               "Reproduce the issue",
+               "Gather logs and screenshots",
+               "Determine root cause",
+               "Document findings"
+            ]
+         },
+         {
+            "name": "Resolution",
+            "checklist": [
+               "Implement fix",
+               "Run regression tests",
+               "Confirm issue resolution",
+               "Close defect after verification"
+            ]
+         }
+      ]
+   },
+   "Enhancement": {
+      "title": "Enhancement",
+      "categories": [
+         {
+            "name": "Requirement Analysis",
+            "checklist": [
+               "Identify enhancement goals",
+               "Review user feedback",
+               "Determine scope of changes",
+               "Get approvals from stakeholders"
+            ]
+         },
+         {
+            "name": "Implementation",
+            "checklist": [
+               "Modify existing code",
+               "Run unit and integration tests",
+               "Deploy to staging",
+               "Gather feedback on enhancement"
+            ]
+         }
+      ]
+   },
+   "CPE Incident": {
+      "title": "CPE Incident",
+      "categories": [
+         {
+            "name": "Intake",
+            "checklist": [
+               "Log support ticket",
+               "Identify user issue",
+               "Classify urgency and assign priority",
+               "Assign to support team"
+            ]
+         },
+         {
+            "name": "Resolution",
+            "checklist": [
+               "Provide solution or workaround",
+               "Communicate with user",
+               "Confirm issue resolution",
+               "Close support ticket"
+            ]
+         }
+      ]
+   },
+   "User Story": {
+      "title": "User Story",
+      "categories": [
+         {
+            "name": "Definition",
+            "checklist": [
+               "Write user story in standard format",
+               "Define acceptance criteria",
+               "Prioritize with product owner",
+               "Estimate story effort"
+            ]
+         },
+         {
+            "name": "Development and Testing",
+            "checklist": [
+               "Implement code changes",
+               "Run unit tests",
+               "Conduct code review",
+               "User acceptance testing (UAT)"
+            ]
+         }
+      ]
+   },
+   "Spike": {
+      "title": "Spike",
+      "categories": [
+         {
+            "name": "Exploration",
+            "checklist": [
+               "Identify technical questions",
+               "Review relevant documentation",
+               "Build simple prototype",
+               "Evaluate technical feasibility"
+            ]
+         },
+         {
+            "name": "Conclusion",
+            "checklist": [
+               "Summarize findings",
+               "Present results to the team",
+               "Document next steps",
+               "Archive research notes"
+            ]
+         }
+      ]
+   }
 }
+
 ```
 
 ## Contributing
