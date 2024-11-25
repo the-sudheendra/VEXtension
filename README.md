@@ -148,8 +148,6 @@ We welcome contributions from everyone! Here's how you can get involved:
 - **Report Issues**: Encounter a bug? Have a feature request? Open an issue on our GitHub repository to let us know.
 - **Contribute Code**: Want to dive into the codebase? Check out our open issues and pull requests.Fork the repository, make your changes, and submit a pull request.
 - **Suggest Improvements**: Have ideas for new features or enhancements? Share them in a new issue. Discuss potential improvements with the community.
-- **Enhance Documentation**: Improve our documentation by fixing errors, adding clarity, or creating new guides. Submit a pull request to our documentation repository.
-
 ### Please note ⚠️
 
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
