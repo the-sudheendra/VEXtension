@@ -1,3 +1,7 @@
+<div align="center">
+  <img width = "10%" height="10%" src="https://media.tenor.com/00XAJzV4AqAAAAAM/checklist.gif" alt="Checklist.gif">
+</div>
+
 # VE Checklist
 Checklist Tool for [OpenText](https://www.opentext.com/) ValueEdge platform.
 
@@ -64,52 +68,6 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 
 ```JSON
 {
-   "Epic": {
-      "title": "Epic",
-      "categories": [
-         {
-            "name": "Planning",
-            "checklist": [
-               "Define the overall objective",
-               "Identify necessary features",
-               "Prioritize tasks within the Epic",
-               "Allocate resources"
-            ]
-         },
-         {
-            "name": "Tracking",
-            "checklist": [
-               "Monitor feature progress",
-               "Adjust timelines as needed",
-               "Communicate updates to stakeholders",
-               "Ensure alignment with product goals"
-            ]
-         }
-      ]
-   },
-   "Feature": {
-      "title": "Feature",
-      "categories": [
-         {
-            "name": "Design",
-            "checklist": [
-               "Outline user flow",
-               "Create wireframes or prototypes",
-               "Review designs with stakeholders",
-               "Finalize design requirements"
-            ]
-         },
-         {
-            "name": "Development",
-            "checklist": [
-               "Write feature code",
-               "Conduct code reviews",
-               "Integrate with existing systems",
-               "Deploy to staging environment"
-            ]
-         }
-      ]
-   },
    "Defect": {
       "title": "Defect",
       "categories": [
@@ -133,29 +91,6 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
          }
       ]
    },
-   "Enhancement": {
-      "title": "Enhancement",
-      "categories": [
-         {
-            "name": "Requirement Analysis",
-            "checklist": [
-               "Identify enhancement goals",
-               "Review user feedback",
-               "Determine scope of changes",
-               "Get approvals from stakeholders"
-            ]
-         },
-         {
-            "name": "Implementation",
-            "checklist": [
-               "Modify existing code",
-               "Run unit and integration tests",
-               "Deploy to staging",
-               "Gather feedback on enhancement"
-            ]
-         }
-      ]
-   },
    "CPE Incident": {
       "title": "CPE Incident",
       "categories": [
@@ -175,29 +110,6 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
                "Communicate with user",
                "Confirm issue resolution",
                "Close support ticket"
-            ]
-         }
-      ]
-   },
-   "User Story": {
-      "title": "User Story",
-      "categories": [
-         {
-            "name": "Definition",
-            "checklist": [
-               "Write user story in standard format",
-               "Define acceptance criteria",
-               "Prioritize with product owner",
-               "Estimate story effort"
-            ]
-         },
-         {
-            "name": "Development and Testing",
-            "checklist": [
-               "Implement code changes",
-               "Run unit tests",
-               "Conduct code review",
-               "User acceptance testing (UAT)"
             ]
          }
       ]
@@ -237,7 +149,6 @@ We welcome contributions from everyone! Here's how you can get involved:
 - **Contribute Code**: Want to dive into the codebase? Check out our open issues and pull requests.Fork the repository, make your changes, and submit a pull request.
 - **Suggest Improvements**: Have ideas for new features or enhancements? Share them in a new issue. Discuss potential improvements with the community.
 - **Enhance Documentation**: Improve our documentation by fixing errors, adding clarity, or creating new guides. Submit a pull request to our documentation repository.
-- **Share Sample Checklists**: Contribute sample checklists to our repository to help others.
 
 ### Please note ⚠️
 
