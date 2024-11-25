@@ -33,7 +33,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 ![Screenshot for Upload Checklist](screenshots/UploadChecklist.png)
 > Upload CheckList
 
-## Ticket Entity Schema
+**Ticket Schema**
 
 ```json
 {
@@ -70,7 +70,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 **Supported Entity Types**
  ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
 
-## Example JSON File
+**Example JSON File**
 
 ```JSON
 {
@@ -154,6 +154,7 @@ We welcome contributions from everyone! Here's how you can get involved:
 - **Report Issues**: Encounter a bug? Have a feature request? Open an issue on our GitHub repository to let us know.
 - **Contribute Code**: Want to dive into the codebase? Check out our open issues and pull requests.Fork the repository, make your changes, and submit a pull request.
 - **Suggest Improvements**: Have ideas for new features or enhancements? Share them in a new issue. Discuss potential improvements with the community.
+
 ### Please note ⚠️
 
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
