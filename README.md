@@ -24,8 +24,12 @@
 * In the context menu, you will see an option called "DoD Checklists".
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
-![Screenshot for DoDChecklist](screenshots/Defect-Checklist.png)
-> **> Screenshot for the DoD Checklist**
+
+<div align="center" style="text-align: center;">
+    <img src="screenshots/Defect-Checklist.png" style="width: 45%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Defect Checklist">
+    <img src="screenshots/Spike-Checklist.png" style="width: 45%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Spike Checklist">
+</div>
+
 
 **Upload Checklist?**
 
