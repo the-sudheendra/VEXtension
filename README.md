@@ -33,7 +33,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 ![Screenshot for Upload Checklist](screenshots/UploadChecklist.png)
 > **> Screenshot for the Upload Checklist**
 
-**Ticket Schema**
+#### Ticket Schema
 
 ```json
 {
