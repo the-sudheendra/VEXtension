@@ -34,6 +34,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 > **>Screenshot for the Upload Checklist**
 
 **Ticket Schema**
+**Ticket Schema**
 
 ```json
 {
@@ -70,6 +71,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 **Supported Entity Types**
  ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
 
+**Example JSON File**
 **Example JSON File**
 
 ```JSON
