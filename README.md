@@ -24,14 +24,19 @@
 * In the context menu, you will see an option called "DoD Checklists".
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
-![Screenshot for DoDChecklist](screenshots/Defect-Checklist.png)
-> **> Screenshot for the DoD Checklist**
+
+<div align="center" style="text-align: center;">
+    <img src="screenshots/Defect-Checklist.png" style="width: 45%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Defect Checklist">
+    <img src="screenshots/Spike-Checklist.png" style="width: 45%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Spike Checklist">
+</div>
+
 
 **Upload Checklist?**
 
 Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
-![Screenshot for Upload Checklist](screenshots/Upload-Checklist.png)
-> **> Screenshot for the Upload Checklist**
+<div align="center" style="text-align: center;">
+    <img src="screenshots/Upload-Checklist.png" style="width: 70%;height:70%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Upload Checklis">
+</div>
 
 #### Ticket Schema
 
