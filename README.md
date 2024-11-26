@@ -14,7 +14,7 @@
 ## Features 🚀
 - Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) Checklist based on the currently opened ticket and its status.
 - Reminds users to review and complete Checklist when changing ticket phases.
-- Users can create their own customized Checklists based on their project requirements.
+- Users can create their own customized Checklist based on their project requirements.
 - Allows users to add completed Checklist in comments to track and maintain a record of the completion status for each item.
 
 ## How to 💡
@@ -160,7 +160,7 @@ We welcome contributions from everyone! Here's how you can get involved:
 - **Contribute Code**: Want to dive into the codebase? Check out our open issues and pull requests.Fork the repository, make your changes, and submit a pull request.
 - **Suggest Improvements**: Have ideas for new features or enhancements? Share them in a new issue. Discuss potential improvements with the community.
 
-**TODO 🧑‍💻**
+**TO-DO⏳**
 1. Based on the ticket status, we need to display the appropriate checklist categories if user select 'All' we need to show all categories.  
 2. When the user selects a checklist, they should be able to add notes to that checklist, which will be displayed in the comments for that item.  
 3. When the user clicks on "Add to Comment," it should automatically add the notes to the comments instead of just drafting them in the comment box.
