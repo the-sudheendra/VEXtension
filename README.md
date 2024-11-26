@@ -161,7 +161,7 @@ We welcome contributions from everyone! Here's how you can get involved:
 - **Suggest Improvements**: Have ideas for new features or enhancements? Share them in a new issue. Discuss potential improvements with the community.
 
 **TODO 🧑‍💻**
-1. Based on the ticket, we need to display the appropriate checklist categories if he select 'All' we need to show all categories.  
+1. Based on the ticket status, we need to display the appropriate checklist categories if user select 'All' we need to show all categories.  
 2. When the user selects a checklist, they should be able to add notes to that checklist, which will be displayed in the comments for that item.  
 3. When the user clicks on "Add to Comment," it should automatically add the notes to the comments instead of just drafting them in the comment box.
 
