@@ -408,10 +408,10 @@ function addDoneListToComments() {
           commentBox.innerHTML = draftCommentForCheckedItems();
         setTimeout(() => {
           let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
-          if (commentSubmitButton) {
-            commentSubmitButton.removeAttribute("disabled");
-            setTimeout(() => { commentSubmitButton.click(); }, 1000);
-          }
+          // if (commentSubmitButton) {
+          //   commentSubmitButton.removeAttribute("disabled");
+          //   setTimeout(() => { commentSubmitButton.click(); }, 2000);
+          // }
         }, 100);
       }, 100);
     }, 100);
