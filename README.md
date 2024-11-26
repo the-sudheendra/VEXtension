@@ -21,7 +21,7 @@
 **Use the Extension?**
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
-* In the context menu, you will see an option called "DoD Checklists".
+* In the context menu, you will see an option called "DoD Checklist".
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
 
@@ -152,7 +152,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 
 ```
 
-## Contributing 🤝
+**Contributing 🤝**
 
 We welcome contributions from everyone! Here's how you can get involved:
 
@@ -165,7 +165,7 @@ We welcome contributions from everyone! Here's how you can get involved:
 2. When the user selects a checklist, they should be able to add notes to that checklist, which will be displayed in the comments for that item.  
 3. When the user clicks on "Add to Comment," it should automatically add the notes to the comments instead of just drafting them in the comment box.
 
-### Please note ⚠️
+**Please note ⚠️**
 
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
