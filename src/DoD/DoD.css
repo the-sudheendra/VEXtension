@@ -265,7 +265,7 @@
   padding: 10px;
 }
 
-.veX_ticket_phase_txt::after {
+/* .veX_ticket_phase_txt::after {
   content: "";
   position: absolute;
   transform: translateY(-50%);
@@ -276,7 +276,7 @@
   border-top: 5px solid #333;
   right: 13px;
   top: 53%;
-}
+} */
 
 .veX_dod_categories button {
   width: 100%;

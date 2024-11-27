@@ -425,7 +425,8 @@ function draftCommentForCheckedItems() {
   try {
     let CommentDraftNode = document.createElement('div');
     let CommentHeaderNode = document.createElement("p");
-    CommentHeaderNode.innerHTML = "<strong>**Done Checklist**</strong>";
+    let donePercentage = ((veXTotalCheckedItems / veXTotalItems).toFixed(2) * 100).toFixed(0);
+    CommentHeaderNode.innerHTML = `<strong>**Done Checklist-(${donePercentage}%)**</strong>`;
     CommentHeaderNode.style.color = "#22BB33";
     CommentDraftNode.appendChild(CommentHeaderNode);
     for (categoryIndex in veXCheckedItems) {
