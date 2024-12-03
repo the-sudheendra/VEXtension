@@ -16,7 +16,7 @@
   ],
   "action": {
     "default_popup": "./src/Popup/popup.html",
-    "default_title": "Fulfill"
+    "default_title": "VE Checklist"
   },
   "background": {
     "service_worker": "./src/Utility/background.js",
@@ -37,7 +37,10 @@
         "icons/check_circle_24.png",
         "icons/error_24.png",
         "icons/info_24.png",
-        "icons/warning_24.png"
+        "icons/warning_24.png",
+        "icons/brightness_empty_24.png",
+        "icons/add_notes_24.png",
+        "icons/new_releases_24.png"
       ],
       "matches": ["https://ot-internal.saas.microfocus.com/*"]
     }

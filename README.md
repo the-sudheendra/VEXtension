@@ -80,10 +80,8 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 ```JSON
 {
    "Defect": {
-      "title": "Defect",
-      "categories": [
-         {
-            "name": "Investigation",
+      "categories": {
+         "Investigation": {
             "checklist": [
                "Reproduce the issue",
                "Gather logs and screenshots",
@@ -91,8 +89,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
                "Document findings"
             ]
          },
-         {
-            "name": "Resolution",
+         "Resolution": {
             "checklist": [
                "Implement fix",
                "Run regression tests",
@@ -100,13 +97,11 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
                "Close defect after verification"
             ]
          }
-      ]
+      }
    },
    "CPE Incident": {
-      "title": "CPE Incident",
-      "categories": [
-         {
-            "name": "Intake",
+      "categories": {
+         "Intake": {
             "checklist": [
                "Log support ticket",
                "Identify user issue",
@@ -114,8 +109,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
                "Assign to support team"
             ]
          },
-         {
-            "name": "Resolution",
+         "Resolution": {
             "checklist": [
                "Provide solution or workaround",
                "Communicate with user",
@@ -123,13 +117,11 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
                "Close support ticket"
             ]
          }
-      ]
+      }
    },
    "Spike": {
-      "title": "Spike",
-      "categories": [
-         {
-            "name": "Exploration",
+      "categories": {
+         "Exploration": {
             "checklist": [
                "Identify technical questions",
                "Review relevant documentation",
@@ -137,8 +129,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
                "Evaluate technical feasibility"
             ]
          },
-         {
-            "name": "Conclusion",
+         "Conclusion": {
             "checklist": [
                "Summarize findings",
                "Present results to the team",
@@ -146,7 +137,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
                "Archive research notes"
             ]
          }
-      ]
+      }
    }
 }
 

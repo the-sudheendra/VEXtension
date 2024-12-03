@@ -1,4 +1,5 @@
 @import url("../Utility/common.css");
+
 :root {
   --veX-banner-backgroundColor: rgb(255, 255, 255);
   --veX-common-backgroundColor: #fff;
@@ -15,6 +16,7 @@
   --veX-blackColor: #000000;
   --veX-fontColorAgainstTicketColor: var(--veX-blackColor);
 }
+
 #veX-PopUp-Container ::-webkit-scrollbar {
   width: 5px;
 }
@@ -72,12 +74,13 @@
   border: 2px solid var(--veX-ticktColor);
   background-color: var(--veX-common-backgroundColor);
 }
-.veX_pop_deactive
-{
+
+.veX_pop_deactive {
   opacity: 0 !important;
   transform: translate(-50%, -60%) !important;
   visibility: hidden !important;
 }
+
 .veX_pop_active {
   opacity: 1 !important;
   transform: translate(-50%, -50%) !important;
@@ -132,20 +135,6 @@
   border-radius: var(--veX-common-borderRadius);
 }
 
-
-/* .veX_done_status::after {
-  content: '🔴';
-  font-size: small;
-  height: 10px;
-  width: 10px;
-  position: absolute;
-  right: -10px;
-  bottom: -2.5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-} */
-
 .veX_content_wrapper {
   display: flex;
   flex: 1;
@@ -177,36 +166,36 @@
   cursor: pointer;
 }
 
-.veX_phase_dropdown
-{
+.veX_all_phases {
   position: absolute;
-  top: 3rem;
-  margin-top: 0.5rem;
-  width: 14rem;
-  opacity: 0;
+  width: 80%;
+  top: 50px;
   visibility: hidden;
-  transform-origin: top right;
   border-radius: var(--veX-common-borderRadius);
   background: var(--veX-whiteColor);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
-.veX_phase_dropdown.active
-{
-  opacity: 1;
+
+.veX_all_phases.active {
   visibility: visible;
 }
-.veX_phase_dropdown_option {
-  display: block;
+
+.veX_phase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0.5rem 1rem;
   font-size: var(--veX-common-fontSize);
   line-height: 1.25rem;
   color: var(--veX-common-fontColor);
   width: 100%;
 }
-.veX_phase_dropdown_option:hover {
+
+.veX_phase:hover {
   color: #111827;
   background: #f1f1f1;
 }
+
 .veX_sidebar_header {
   display: flex;
   width: 100%;
@@ -215,13 +204,13 @@
   align-items: center;
 }
 
-.veX_phase_dropdown {
+/* .veX_ticket_phase {
   display: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-}
+} */
 
 .veX_done_percentage {
   position: absolute;
@@ -243,10 +232,6 @@
   background-color: var(--veX-common-backgroundColor);
 }
 
-.show_all_phases {
-  display: block;
-}
-
 .veX_dod_categories {
   background-color: var(--veX-common-backgroundColor);
   padding: 10px;
@@ -265,7 +250,7 @@
   padding: 10px;
 }
 
-/* .veX_ticket_phase_txt::after {
+.veX_ticket_phase_txt::after {
   content: "";
   position: absolute;
   transform: translateY(-50%);
@@ -276,7 +261,7 @@
   border-top: 5px solid #333;
   right: 13px;
   top: 53%;
-} */
+}
 
 .veX_dod_categories button {
   width: 100%;
@@ -403,4 +388,124 @@
   align-items: center;
   border-radius: 0px 0px var(--veX-common-borderRadius) var(--veX-common-borderRadius);
   background-color: rgb(247, 247, 248) !important;
+}
+
+.veX_list_container {
+  margin: 0;
+  padding: 0;
+}
+
+.veX_list_item {
+  font-size: var(--veX-common-fontSize);
+  padding: 12px 8px 12px 12px;
+  background: var(--veX-common-backgroundColor);
+  border-radius: var(--veX-common-borderRadius);
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+  transition: background-color 300ms linear;
+  position: relative;
+  margin: 10px 0;
+  cursor: pointer;
+  border: 1px solid var(--veX-borderColor);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.veX_list_item.veX_selected {
+  background-color: var(--vex-hoverColor);
+}
+
+.veX_done_check {
+  min-width: 30px;
+  max-height: 30px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.veX_note {
+  min-width: 30px;
+  max-height: 30px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.veX_done_check img,
+.veX_note img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.veX_list_text {
+  font-size: var(--veX-common-fontSize);
+  margin-left: 10PX;
+  max-width: 90%;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.veX_list_item.veX_completed {
+  background: var(--veX-successColor) !important;
+  color: var(--veX-whiteColor) !important;
+  text-decoration: line-through;
+}
+
+.veX_list_actions {
+  width: 5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  visibility: hidden;
+}
+
+.veX_selected .veX_list_actions,
+.veX_completed .veX_list_actions {
+  visibility: visible;
+}
+
+.veX_checklist_note {
+  resize: none;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  font-family: inherit;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  width: 90%;
+  top: 100%;
+  left: 3%;
+  z-index: 1;
+
+}
+
+.veX_hide_checklist_note {
+  display: none;
+}
+
+.veX_checklist_note:focus {
+  border-color: var(--veX-ticktColor);
+  outline: none;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.veX_list_content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
 }

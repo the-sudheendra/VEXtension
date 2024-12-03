@@ -1,21 +1,22 @@
-
 const fileInput = document.getElementById('veX_dod_file');
-const validVETickets = ["Epic", "Feature", "Defect", "Enhancement", "CPE Incident", "User Story", "Internal", "Spike", "Quality Story", "Task"];
 var utilAPI;
 (async () => {
     const utilURL = chrome.runtime.getURL("src/Utility/util.js");
     utilAPI = await import(utilURL);
 })();
+if (fileInput)
+    fileInput.addEventListener('change', onFileUpload);
+else
+    utilAPI.onError(err, undefined, true);
 
-fileInput.addEventListener('change', onFileUpload);
 function onFileUpload(event) {
     const file = event.target.files[0];
     if (file.type === 'application/json') {
         const reader = new FileReader();
-        reader.onload = async() => {
+        reader.onload = async () => {
             try {
-                const veXDODInfo = JSON.parse(reader.result);
-                if (validateDoD(veXDODInfo) === true && await SaveDoD(veXDODInfo) === true) {
+                const veXChecklistInfo = JSON.parse(reader.result);
+                if (validateChecklist(veXChecklistInfo) === true && await saveChecklist(veXChecklistInfo) === true) {
                     utilAPI.notify("VE Checklist saved successfully!", "success", true);
                 }
                 fileInput.value = '';
@@ -26,44 +27,33 @@ function onFileUpload(event) {
         };
         reader.readAsText(file);
     } else {
-        utilAPI.notify("Upload a valid JSON file to proceed.", "warning", true);
+        utilAPI.notify("Please upload a valid JSON file.", "warning", true);
     }
 }
-function validateDoD(veXDODInfo) {
+
+function validateChecklist(veXChecklistInfo) {
     try {
-        if (utilAPI.isEmptyObject(veXDODInfo)) {
+        if (utilAPI.isEmptyObject(veXChecklistInfo)) {
             utilAPI.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue.", "warning", true);
             return false;
         }
-        let entitiesArray = Object.keys(veXDODInfo);
+        let entitiesArray = Object.keys(veXChecklistInfo);
         for (let i = 0; i < entitiesArray.length; i++) {
             let ticketEntityName = entitiesArray[i];
-            let entityDOD = veXDODInfo[ticketEntityName];
-            if (utilAPI.isEmptyObject(entityDOD)) {
+            let entityChecklist = veXChecklistInfo[ticketEntityName];
+            if (utilAPI.isEmptyObject(entityChecklist)) {
                 utilAPI.notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, "warning", true);
                 return false;
             }
-            if (!validVETickets.some(item => item === ticketEntityName)) {
-                utilAPI.notify(`The '${ticketEntityName}' is not a valid Ticket. Please enter a valid ticket name.`, "warning", true);
+            if (!entityChecklist.hasOwnProperty("categories")) {
+                utilAPI.notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
                 return false;
             }
-            if (!entityDOD.hasOwnProperty("title")) {
-                utilAPI.notify(`The key 'title' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
+            if (utilAPI.isEmptyObject(entityChecklist["categories"])) {
+                utilAPI.notify(`No categories are specified in the '${ticketEntityName}'. Please add atleast one, as it is a mandatory field.`, "warning", true);
                 return false;
             }
-            if (!validVETickets.some(item => item === entityDOD["title"])) {
-                utilAPI.notify(`The '${entityDOD.title}' is not a valid Ticket. Please enter a valid ticket name.`, "warning", true);
-                return false;
-            }
-            if (!entityDOD.hasOwnProperty("categories")) {
-                utilAPI.notify(`The key 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
-                return false;
-            }
-            if (utilAPI.isEmptyArray(entityDOD["categories"])) {
-                utilAPI.notify(`No categories are specified in the '${ticketEntityName}' DoD. Please add it, as it is a mandatory field.`, "warning", true);
-                return false;
-            }
-            if (validateDoDCategories(entityDOD["categories"], ticketEntityName) === false)
+            if (validateChecklistCategories(entityChecklist["categories"], ticketEntityName) === false)
                 return false;
         }
         return true;
@@ -71,23 +61,23 @@ function validateDoD(veXDODInfo) {
         utilAPI.onError(err, undefined, true);
         return false;
     }
-
-
 }
-function validateDoDCategories(DoDCategories, ticketEntityName) {
+
+function validateChecklistCategories(ChecklistCategories, ticketEntityName) {
     try {
-        for (let i = 0; i < DoDCategories.length; i++) {
-            let DoDcategory = DoDCategories[i];
-            if (!DoDcategory.hasOwnProperty("name")) {//
-                utilAPI.notify(`The 'name' key is missing in the ${i} category of the '${ticketEntityName}' entity, and it is a required field.`, "warning", true);
+        let categories = Object.keys(ChecklistCategories);
+        for (let i = 0; i < categories.length; i++) {
+            let categoryName = categories[i];
+            if (!ChecklistCategories[categoryName].hasOwnProperty("checklist")) {
+                utilAPI.notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
                 return false;
             }
-            if (!DoDcategory.hasOwnProperty("checklist")) {
-                utilAPI.notify(`The 'checklist' key is missing in the '${DoDcategory.name}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
+            if (utilAPI.isEmptyArray(ChecklistCategories[categoryName].checklist)) {
+                utilAPI.notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
                 return false;
             }
-            if (utilAPI.isEmptyArray(DoDcategory["checklist"])) {
-                utilAPI.notify(`The 'checklist' array is empty in the '${DoDcategory.name}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
+            if (ChecklistCategories[categoryName].checklist.every(list => list.length >= 1) === false) {
+                utilAPI.notify(`One of the checklist item is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
                 return false;
             }
         }
@@ -98,16 +88,16 @@ function validateDoDCategories(DoDCategories, ticketEntityName) {
     }
 }
 
-async function SaveDoD(veXDODInfo) {
+async function saveChecklist(veXChecklistInfo) {
     try {
         await chrome.storage.sync.clear();
-        let entites = Object.keys(veXDODInfo);
+        let entites = Object.keys(veXChecklistInfo);
         for (let i = 0; i < entites.length; i++) {
             let ticketEntityName = entites[i];
             let keyValue = {};
-            if (utilAPI.isEmptyObject(veXDODInfo[ticketEntityName]))
+            if (utilAPI.isEmptyObject(veXChecklistInfo[ticketEntityName]))
                 return false;
-            keyValue[ticketEntityName] = veXDODInfo[ticketEntityName];
+            keyValue[ticketEntityName] = veXChecklistInfo[ticketEntityName];
             await chrome.storage.sync.set(keyValue);
         }
         return true;
