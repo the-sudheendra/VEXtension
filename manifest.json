@@ -40,7 +40,9 @@
         "icons/warning_24.png",
         "icons/brightness_empty_24.png",
         "icons/add_notes_24.png",
-        "icons/new_releases_24.png"
+        "icons/new_releases_24.png",
+        "icons/add_notes_24dp_FFFFFF.png",
+        "icons/new_releases_24dp_FFFFFF.png"
       ],
       "matches": ["https://ot-internal.saas.microfocus.com/*"]
     }

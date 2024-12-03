@@ -469,15 +469,17 @@ function updateCheckList() {
         listItem.addEventListener("click", (event) => {
           onListItemClick(event, listItem);
         });
-        if (currentCheckList[index].isSelected == true) {
+        if (currentCheckList[index].isSelected == true && currentCheckList[index].isCompleted == true) {
           setSelectedState(listItem, index);
-        } if (currentCheckList[index].isSelected == false) {
-          setUnSelectedState(listItem, index);
-        }
-        if (currentCheckList[index].isCompleted == true) {
           setCompletedState(listItem, index);
-        } if (currentCheckList[index].isCompleted == false) {
-          setUnCompletedState(listItem, index);
+        } else if (currentCheckList[index].isSelected == true && currentCheckList[index].isCompleted == false) {
+          setSelectedState(listItem, index);
+        }
+        else if (currentCheckList[index].isSelected == false && currentCheckList[index].isCompleted == true) {
+          setCompletedState(listItem, index);
+        }
+        else if (currentCheckList[index].isSelected == false && currentCheckList[index].isCompleted == false) {
+          setUnSelectedState(listItem, index);
         }
 
         listItem.querySelector(".veX_note").addEventListener("click", (event) => {
@@ -488,6 +490,9 @@ function updateCheckList() {
         });
         listItem.querySelector('.veX_checklist_note').addEventListener('click', (event) => {
           event.stopPropagation();
+        });
+        listItem.querySelector('.veX_checklist_note').addEventListener('blur', (event) => {
+          listItem.querySelector('.veX_checklist_note').classList.add("veX_hide_checklist_note");
         });
         listItem.querySelector('.veX_checklist_note').addEventListener('change', (event) => {
           onListNoteChange(event, listItem);
@@ -521,10 +526,13 @@ function addDoneListToComments() {
           commentBox.innerHTML = draftCommentForCheckedItems();
         setTimeout(() => {
           let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
-          // if (commentSubmitButton) {
-          //   commentSubmitButton.removeAttribute("disabled");
-          //   setTimeout(() => { commentSubmitButton.click(); }, 2000);
-          // }
+          if (commentSubmitButton) {
+            commentSubmitButton.removeAttribute("disabled");
+            setTimeout(() => {
+              commentSubmitButton.click();
+              utilAPI.notify("The checklist has been successfully added to the comments.", "success", true);
+            }, 2000);
+          }
         }, 100);
       }, 100);
     }, 100);
@@ -539,60 +547,39 @@ function draftCommentForCheckedItems() {
     let CommentDraftNode = document.createElement('div');
     let CommentHeaderNode = document.createElement("p");
     let donePercentage = ((veXTotalCompletedtems / veXTotalItems).toFixed(2) * 100).toFixed(0);
-    CommentHeaderNode.innerHTML = `<strong>**Done Checklist-(${donePercentage}%)**</strong>`;
+    CommentHeaderNode.innerHTML = `<strong>**Checklist Completion: ${donePercentage}%**</strong>`;
     CommentHeaderNode.style.color = "#22BB33";
     CommentDraftNode.appendChild(CommentHeaderNode);
     let categories = Object.keys(veXCheckedItems);
     categories.forEach((categoryName) => {
-      let checklist=veXCheckedItems[categoryName];
-       if(!checklist.some(item => item.isCompleted==true))
-                          return;
-       let categoryNameNode = document.createElement("p")
-       categoryNameNode.innerHTML = `<b>${categoryName}</b>`;
-       let checkedListNode = document.createElement("ul");
-       checkedListNode.style.listStyleType = "none";
-      checklist.forEach((item) => {
-
-          let itemNode = document.createElement("li");
-          let checklistNode = document.createElement('div');
-  
-          let noteNode = document.createElement('div');
-          if(item)
-          itemNode.innerHTML = `[✔]${item.listContent}`
-          checkedListNode.appendChild(itemNode);
-
-      });
-      CommentDraftNode.appendChild(categoryNameNode);
-      CommentDraftNode.appendChild(checkedListNode);
-      
-    })
-    for (category in selectedCategories) {
-      let categoryName = veXCurrentTicketChecklist.categories[categoryIndex].name;
-      let checkList = veXCurrentTicketChecklist.categories[categoryIndex].checklist;
-      let checkedItems = veXCheckedItems[categoryIndex];
-      let currList = [];
-      for (let i = 0; i < checkedItems.length; i++) {
-        if (checkedItems[i] == 1) {
-          currList.push(checkList[i]);
-        }
-      }
-      if (currList.length == 0)
-        continue;
+      let checklist = veXCheckedItems[categoryName];
+      if (!checklist.some(item => item.isCompleted == true))
+        return;
       let categoryNameNode = document.createElement("p")
       categoryNameNode.innerHTML = `<b>${categoryName}</b>`;
       let checkedListNode = document.createElement("ul");
       checkedListNode.style.listStyleType = "none";
-      currList.forEach((item) => {
-        let itemNode = document.createElement("li");
-        let checklistNode = document.createElement('div');
-
-        let noteNode = document.createElement('div');
-        itemNode.innerHTML = `[✔]${item}`
-        checkedListNode.appendChild(itemNode);
+      checklist.forEach((item) => {
+        if (item.isCompleted == true || item.isSelected == true) {
+          let itemNode = document.createElement("li");
+          itemNode.style.display = "flex";
+          itemNode.style.flexDirection = "column";
+          itemNode.style.justifyContent = "space-between";
+          itemNode.style.alignItems = "flex-start";
+          if (item.note != "") {
+            itemNode.innerHTML = `<li style="font-weight: bold; color: #333;">[${item.isCompleted == true ? "✔" : "X"}] ${item.listContent}<li>`
+            itemNode.innerHTML += `<li style="font-size: 12px; color: #777;">Notes: "${item.note}"</li>`
+          }
+          else
+            itemNode.innerHTML = `<li style="font-weight: bold; color: #333;">[${item.isCompleted == true ? "✔" : "X"}] ${item.listContent}<li>`
+          checkedListNode.appendChild(itemNode);
+        }
       });
       CommentDraftNode.appendChild(categoryNameNode);
       CommentDraftNode.appendChild(checkedListNode);
-    }
+
+    })
+
     let finalComment = CommentDraftNode.innerHTML;
     CommentDraftNode.remove();
     return finalComment;
@@ -618,27 +605,27 @@ function updateDonePercentage() {
 }
 function setUnSelectedState(listItemNode, listIndex) {
   listItemNode.classList.remove('veX_selected');
-  listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/brightness_empty_24.png");
-  listItemNode.querySelector('.veX_done_check').classList.remove("veX_checked");
   veXCheckedItems[veXCurrentCategory.name][listIndex].isSelected = false;
+  setUnCompletedState(listItemNode, listIndex);
 }
 function setSelectedState(listItemNode, listIndex) {
   listItemNode.classList.add('veX_selected');
-  listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/brightness_empty_24.png");
-  listItemNode.querySelector('.veX_done_check').classList.remove("veX_checked");
   veXCheckedItems[veXCurrentCategory.name][listIndex].isSelected = true;
+  setUnCompletedState(listItemNode, listIndex);
 }
 function setCompletedState(listItemNode, listIndex) {
-  listItemNode.classList.add('veX_completed');
-  listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/new_releases_24.png");
+  listItemNode.classList.add('veX_completed');//
+  listItemNode.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/add_notes_24dp_FFFFFF.png");
+  listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/new_releases_24dp_FFFFFF.png");
   listItemNode.querySelector('.veX_done_check').classList.add("veX_checked");
   veXCheckedItems[veXCurrentCategory.name][listIndex].isCompleted = true;
   updateDonePercentage();
 }
 function setUnCompletedState(listItemNode, listIndex) {
   listItemNode.classList.remove('veX_completed');
-  listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/brightness_empty_24.png");
   listItemNode.querySelector('.veX_done_check').classList.remove("veX_checked");
+  listItemNode.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/add_notes_24.png");
+  listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/brightness_empty_24.png");
   veXCheckedItems[veXCurrentCategory.name][listIndex].isCompleted = false;
   updateDonePercentage();
 }
@@ -686,12 +673,15 @@ function onListItemClick(event, listItemNode) {
       return;
     }
     if (currentNode.classList.contains("veX_selected")) {
+      if (doneNode.classList.contains('veX_checked'))
+        veXTotalCompletedtems--;
       setUnSelectedState(currentNode, listIndex);
     }
-    if (doneNode.classList.contains('veX_checked')) {
+    else if (doneNode.classList.contains('veX_checked')) {
+      veXTotalCompletedtems--;
       setUnCompletedState(currentNode, listIndex);
     }
-    if (!currentNode.classList.contains("veX_selected")) {
+    else if (!currentNode.classList.contains("veX_selected")) {
       setSelectedState(currentNode, listIndex);
     }
     event.stopPropagation();
