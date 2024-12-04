@@ -491,9 +491,10 @@ function updateCheckList() {
         listItem.querySelector('.veX_checklist_note').addEventListener('click', (event) => {
           event.stopPropagation();
         });
-        listItem.querySelector('.veX_checklist_note').addEventListener('blur', (event) => {
-          listItem.querySelector('.veX_checklist_note').classList.add("veX_hide_checklist_note");
-        });
+        // listItem.querySelector('.veX_checklist_note').addEventListener('blur', (event) => {
+        //   listItem.querySelector('.veX_checklist_note').classList.add("veX_hide_checklist_note");
+        //   event.stopPropagation();
+        // });
         listItem.querySelector('.veX_checklist_note').addEventListener('change', (event) => {
           onListNoteChange(event, listItem);
           event.stopPropagation();
@@ -664,25 +665,26 @@ function onCategoryChange(event) {
 }
 function onListItemClick(event, listItemNode) {
   try {
-    let listIndex = listItemNode.getAttribute('listIndex')
     let currentNode = listItemNode;
-    let doneNode = currentNode.querySelector('.veX_done_check');
     if (!currentNode.querySelector(".veX_checklist_note").classList.contains("veX_hide_checklist_note")) {
       currentNode.querySelector(".veX_checklist_note").classList.add("veX_hide_checklist_note")
       event.stopPropagation(currentNode);
       return;
     }
-    if (currentNode.classList.contains("veX_selected")) {
-      if (doneNode.classList.contains('veX_checked'))
-        veXTotalCompletedtems--;
-      setUnSelectedState(currentNode, listIndex);
-    }
-    else if (doneNode.classList.contains('veX_checked')) {
+    let index = listItemNode.getAttribute('listIndex')
+    let currentCheckList = veXCheckedItems[veXCurrentCategory.name];
+    if (currentCheckList[index].isSelected == true && currentCheckList[index].isCompleted == true) {
       veXTotalCompletedtems--;
-      setUnCompletedState(currentNode, listIndex);
+      setSelectedState(listItemNode, index);
+    } else if (currentCheckList[index].isSelected == true && currentCheckList[index].isCompleted == false) {
+      setUnSelectedState(listItemNode, index);
     }
-    else if (!currentNode.classList.contains("veX_selected")) {
-      setSelectedState(currentNode, listIndex);
+    else if (currentCheckList[index].isSelected == false && currentCheckList[index].isCompleted == true) {
+      veXTotalCompletedtems--;
+      setUnSelectedState(listItemNode, index);
+    }
+    else if (currentCheckList[index].isSelected == false && currentCheckList[index].isCompleted == false) {
+      setSelectedState(listItemNode, index);
     }
     event.stopPropagation();
   } catch (err) {
@@ -692,6 +694,10 @@ function onListItemClick(event, listItemNode) {
 
 function onListNoteClick(event, listItemNode) {
   listItemNode.querySelector('.veX_checklist_note').classList.toggle("veX_hide_checklist_note");
+  // if(!listItemNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note"))
+  // {
+  //   //listItemNode.querySelector('.veX_checklist_note').focus();
+  // }
   event.stopPropagation();
 }
 function onListNoteChange(event, listItemNode) {
