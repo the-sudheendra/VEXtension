@@ -3,10 +3,7 @@
   "description": "Checklist Tool for OpenText ValueEdge",
   "version": "1.0.0",
   "manifest_version": 3,
-  "permissions": [
-    "contextMenus",
-    "storage"
-  ],
+  "permissions": ["contextMenus", "storage"],
   "content_scripts": [
     {
       "matches": ["https://ot-internal.saas.microfocus.com/*"],
@@ -38,11 +35,12 @@
         "icons/error_24.png",
         "icons/info_24.png",
         "icons/warning_24.png",
-        "icons/brightness_empty_24.png",
         "icons/add_notes_24.png",
-        "icons/new_releases_24.png",
-        "icons/add_notes_24dp_FFFFFF.png",
-        "icons/new_releases_24dp_FFFFFF.png"
+        "icons/edit_note_24dp.png",
+        "icons/notes_24dp.png",
+        "icons/check_box_outline_blank_24dp.png",
+        "icons/indeterminate_check_box_24dp.png",
+        "icons/check_box_24dp_FFFFFF.png"
       ],
       "matches": ["https://ot-internal.saas.microfocus.com/*"]
     }

@@ -66,7 +66,7 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  z-index: 99999;
+  z-index: 3000;
   width: 70%;
   transform: translate(-50%, -60%);
   /*transition: opacity 0.5s ease, transform 0.5s ease;*/
@@ -407,7 +407,6 @@
   transition: background-color 300ms linear;
   position: relative;
   margin: 10px 0;
-  cursor: pointer;
   border: 1px solid var(--veX-borderColor);
   display: flex;
   justify-content: space-between;
@@ -426,6 +425,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .veX_note {
@@ -436,6 +436,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .veX_done_check img,
@@ -455,6 +456,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  cursor: pointer;
 }
 
 .veX_list_item.veX_completed {
@@ -470,18 +472,12 @@
   align-items: center;
   position: relative;
   height: 100%;
-  visibility: hidden;
-}
-
-.veX_selected .veX_list_actions,
-.veX_completed .veX_list_actions {
-  visibility: visible;
+  cursor: pointer;
 }
 
 .veX_checklist_note {
   resize: none;
-  border: var(--veX-common-borderWidth) solid var(--veX-ticktColor);
-  border-radius: var(--veX-common-borderRadius);
+  border-radius: 10px;
   padding: 10px;
   font-size: 16px;
   font-family: inherit;
@@ -489,9 +485,9 @@
   position: absolute;
   width: 90%;
   top: 100%;
-  left: 8%;
+  left: 10%;
   z-index: 1;
-  outline: none;
+  border: 1PX solid var(--veX-blackColor);
 }
 
 .veX_hide_checklist_note {
@@ -499,16 +495,11 @@
 }
 
 .veX_checklist_note:focus {
-  outline: none;
-  border: var(--veX-common-borderWidth) solid var(--veX-ticktColor);
+  outline: #000000;
+  border: 1PX solid var(--veX-blackColor);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-.veX_checklist_note:hover {
-  outline: none;
-  border: var(--veX-common-borderWidth) solid var(--veX-ticktColor);
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
 
 .veX_list_content {
   display: flex;
