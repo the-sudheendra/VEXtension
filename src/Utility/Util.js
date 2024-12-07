@@ -26,7 +26,9 @@ function onError(error, info = "An error occurred. Please review the console log
   notify(info, "error", display);
   console.dir(error);
 }
-
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 export {
-  onError, notify, isEmptyArray, isEmptyObject
+  onError, notify, isEmptyArray, isEmptyObject,delay
 }

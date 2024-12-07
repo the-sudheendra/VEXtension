@@ -2,23 +2,16 @@
 var veXDODInfo = {};
 var veXCurrentTicketInfo = {};
 var veXCurrentTicketChecklist = {};
-var veXCheckedItems = {};
+var veXChecklistItems = {};
 var veXPhaseMap = {};
 var veXTotalCompletedtems = 0;
 var veXCurrentTicketCategoryNames = [];
 var veXTotalItems = 0;
+var veXNodes = {};
 var veXPopUpNode = document.createElement("div");
 var veXPopUpOverlay = document.createElement("div");
-var veXCategoryTitleNode;
-var veXSidebarParentNode;
-var veXChecklistParentNode;
-var veXHeaderTitleNode;
-var veXDODcategoriesNode;
 var veXTicketPhaseMutationObserver;
 var veXTicketTitleMutationObserver;
-var veXTicketPhaseTextNode;
-var veXDonePercentageNode;
-var veXTicketPhaseNode;
 var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
@@ -140,17 +133,22 @@ function initTicketTitleMutationObserver() {
 }
 
 function initTicketPhaseMutationObserver() {
-  let targetNode = document.querySelector("[data-aid='entity-life-cycle-widget-phase']").childNodes[3];
-  if (!targetNode) return;
-  let options = { attributes: true };
-  veXTicketPhaseMutationObserver = new MutationObserver(
-    (mutationList, observer) => {
-      for (const mutation of mutationList) {
-        onTicketPhaseChange(mutation);
+  try {
+    let targetNode = document.querySelector("[data-aid='entity-life-cycle-widget-phase']").childNodes[3];
+    if (!targetNode) return;
+    let options = { attributes: true };
+    veXTicketPhaseMutationObserver = new MutationObserver(
+      (mutationList, observer) => {
+        for (const mutation of mutationList) {
+          onTicketPhaseChange(mutation);
+        }
       }
-    }
-  );
-  veXTicketPhaseMutationObserver.observe(targetNode, options);
+    );
+    veXTicketPhaseMutationObserver.observe(targetNode, options);
+  }
+  catch (err) {
+    utilAPI.onError(err, "An error occurred during the setup.");
+  }
 }
 //<-Initialising Mutation Observers
 
@@ -174,14 +172,21 @@ function veXSetup() {
 }
 
 function initVEXNodes() {
-  veXCategoryTitleNode = veXPopUpNode.querySelector('.veX_dod_title');
-  veXSidebarParentNode = veXPopUpNode.querySelector('.veX_sidebar');
-  veXChecklistParentNode = veXPopUpNode.querySelector('.veX_dod_list_container');
-  veXHeaderTitleNode = veXPopUpNode.querySelector(".veX_header_title");
-  veXDODcategoriesNode = veXPopUpNode.querySelector(".veX_dod_categories");
-  veXTicketPhaseTextNode = veXPopUpNode.querySelector(".veX_ticket_phase_txt");
-  veXTicketPhaseNode = veXPopUpNode.querySelector(".veX_ticket_phase");
-  veXDonePercentageNode = veXPopUpNode.querySelector(".veX_done_percentage");
+  try {
+    veXNodes.veXCategoryTitleNode = veXPopUpNode.querySelector('.veX_dod_title');
+    veXNodes.veXSidebarParentNode = veXPopUpNode.querySelector('.veX_sidebar');
+    veXNodes.veXChecklistParentNode = veXPopUpNode.querySelector('.veX_dod_list_container');
+    veXNodes.veXHeaderTitleNode = veXPopUpNode.querySelector(".veX_header_title");
+    veXNodes.veXDODcategoriesNode = veXPopUpNode.querySelector(".veX_dod_categories");
+    veXNodes.veXTicketPhaseTextNode = veXPopUpNode.querySelector(".veX_ticket_phase_txt");
+    veXNodes.veXTicketPhaseNode = veXPopUpNode.querySelector(".veX_ticket_phase");
+    veXNodes.veXDonePercentageNode = veXPopUpNode.querySelector(".veX_done_percentage");
+    veXNodes.veXPhaseDropDown = veXPopUpNode.querySelector(".veX_all_phases");
+    veXNodes.veXCategoryButton = veXPopUpNode.querySelectorAll('.veX-Button')
+  } catch (err) {
+    utilAPI.onError(err, "An error occurred during the setup.");
+  }
+
 }
 
 function getCurrentTicketInfo(title) {
@@ -219,20 +224,24 @@ function getTicketTitle(title) {
 }
 
 function veXReset() {
-  veXCurrentCategory = {};
-  veXCheckedItems = {};
-  veXCurrentTicketChecklist = {};
-  veXCurrentTicketInfo = {};
-  veXPhaseMap = {};
-  veXTotalCompletedtems = 0;
-  veXTotalItems = 0;
-  if (veXTicketPhaseMutationObserver) {
-    veXTicketPhaseMutationObserver.disconnect();
-    veXTicketPhaseMutationObserver = undefined;
+  try {
+    veXCurrentCategory = {};
+    veXChecklistItems = {};
+    veXCurrentTicketChecklist = {};
+    veXCurrentTicketInfo = {};
+    veXPhaseMap = {};
+    veXTotalCompletedtems = 0;
+    veXTotalItems = 0;
+    if (veXTicketPhaseMutationObserver) {
+      veXTicketPhaseMutationObserver.disconnect();
+      veXTicketPhaseMutationObserver = undefined;
+    }
+    root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
+    root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);
+    root.style.setProperty('--veX-ticktColor', `#fff`);
+  } catch (err) {
+    utilAPI.onError(err, "An error occurred while resetting variables");
   }
-  root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
-  root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);
-  root.style.setProperty('--veX-ticktColor', `#fff`);
 }
 
 function initView() {
@@ -252,17 +261,17 @@ function initView() {
     return false;
   }
 }
-// Set the initial title for the checklist popup.
+
 async function initHeaderView() {
   try {
     veXPopUpNode.querySelector('.veX_logo').src = await chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png");
-    veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
+    veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
   }
   catch (err) {
     utilAPI.onError(err, "An error occurred while initializing the header view.");
   }
 }
-// This function initialise veXPhaseMap object 
+
 function initPhaseMap() {
   try {
     let categories = Object.keys(veXCurrentTicketChecklist.categories);
@@ -296,35 +305,15 @@ function initStyle() {
 
 function initSidebarHeaderView() {
   try {
-    veXDonePercentageNode.innerHTML = "0%";
-    veXTicketPhaseTextNode.innerHTML = veXCurrentTicketInfo.phase;
-    veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
-    //veXPopUpNode.querySelector(".veX_all_phases").style.display = "none";
+    veXNodes.veXDonePercentageNode.innerHTML = "0%";
+    veXNodes.veXTicketPhaseTextNode.innerHTML = veXCurrentTicketInfo.phase;
+    veXNodes.veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
   }
   catch (err) {
     utilAPI.onError(err, "An error occurred while initializing the sidebar header view.");
   }
 }
-// function initPhaseDropdownView() {
-//   try
-//   {
-//     if (utilAPI.isEmptyObject(veXPhaseMap)) return;
-//     Object.keys(veXPhaseMap).forEach((phase) => {
-//       let phaseItemNode = document.createElement('div');
-//       phaseItemNode.innerText = phase;
-//       phaseItemNode.setAttribute('phaseName', phase);
-//       phaseItemNode.addEventListener('click', (event) => {
-//         let phaseName = event.target.getAttribute('phaseName');
-//         initCategoriesView(veXPhaseMap[phaseName]);
-//       });
-//       veXPopUpNode.querySelector(".veX_all_phases").appendChild(phaseItemNode);
-//     });
-//   }catch(err)
-//   {
-//     utilAPI.onError(err, "An error occurred while initializing the Phase dropdown");
-//     throw err;
-//   }
-// }
+
 function initPhaseDropdownView() {
   try {
     let veXPhaseDropDown = veXPopUpNode.querySelector(".veX_all_phases");
@@ -338,7 +327,7 @@ function initPhaseDropdownView() {
       dropdownListNode.textContent = avaliablePhases[i];
       dropdownListNode.addEventListener('click', (event) => {
         let phaseName = event.target.getAttribute('phaseName');
-        veXTicketPhaseTextNode.innerText = phaseName;
+        veXNodes.veXTicketPhaseTextNode.innerText = phaseName;
         initCategoriesView(veXPhaseMap[phaseName]);
         updateMainContentView();
       });
@@ -348,11 +337,12 @@ function initPhaseDropdownView() {
     utilAPI.onError(err, "An error occurred while initializing the Phase dropdown");
   }
 }
+
 function initCategoriesView(categories) {
-  veXDODcategoriesNode.innerHTML = "";
+  veXNodes.veXDODcategoriesNode.innerHTML = "";
   try {
     if (utilAPI.isEmptyObject(categories)) {
-      veXDODcategoriesNode.innerHTML = "No Item";
+      veXNodes.veXDODcategoriesNode.innerHTML = "No Item";
       return;
     };
     let categoryNames = Object.keys(categories);
@@ -363,7 +353,7 @@ function initCategoriesView(categories) {
         sideBarItemNode.setAttribute("categoryName", categoryName);
         sideBarItemNode.addEventListener('click', onCategoryChange);
         sideBarItemNode.textContent = categoryName;
-        veXDODcategoriesNode.appendChild(sideBarItemNode);
+        veXNodes.veXDODcategoriesNode.appendChild(sideBarItemNode);
       }
     );
     veXCurrentCategory = {
@@ -379,27 +369,24 @@ function initCategoriesView(categories) {
 function updateMainContentView() {
   try {
     if (utilAPI.isEmptyObject(veXCurrentCategory)) {
-      veXCategoryTitleNode.innerHTML = "No Item";
-      veXChecklistParentNode.innerHTML = "No Item";
+      veXNodes.veXCategoryTitleNode.innerHTML = "No Category Found";
+      veXNodes.veXChecklistParentNode.innerHTML = "No Item";
       return;
     }
-    veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
+    veXNodes.veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
     veXPopUpNode.querySelectorAll('.veX-Button').forEach((buttonNode) => {
       buttonNode.classList.remove("veX-Active-Button");
     });
-    veXSidebarParentNode.querySelector(`[categoryName="${veXCurrentCategory.name}"]`).classList.add("veX-Active-Button");
-    updateCheckList();
+    veXNodes.veXSidebarParentNode.querySelector(`[categoryName="${veXCurrentCategory.name}"]`).classList.add("veX-Active-Button");
+    updateChecklist();
   } catch (err) {
     utilAPI.onError(err, "An error occurred while updating main content view.", true);
   }
 }
 
-function initCheckListView() {
-
-}
-function initCheckedItems() {
+function initChecklist() {
   veXTotalItems = 0;
-  veXCheckedItems = {};
+  veXChecklistItems = {};
   try {
     let categories = Object.keys(veXCurrentTicketChecklist.categories);
     if (utilAPI.isEmptyArray(categories)) {
@@ -407,10 +394,10 @@ function initCheckedItems() {
       return;
     }
     categories.forEach((categoryName) => {
-      veXCheckedItems[categoryName] = [];
+      veXChecklistItems[categoryName] = [];
       let currentCategory = veXCurrentTicketChecklist.categories[categoryName];
       currentCategory.checklist.forEach((listContent) => {
-        veXCheckedItems[categoryName].push(
+        veXChecklistItems[categoryName].push(
           {
             isSelected: false,
             note: "",
@@ -427,16 +414,16 @@ function initCheckedItems() {
   }
 }
 
-function updateCheckList() {
-  let checkList = veXCurrentCategory.value.checklist;
-  veXChecklistParentNode.innerHTML = "";
+function updateChecklist() {
   try {
-    if (utilAPI.isEmptyArray(checkList)) {
+    let checklist = veXCurrentCategory.value.checklist;
+    veXNodes.veXChecklistParentNode.innerHTML = "";
+    if (utilAPI.isEmptyArray(checklist)) {
       return;
     }
-    let currentCheckList = veXCheckedItems[veXCurrentCategory.name];
+    let currentCheckList = veXChecklistItems[veXCurrentCategory.name];
     let index = 0;
-    checkList.forEach(
+    checklist.forEach(
       (itemValue) => {
         let listItem = document.createElement('div');
         let listNodeUI = `
@@ -459,6 +446,7 @@ function updateCheckList() {
         listItem.addEventListener("click", (event) => {
           onListItemClick(event, listItem);
         });
+        updateNoteIcon(listItem);
         if (currentCheckList[index].isSelected == true && currentCheckList[index].isCompleted == true) {
           setSelectedState(listItem, index);
           setCompletedState(listItem, index);
@@ -471,8 +459,6 @@ function updateCheckList() {
         else if (currentCheckList[index].isSelected == false && currentCheckList[index].isCompleted == false) {
           setUnSelectedState(listItem, index);
         }
-
-        updateNotesIcon(listItem);
         listItem.querySelector(".veX_note").addEventListener("click", (event) => {
           onListNoteClick(event, listItem);
         });
@@ -484,9 +470,8 @@ function updateCheckList() {
         });
         listItem.querySelector('.veX_checklist_note').addEventListener('change', (event) => {
           onListNoteChange(event, listItem);
-          event.stopPropagation();
         });
-        veXChecklistParentNode.appendChild(listItem);
+        veXNodes.veXChecklistParentNode.appendChild(listItem);
         index++;
       }
     );
@@ -494,67 +479,79 @@ function updateCheckList() {
     utilAPI.onError(err, "An error occurred while updating checklist", true);
   }
 }
-function updateNotesIcon(listItem) {
-  if (listItem.querySelector('.veX_checklist_note').value.trim() == "") {
-    listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/notes_24dp.png");
-  }
-  else {
-    listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/edit_note_24dp.png");
-  }
-}
-function isChecklistCanAddToComments() {
-  let categories = Object.keys(veXCheckedItems);
-  let unselected = 0;
-  for (let i = 0; i < categories.length; i++) {
-    let categoryName = categories[i];
-    let checklist = veXCheckedItems[categoryName];
-    for (let j = 0; j < checklist.length; j++) {
-      let item = checklist[j];
-      if (item.isCompleted == false) {
-        if (item.isSelected == true) {
-          if (item.note.trim() == "")
-            return false;
-        }
-        else
-          unselected++;
-      }
+
+function updateNoteIcon(listItem) {
+  try {
+    if (listItem.querySelector('.veX_checklist_note').value.trim() == "") {
+      listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/notes_24dp.png");
+    }
+    else {
+      listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/edit_note_24dp.png");
     }
   }
-  return unselected == veXTotalItems ? false : true;
-
+  catch (err) {
+    utilAPI.onError(err, "An error occurred while updating Note Icon", true);
+  }
 }
-function addDoneListToComments() {
+function isCommentAllowed() {
   try {
-    if (!isChecklistCanAddToComments()) {
+    let categories = Object.keys(veXChecklistItems);
+    let notSelected = 0;
+    for (let i = 0; i < categories.length; i++) {
+      let categoryName = categories[i];
+      let checklist = veXChecklistItems[categoryName];
+      for (let j = 0; j < checklist.length; j++) {
+        let item = checklist[j];
+        if (item.isCompleted == false) {
+          if (item.isSelected == true) {
+            if (item.note.trim() == "")
+              return false;
+          }
+          else
+            notSelected++;
+        }
+      }
+    }
+    return notSelected == veXTotalItems ? false : true;
+  }
+  catch (err) {
+    utilAPI.onError(err, "An error occurred while going through checklist items", true);
+  }
+ 
+}
+
+async function addDoneListToComments() {
+  try {
+    if (!isCommentAllowed()) {
       utilAPI.notify("Mark at least one item as complete or add a note to selected items", "warning", true);
       return;
     }
     let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-label-commentsPanel']")
-    if (rightSidebarCommentButton)
-      rightSidebarCommentButton.click();
-    setTimeout(() => {
-      let dummyAddNewCommentBox = document.querySelector("[data-aid='comments-pane-add-new-comment-placeholder-state']")
-      if (dummyAddNewCommentBox)
-        dummyAddNewCommentBox.click();
-      setTimeout(() => {
-        let commentBox = document.querySelector(".mqm-writing-new-comment-div").querySelector(".fr-wrapper").childNodes[0];
-        if (commentBox) {
-          let finalComment = draftCommentForCheckedItems();
-          if (finalComment != "")
-            commentBox.innerHTML = finalComment;
-          else return;
-        }
-        setTimeout(() => {
-          let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
-          if (commentSubmitButton) {
-            setTimeout(() => {
-              commentSubmitButton.click();
-              utilAPI.notify("The checklist has been successfully added to the comments.", "success", true);
-            }, 3000);
-          }
-        }, 100);
-      }, 100);
-    }, 100);
+    if (rightSidebarCommentButton) rightSidebarCommentButton.click();
+    await utilAPI.delay(500);
+    let addNewCommentBox = document.querySelector("[data-aid='comments-pane-add-new-comment-placeholder-state']")
+    if (addNewCommentBox)
+      addNewCommentBox.click();
+    else
+      return;
+    await utilAPI.delay(500);
+    let commentBox = document.querySelector(".mqm-writing-new-comment-div").querySelector(".fr-wrapper").childNodes[0];
+    if (commentBox) {
+      let finalComment = draftCommentForCheckedItems();
+      if (finalComment != "")
+        commentBox.innerHTML = finalComment;
+      else return;
+    }
+    else return;
+    
+    let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
+    if (commentSubmitButton) {
+      commentSubmitButton.removeAttribute("disabled");
+      await utilAPI.delay(3000);
+      commentSubmitButton.click();
+      commentSubmitButton.childNodes[1].click();
+      utilAPI.notify("The checklist has been successfully added to the comments.", "success", true);
+    }
   }
   catch (ex) {
     utilAPI.onError(ex, "An exception occurred while trying to open comments in response to a click event", true)
@@ -569,9 +566,9 @@ function draftCommentForCheckedItems() {
     CommentHeaderNode.innerHTML = `<strong>**Checklist Completion: ${donePercentage}%**</strong>`;
     CommentHeaderNode.style.color = "#22BB33";
     CommentDraftNode.appendChild(CommentHeaderNode);
-    let categories = Object.keys(veXCheckedItems);
+    let categories = Object.keys(veXChecklistItems);
     categories.forEach((categoryName) => {
-      let checklist = veXCheckedItems[categoryName];
+      let checklist = veXChecklistItems[categoryName];
       let categoryNameNode = document.createElement("p")
       categoryNameNode.innerHTML = `<b>${categoryName}</b>`;
       let checkedListNode = document.createElement("ul");
@@ -621,30 +618,30 @@ function updateDonePercentage() {
     donePercentage = 100
   else if (donePercentage == 0)
     donePercentage = 0;
-  veXDonePercentageNode.innerHTML = `${donePercentage}%`;
+  veXNodes.veXDonePercentageNode.innerHTML = `${donePercentage}%`;
   root.style.setProperty('--veX-checkedItemsPercentage', `${donePercentage}%`);
 }
 function setUnSelectedState(listItemNode, listIndex) {
-  veXCheckedItems[veXCurrentCategory.name][listIndex].isSelected = false;
+  veXChecklistItems[veXCurrentCategory.name][listIndex].isSelected = false;
   listItemNode.classList.remove('veX_selected');
   listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png");
   updateDonePercentage();
 }
 function setSelectedState(listItemNode, listIndex) {
-  veXCheckedItems[veXCurrentCategory.name][listIndex].isSelected = true;
+  veXChecklistItems[veXCurrentCategory.name][listIndex].isSelected = true;
   listItemNode.classList.add('veX_selected');
   listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/indeterminate_check_box_24dp.png");
   updateDonePercentage();
 }
 function setCompletedState(listItemNode, listIndex) {
-  veXCheckedItems[veXCurrentCategory.name][listIndex].isCompleted = true;
+  veXChecklistItems[veXCurrentCategory.name][listIndex].isCompleted = true;
   listItemNode.classList.add('veX_completed');
   listItemNode.querySelector('.veX_done_check').classList.add("veX_checked");
   listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/check_box_24dp_FFFFFF.png");
   updateDonePercentage();
 }
 function setUnCompletedState(listItemNode, listIndex) {
-  veXCheckedItems[veXCurrentCategory.name][listIndex].isCompleted = false;
+  veXChecklistItems[veXCurrentCategory.name][listIndex].isCompleted = false;
   listItemNode.classList.remove('veX_completed');
   listItemNode.querySelector('.veX_done_check').classList.remove("veX_checked");
   if (listItemNode.classList.contains("veX_selected")) {
@@ -693,12 +690,12 @@ function onListItemClick(event, listItemNode) {
     let currentNode = listItemNode;
     if (!currentNode.querySelector(".veX_checklist_note").classList.contains("veX_hide_checklist_note")) {
       currentNode.querySelector(".veX_checklist_note").classList.add("veX_hide_checklist_note");
-      updateNotesIcon(listItemNode);
+      updateNoteIcon(listItemNode);
       event.stopPropagation(currentNode);
       return;
     }
     let index = listItemNode.getAttribute('listIndex')
-    let currentCheckList = veXCheckedItems[veXCurrentCategory.name];
+    let currentCheckList = veXChecklistItems[veXCurrentCategory.name];
     if (currentCheckList[index].isSelected == true && currentCheckList[index].isCompleted == true) {
       veXTotalCompletedtems--;
       setUnCompletedState(listItemNode, index);
@@ -722,12 +719,12 @@ function onListItemClick(event, listItemNode) {
 
 function onListNoteClick(event, listItemNode) {
   let index = listItemNode.getAttribute('listIndex')
-  veXChecklistParentNode.querySelectorAll('.veX_list_item').forEach((listNode) => {
+  veXNodes.veXChecklistParentNode.querySelectorAll('.veX_list_item').forEach((listNode) => {
     let curIndex = listNode.getAttribute('listIndex');
     if (curIndex != index) {
       if (!listNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
         listNode.querySelector('.veX_checklist_note').classList.add("veX_hide_checklist_note");
-        updateNotesIcon(listNode);
+        updateNoteIcon(listNode);
       }
     }
 
@@ -735,7 +732,7 @@ function onListNoteClick(event, listItemNode) {
 
   listItemNode.querySelector('.veX_checklist_note').classList.toggle("veX_hide_checklist_note");
 
-  updateNotesIcon(listItemNode);
+  updateNoteIcon(listItemNode);
   if (!listItemNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
     listItemNode.querySelector('.veX_checklist_note').focus();
   }
@@ -743,12 +740,12 @@ function onListNoteClick(event, listItemNode) {
 }
 function onListNoteChange(event, listItemNode) {
   let listIndex = listItemNode.getAttribute('listIndex');
-  veXCheckedItems[veXCurrentCategory.name][listIndex].note = listItemNode.querySelector('.veX_checklist_note').value;
+  veXChecklistItems[veXCurrentCategory.name][listIndex].note = listItemNode.querySelector('.veX_checklist_note').value;
   event.stopPropagation();
 }
 function onListDoneCheckClick(event, listItemNode) {
   let index = listItemNode.getAttribute('listIndex')
-  let currentCheckList = veXCheckedItems[veXCurrentCategory.name];
+  let currentCheckList = veXChecklistItems[veXCurrentCategory.name];
   if (currentCheckList[index].isSelected == true && currentCheckList[index].isCompleted == true) {
     veXTotalCompletedtems--;
     setUnCompletedState(listItemNode, index);
@@ -779,7 +776,7 @@ async function onTicketTitleChange() {
     }
     if (!utilAPI.isEmptyObject(veXCurrentTicketChecklist)) {
       initTicketPhaseMutationObserver();
-      initCheckedItems();
+      initChecklist();
       veXIsViewInitialised = initView();
     }
   }
