@@ -42,43 +42,6 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
 
 ```json
 {
-  "<entityName>": {
-    "type": "object",
-    "properties": {
-      "title": {
-        "type": "string",
-        "description": "The title representing the type of ticket (e.g., Defect, Epic)"
-      },
-      "categories": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "The name of the category."
-            },
-            "checklist": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "description": "An individual checklist item."
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-```
-**Supported Entity Types**
- ```"Epic","Feature","Defect","Enhancement","CPE Incident","User Story","Internal","Spike","Quality Story","Task"```
-
-**Example JSON File**
-
-```JSON
-{
    "Defect": {
       "categories": {
          "Investigation": {
@@ -140,23 +103,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
       }
    }
 }
-
 ```
-
-**Contributing 🤝**
-
-We welcome contributions from everyone! Here's how you can get involved:
-
-- **Report Issues**: Encounter a bug? Have a feature request? Open an issue on our GitHub repository to let us know.
-- **Contribute Code**: Want to dive into the codebase? Check out our open issues and pull requests.Fork the repository, make your changes, and submit a pull request.
-- **Suggest Improvements**: Have ideas for new features or enhancements? Share them in a new issue. Discuss potential improvements with the community.
-
-**TO-DO⏳**
-1. Based on the ticket status, we need to display the appropriate checklist categories if user select 'All' we need to show all categories.  
-2. When the user selects a checklist, they should be able to add notes to that checklist, which will be displayed in the comments for that item.  
-3. When the user clicks on "Add to Comment," it should automatically add the notes to the comments instead of just drafting them in the comment box.
-
 **Please note ⚠️**
-
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
