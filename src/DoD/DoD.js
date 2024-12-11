@@ -275,7 +275,7 @@ async function initHeaderView() {
 function initPhaseMap() {
   try {
     let categories = Object.keys(veXCurrentTicketChecklist.categories);
-    veXPhaseMap["All"] = {};
+    veXPhaseMap["All Phases"] = {};
     categories.forEach(
       (categoryName) => {
         let phases = veXCurrentTicketChecklist.categories[categoryName]["phases"];
