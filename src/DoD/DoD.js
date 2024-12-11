@@ -290,7 +290,7 @@ function initPhaseMap() {
             }
           });
         }
-        veXPhaseMap["All"][categoryName] = veXCurrentTicketChecklist.categories[categoryName];
+        veXPhaseMap["All Phases"][categoryName] = veXCurrentTicketChecklist.categories[categoryName];
       });
   }
   catch (err) {
