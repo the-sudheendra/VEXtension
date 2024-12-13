@@ -1,5 +1,5 @@
 <div align="center">
-     <h1>VE Checklist</h1>
+     <p style="font-size:larger">VE Checklist</p>
     <p>Checklist Tool for OpenText ValueEdge platform.</p>
     <img width = "40px" height="40px" src="icons/fact_check_32.png" alt="Logo"> 
     <div align="center">
