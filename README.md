@@ -38,70 +38,51 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
     <img src="screenshots/Upload-Checklist.png" style="width: 70%;height:70%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Upload Checklis">
 </div>
 
-#### Ticket Schema
+#### Example Checklist
 
 ```json
 {
-   "Defect": {
-      "categories": {
-         "Investigation": {
-            "checklist": [
-               "Reproduce the issue",
-               "Gather logs and screenshots",
-               "Determine root cause",
-               "Document findings"
-            ]
-         },
-         "Resolution": {
-            "checklist": [
-               "Implement fix",
-               "Run regression tests",
-               "Confirm issue resolution",
-               "Close defect after verification"
-            ]
-         }
+  "Defect": {
+    "categories": {
+      "Reproduction": {
+        "checklist": [
+          "Steps to reproduce the issue are clearly documented",
+          "Actual vs expected behavior is described",
+          "Screenshots or logs are attached, if applicable"
+        ],
+        "phases": ["New", "Inprogress"]
+      },
+      "Resolution": {
+        "checklist": [
+          "Root cause analysis is documented",
+          "Solution has been tested and verified",
+          "All relevant stakeholders are informed of the fix",
+          "Test cases are updated to cover the issue"
+        ],
+        "phases": ["Done", "Resolved"]
       }
-   },
-   "CPE Incident": {
-      "categories": {
-         "Intake": {
-            "checklist": [
-               "Log support ticket",
-               "Identify user issue",
-               "Classify urgency and assign priority",
-               "Assign to support team"
-            ]
-         },
-         "Resolution": {
-            "checklist": [
-               "Provide solution or workaround",
-               "Communicate with user",
-               "Confirm issue resolution",
-               "Close support ticket"
-            ]
-         }
+    }
+  },
+  "Spike": {
+    "categories": {
+      "Planning": {
+        "checklist": [
+          "Objective of the spike is clearly defined",
+          "Expected deliverables are documented",
+          "Team has agreed on a timebox for the spike"
+        ],
+        "phases": ["New", "Inprogress"]
+      },
+      "Analysis": {
+        "checklist": [
+          "Relevant research and findings are documented",
+          "Any discovered blockers or risks are noted",
+          "Recommendations or next steps are provided"
+        ],
+        "phases": ["Done", "Resolved"]
       }
-   },
-   "Spike": {
-      "categories": {
-         "Exploration": {
-            "checklist": [
-               "Identify technical questions",
-               "Review relevant documentation",
-               "Build simple prototype",
-               "Evaluate technical feasibility"
-            ]
-         },
-         "Conclusion": {
-            "checklist": [
-               "Summarize findings",
-               "Present results to the team",
-               "Document next steps",
-               "Archive research notes"
-            ]
-         }
-      }
-   }
+    }
+  }
 }
 ```
 **Please note ⚠️**
