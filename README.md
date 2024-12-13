@@ -12,6 +12,7 @@
 - Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) Checklist based on the currently opened ticket and its status.
 - Reminds users to review and complete Checklist when changing ticket phases.
 - Users can create their own customized Checklist based on their project requirements.
+- Users can add notes to each checklist, and these notes will be included in the comments.
 - Allows users to add completed Checklist in comments to track and maintain a record of the completion status for each item.
 
 ## How to 💡
