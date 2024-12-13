@@ -1,6 +1,6 @@
 <div align="center">
-     <p style="font-size:xx-larger;font-weight:400">VE Checklist</p>
-    <p>Checklist Tool for OpenText ValueEdge platform.</p>
+     <h3>VE Checklist</h3>
+    <h4>Checklist Tool for OpenText ValueEdge platform.</h4>
     <div align="center">
         <img  src="https://img.shields.io/badge/Google_chrome-4285F4?style=for-the-badge&logo=Google-chrome&logoColor=white">
         <img  src="https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white">
