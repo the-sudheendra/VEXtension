@@ -1,5 +1,3 @@
-@import url("../Utility/common.css");
-
 :root {
   --veX-banner-backgroundColor: rgb(255, 255, 255);
   --veX-common-backgroundColor: #fff;
@@ -13,7 +11,7 @@
   --veX-header-fontSize: 20px;
   --veX-common-borderRadius: 6px;
   --veX-whiteColor: #FFFFFF;
-  --veX-blackColor: #000000;
+  --veX-blackColor: #020202;
   --veX-fontColorAgainstTicketColor: var(--veX-blackColor);
   --veX-common-borderWidth: 2px;
 }
@@ -67,7 +65,7 @@
   top: 50%;
   left: 50%;
   z-index: 3000;
-  width: 70%;
+  width: 60%;
   transform: translate(-50%, -60%);
   /*transition: opacity 0.5s ease, transform 0.5s ease;*/
   border-radius: var(--veX-common-borderRadius);
@@ -216,7 +214,7 @@
 .veX_done_percentage {
   position: absolute;
   top: 60px;
-  left: 0px;
+  left: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -411,6 +409,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
 
 .veX_list_item.veX_selected {
@@ -477,7 +476,7 @@
 
 .veX_checklist_note {
   resize: none;
-  border-radius: 10px;
+  border-radius: 3px;
   padding: 10px;
   font-size: 16px;
   font-family: inherit;
@@ -487,16 +486,18 @@
   top: 100%;
   left: 10%;
   z-index: 1;
-  border: 1PX solid var(--veX-blackColor);
+  height: auto;
+  max-height: 300px;
+  border: 2.5PX solid var(--veX-blackColor);
 }
 
 .veX_hide_checklist_note {
   display: none;
 }
 
-.veX_checklist_note:focus {
-  outline: #000000;
-  border: 1PX solid var(--veX-blackColor);
+.veX_checklist_note:focus,.veX_checklist_note:hover {
+  outline: var(--veX-blackColor);
+  border: 2.5PX solid var(--veX-blackColor);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
