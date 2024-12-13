@@ -1,7 +1,7 @@
 <div align="center">
      <h1>VE Checklist</h1>
     <p>Checklist Tool for OpenText ValueEdge platform.</p>
-    <img width = "10%" height="10%" src="icons/fact_check_32.png" alt="Logo"> 
+    <img width = "40px" height="40px" src="icons/fact_check_32.png" alt="Logo"> 
     <div align="center">
         <img width = "20%" src="https://img.shields.io/badge/Google_chrome-4285F4?style=for-the-badge&logo=Google-chrome&logoColor=white">
         <img width = "20%" src="https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white">
