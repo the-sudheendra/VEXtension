@@ -1,7 +1,8 @@
 <div align="center">
-    <h1>
-     <img src="icons/fact_check_32.png" style="width: 20px;height:20px;" alt="Logo">VE Checklist
-    <h1>
+    <div style="display:flex;justify-content:center;align-items:center;">
+     <img src="icons/fact_check_32.png" style="width: 40px;height:40px;margin: 0 10px;" alt="Logo"/>
+     <h1>VE Checklist</h1>
+    <div>
     <p>Checklist Tool for OpenText ValueEdge platform.</p>
     <img width = "10%" height="10%" src="https://media.tenor.com/00XAJzV4AqAAAAAM/checklist.gif" alt="Checklist.gif"> 
     <div align="center">
