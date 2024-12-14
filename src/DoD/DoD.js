@@ -766,10 +766,10 @@ function onListNoteClick(event, listItemNode) {
       }
 
     });
-    checklistNoteNode.classList.toggle("veX_hide_checklist_note");
+    listItemNode.querySelector('.veX_checklist_note').classList.toggle("veX_hide_checklist_note");
     updateNoteIcon(listItemNode);
-    if (!checklistNoteNode.classList.contains("veX_hide_checklist_note")) {
-      checklistNoteNode.focus();
+    if (!listItemNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
+      listItemNode.querySelector('.veX_checklist_note').focus();
     }
     if (event)
       event.stopPropagation();
