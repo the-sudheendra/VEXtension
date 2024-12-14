@@ -1,6 +1,6 @@
 <div align="center">
-     <p style="font-size:xx-larger;font-weight:400;">VE Checklist</p>
-    <p>Checklist Tool for OpenText ValueEdge platform.</p>
+     <h3>VE Checklist</h3>
+    <h4>Checklist Tool for OpenText ValueEdge platform.</h4>
     <div align="center">
         <img  src="https://img.shields.io/badge/Google_chrome-4285F4?style=for-the-badge&logo=Google-chrome&logoColor=white">
         <img  src="https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white">
@@ -12,6 +12,7 @@
 - Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) Checklist based on the currently opened ticket and its status.
 - Reminds users to review and complete Checklist when changing ticket phases.
 - Users can create their own customized Checklist based on their project requirements.
+- Users can add notes to each checklist, and these notes will be included in the comments.
 - Allows users to add completed Checklist in comments to track and maintain a record of the completion status for each item.
 
 ## How to 💡
