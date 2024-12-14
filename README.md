@@ -12,29 +12,19 @@
 - Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) Checklist based on the currently opened ticket and its status.
 - Reminds users to review and complete Checklist when changing ticket phases.
 - Users can create their own customized Checklist based on their project requirements.
-- Users can add notes to each checklist, and these notes will be included in the comments.
+- Users can add text or HTML notes to each checklist, and these notes will be included in the comments
 - Allows users to add completed Checklist in comments to track and maintain a record of the completion status for each item.
 
 ## How to 💡
 **Use the Extension?**
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
-* In the context menu, you will see an option called "DoD Checklist".
+* In the context menu, you will see an option called **VE Checklist**.
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
-
-
-<div align="center" style="text-align: center;">
-    <img src="screenshots/Defect-Checklist.png" style="width: 45%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Defect Checklist">
-    <img src="screenshots/Spike-Checklist.png" style="width: 45%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Spike Checklist">
-</div>
-
 
 **Upload Checklist?**
 
 Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
-<div align="center" style="text-align: center;">
-    <img src="screenshots/Upload-Checklist.png" style="width: 70%;height:70%; display: inline-block; margin: 0 10px;" alt="Screenshot for the Upload Checklis">
-</div>
 
 #### Example Checklist
 
