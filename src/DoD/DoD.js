@@ -207,6 +207,14 @@ function getCurrentTicketInfo(title) {
     }
   }
   catch (err) {
+    veXCurrentTicketInfo =
+    {
+      type: "Not Found",
+      id: "Not Found",
+      color: "Not Found",
+      title: "Not Found",
+      phase: "Not Found"
+    }
     utilAPI.onError(err, "An error occurred while attempting to retrieve the current ticket information.");
   }
 }
@@ -244,9 +252,9 @@ function veXReset() {
   }
 }
 
-function initView() {
+async function initView() {
   try {
-    initHeaderView();
+    await initHeaderView();
     initSidebarHeaderView();
     initPhaseMap();
     initPhaseDropdownView();
@@ -490,13 +498,14 @@ function updateChecklist() {
 
 function updateNoteIcon(listItem) {
   try {
+    let noteIconNode=listItem.querySelector(".veX_note_icon");
     if (listItem.querySelector('.veX_checklist_note').value.trim() == "") {
-      listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/notes_24dp.png");
-      listItem.querySelector(".veX_note_icon").title = "Add Notes"
+      noteIconNode.src = chrome.runtime.getURL("icons/notes_24dp.png");
+      noteIconNode.title = "Add Notes"
     }
     else {
-      listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/edit_note_24dp.png");
-      listItem.querySelector(".veX_note_icon").title = "Edit Notes"
+      noteIconNode.src = chrome.runtime.getURL("icons/edit_note_24dp.png");
+      noteIconNode.title = "Edit Notes"
     }
   }
   catch (err) {
@@ -664,14 +673,15 @@ function setUnCompletedState(listItemNode, listIndex) {
   veXChecklistItems[veXCurrentCategory.name][listIndex].isCompleted = false;
   listItemNode.classList.remove('veX_completed');
   listItemNode.querySelector('.veX_done_check').classList.remove("veX_checked");
+  let doneIconNode=listItemNode.querySelector(".veX_done_icon");
   if (listItemNode.classList.contains("veX_selected")) {
-    listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/indeterminate_check_box_24dp.png");
-    listItemNode.querySelector(".veX_done_icon").title = "Not Done";
+    doneIconNode.src = chrome.runtime.getURL("icons/indeterminate_check_box_24dp.png");
+    doneIconNode.title = "Not Done";
 
   }
   else {
-    listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png");
-    listItemNode.querySelector(".veX_done_icon").title = "Unselected";
+    doneIconNode.src = chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png");
+    doneIconNode.title = "Unselected";
 
   }
   updateDonePercentage();
@@ -747,18 +757,19 @@ function onListNoteClick(event, listItemNode) {
     let index = listItemNode.getAttribute('listIndex')
     veXNodes.veXChecklistParentNode.querySelectorAll('.veX_list_item').forEach((listNode) => {
       let curIndex = listNode.getAttribute('listIndex');
+      let checklistNoteNode=listNode.querySelector('.veX_checklist_note');
       if (curIndex != index) {
-        if (!listNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
-          listNode.querySelector('.veX_checklist_note').classList.add("veX_hide_checklist_note");
+        if (!checklistNoteNode.classList.contains("veX_hide_checklist_note")) {
+          checklistNoteNode.classList.add("veX_hide_checklist_note");
           updateNoteIcon(listNode);
         }
       }
 
     });
-    listItemNode.querySelector('.veX_checklist_note').classList.toggle("veX_hide_checklist_note");
+    checklistNoteNode.classList.toggle("veX_hide_checklist_note");
     updateNoteIcon(listItemNode);
-    if (!listItemNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
-      listItemNode.querySelector('.veX_checklist_note').focus();
+    if (!checklistNoteNode.classList.contains("veX_hide_checklist_note")) {
+      checklistNoteNode.focus();
     }
     if (event)
       event.stopPropagation();
