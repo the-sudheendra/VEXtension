@@ -2,23 +2,24 @@
 
 body
 {
-    background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(34,116,181,1) 75%);
+    background: linear-gradient(61deg, rgb(9, 14, 44) 0%, rgb(18, 44, 105) 59%, rgb(7, 141, 179) 100%);
 }
 .veX_container {
+    position: absolute; /* Use absolute or fixed positioning */
+    top: 50%;           /* Position the element 50% from the top of the container */
+    left: 50%;          /* Position the element 50% from the left of the container */
+    transform: translate(-50%, -50%); 
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
-    width: 600px;
-    height: 300px;
     margin: 0 auto;
     border: 2px solid rgba(34,116,181,1);
     border-radius: 6px;
     position: fixed;
-    left: 30%;
-    top: 30%;
     padding: 40px;
-    background: var(--veX-common-backgroundColor);
+    background-color: rgb(255, 255, 255, 0.1);
+    color: #fff;
 }
 .veX_container p{
     font-size: xx-large;
@@ -42,14 +43,16 @@ body
 }
 
 .veX_submit_btn {
+    margin-top: 20px;
     display: block;
-    padding: 10px;
     background-color: var(--veX-common-backgroundColor);
-    color: var(--veX-common-fontColor);
+    color: #000;
     border: none;
     border-radius: var(--veX-common-borderRadius);
     cursor: pointer;
     text-decoration: none;
     font-size: medium;
     background-color: var(--vex-hoverColor);
+    padding: 10px 24px;
+    border-radius: 20px;
 }
