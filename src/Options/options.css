@@ -3,6 +3,7 @@
 body
 {
     background: linear-gradient(61deg, rgb(9, 14, 44) 0%, rgb(18, 44, 105) 59%, rgb(7, 141, 179) 100%);
+    font-family: cursive;
 }
 .veX_container {
     position: absolute; /* Use absolute or fixed positioning */
@@ -18,8 +19,8 @@ body
     border-radius: 6px;
     position: fixed;
     padding: 40px;
-    background-color: rgb(255, 255, 255, 0.1);
     color: #fff;
+    box-shadow: rgba(34,116,181, 0.35) 0px 5px 15px;
 }
 .veX_container p{
     font-size: xx-large;
