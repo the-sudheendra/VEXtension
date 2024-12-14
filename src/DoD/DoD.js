@@ -474,6 +474,7 @@ function updateChecklist() {
         let noteIconNode = listItem.querySelector(".veX_note");
         let doneIconNode = listItem.querySelector(".veX_done_check");
         let noteNode = listItem.querySelector('.veX_checklist_note');
+        noteNode.innerText=DOMPurify.sanitize(currentCheckList[index].note);
         noteIconNode.addEventListener("click", (event) => {
           onListNoteClick(event, listItem);
         });
@@ -783,7 +784,8 @@ function onListNoteClick(event, listItemNode) {
 function onListNoteChange(event, listItemNode) {
   try {
     let listIndex = listItemNode.getAttribute('listIndex');
-    veXChecklistItems[veXCurrentCategory.name][listIndex].note = listItemNode.querySelector('.veX_checklist_note').value;
+    let noteValue=listItemNode.querySelector('.veX_checklist_note').value;
+    veXChecklistItems[veXCurrentCategory.name][listIndex].note =  DOMPurify.sanitize(noteValue);
     if (event)
       event.stopPropagation();
   } catch (err) {
