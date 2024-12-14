@@ -19,7 +19,7 @@
 **Use the Extension?**
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
-* In the context menu, you will see an option called "DoD Checklist".
+* In the context menu, you will see an option called **VE Checklist**.
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
 **Upload Checklist?**
