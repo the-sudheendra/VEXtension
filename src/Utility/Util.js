@@ -22,8 +22,8 @@ function notify(message, type = "info",display = false) {
   }
 }
 
-function onError(error, info = "An error occurred. Please review the console logs for details and report the issue if needed.", display = false) {
-  notify(info, "error", display);
+function onError(error, info = "Something Went wrong", display = false) {
+  notify(`${info},Please review the console logs for details and report the issue if needed."`, "error", display);
   console.dir(error);
 }
 function delay(ms) {

@@ -459,22 +459,22 @@ function updateChecklist() {
         else if (currentCheckList[index].isSelected == false && currentCheckList[index].isCompleted == false) {
           setUnSelectedState(listItem, index);
         }
-        let noteIconNode=listItem.querySelector(".veX_note");
-        let doneIconNode=listItem.querySelector(".veX_done_check");
-        let noteNode=listItem.querySelector('.veX_checklist_note');
+        let noteIconNode = listItem.querySelector(".veX_note");
+        let doneIconNode = listItem.querySelector(".veX_done_check");
+        let noteNode = listItem.querySelector('.veX_checklist_note');
         noteIconNode.addEventListener("click", (event) => {
           onListNoteClick(event, listItem);
         });
         doneIconNode.addEventListener("click", (event) => {
           onListDoneCheckClick(event, listItem);
         });
-      
+
         noteNode.addEventListener('click', (event) => {
           event.stopPropagation();
         });
         noteNode.addEventListener('input', () => {
           noteNode.style.height = 'auto'; // Reset height
-          noteNode.style.height = `${Math.min(noteNode.scrollHeight, 300)}px`; // Adjust height up to max-height
+          noteNode.style.height = `${Math.min(noteNode.scrollHeight, 250)}px`; // Adjust height up to max-height
         });
         listItem.querySelector('.veX_checklist_note').addEventListener('change', (event) => {
           onListNoteChange(event, listItem);
@@ -492,11 +492,11 @@ function updateNoteIcon(listItem) {
   try {
     if (listItem.querySelector('.veX_checklist_note').value.trim() == "") {
       listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/notes_24dp.png");
-      listItem.querySelector(".veX_note_icon").title="Add Notes"
+      listItem.querySelector(".veX_note_icon").title = "Add Notes"
     }
     else {
       listItem.querySelector(".veX_note_icon").src = chrome.runtime.getURL("icons/edit_note_24dp.png");
-      listItem.querySelector(".veX_note_icon").title="Edit Notes"
+      listItem.querySelector(".veX_note_icon").title = "Edit Notes"
     }
   }
   catch (err) {
@@ -513,11 +513,9 @@ function isCommentAllowed() {
       for (let j = 0; j < checklist.length; j++) {
         let item = checklist[j];
         if (item.isCompleted == false) {
-          if (item.isSelected == true) {
-            if (item.note.trim() == "")
-              return false;
-          }
-          else
+          if (item.isSelected == true && item.note.trim() == "")
+            return false;
+          else if (item.isSelected == false && item.note.trim() == "")
             notSelected++;
         }
       }
@@ -533,7 +531,7 @@ function isCommentAllowed() {
 async function addDoneListToComments() {
   try {
     if (!isCommentAllowed()) {
-      utilAPI.notify("Mark at least one item as complete or add a note to selected items", "warning", true);
+      utilAPI.notify("Mark at least one item as completed or add a notes", "info", true);
       return;
     }
     let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-label-commentsPanel']")
@@ -548,19 +546,19 @@ async function addDoneListToComments() {
     let commentBox = document.querySelector(".mqm-writing-new-comment-div").querySelector(".fr-wrapper").childNodes[0];
     if (commentBox) {
       let finalComment = draftCommentForCheckedItems();
-      if (finalComment != "")
+      if (finalComment != "") {
         commentBox.innerHTML = finalComment;
+        commentBox.blur();
+      }
       else return;
     }
     else return;
-
     let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
     if (commentSubmitButton) {
       commentSubmitButton.removeAttribute("disabled");
-      await utilAPI.delay(3000);
-      commentBox.click();
+      await utilAPI.delay(500);
+      closeveXPopUp();
       commentSubmitButton.click();
-      commentSubmitButton.childNodes[1].click();
       utilAPI.notify("The checklist has been successfully added to the comments.", "success", true);
     }
   }
@@ -580,25 +578,29 @@ function draftCommentForCheckedItems() {
     let categories = Object.keys(veXChecklistItems);
     categories.forEach((categoryName) => {
       let checklist = veXChecklistItems[categoryName];
-      if (!checklist.some((item) => item.isCompleted == true || item.isSelected == true))
+      if (!checklist.some((item) => item.isCompleted == true || item.note.trim() != ""))
         return;
       let categoryNameNode = document.createElement("p")
-      categoryNameNode.innerHTML = `<b>${categoryName}</b>`;
+      categoryNameNode.style.borderBottom = "1px dotted gray";
+      categoryNameNode.style.paddingBottom = "2px";
+      categoryNameNode.style.color = "#333"
+      categoryNameNode.style.fontWeight = "bold";
+      categoryNameNode.innerHTML = `Category:<b> ${categoryName}</b>`;
       let checkedListNode = document.createElement("ul");
+      checkedListNode.style.paddingLeft = "0px";
       checkedListNode.style.listStyleType = "none";
       checklist.forEach((item) => {
-        if (item.isCompleted == true || item.isSelected == true) {
+        if (item.isCompleted == true || item.note.trim() != "") {
           let itemNode = document.createElement("li");
           itemNode.style.display = "flex";
           itemNode.style.flexDirection = "column";
           itemNode.style.justifyContent = "space-between";
           itemNode.style.alignItems = "flex-start";
+          itemNode.innerHTML = `<li style="color: #333; display:flex; justify-content:flex-start; align-items:center;margin-bottom:2px; "><p style="font-weight: bold; color: #333;margin-bottom:0px;">[${item.isCompleted == true ? "Done" : item.isSelected == true ? "Not Done" : "Not Applicable"}]&nbsp;&nbsp;${item.listContent}</p><li>`
           if (item.note != "") {
-            itemNode.innerHTML = `<li style="font-weight: bold; color: #333;">[${item.isCompleted == true ? "✔" : "X"}] ${item.listContent}<li>`
-            itemNode.innerHTML += `<li style="font-size: 12px; color: #000;"><b>Notes:</b><br/> ${item.note}</li>`
+            itemNode.innerHTML += `<li style="margin-bottom:10px;"><b style="color: #fbbe0c;">Notes:</b><br/>${item.note}</li>`
           }
-          else
-            itemNode.innerHTML = `<li style="font-weight: bold; color: #333;">[${item.isCompleted == true ? "✔" : "X"}] ${item.listContent}<li>`
+
           checkedListNode.appendChild(itemNode);
         }
       });
