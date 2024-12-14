@@ -21,6 +21,10 @@ var utilAPI;
   const utilURL = chrome.runtime.getURL("src/Utility/util.js");
   utilAPI = await import(utilURL);
 })();
+(async () => {
+  const DOMPurifyURL = chrome.runtime.getURL("src/Utility/purify.min.js");
+  await import(DOMPurifyURL);
+})();
 const veXEntityMetaData = {
   'E':
   {
@@ -108,7 +112,6 @@ var vexDODUI = `
 <div class="veX_banner veX_footer">
     <button class="veX_common_btn">Comment Checklist</button>
 </div>
-<script type="text/javascript" src="${chrome.runtime.getURL("src/Utility/purify.min.js")}"></script>
 `;
 
 //<-- veX Objects Declarations
@@ -555,8 +558,8 @@ async function addDoneListToComments() {
     await utilAPI.delay(500);
     let commentBox = document.querySelector(".mqm-writing-new-comment-div").querySelector(".fr-wrapper").childNodes[0];
     if (commentBox) {
-      let finalComment = draftCommentForCheckedItems();
-      if (finalComment != "") {
+      let finalComment = await draftCommentForCheckedItems();
+      if (finalComment) {
         commentBox.innerHTML = finalComment;
         commentBox.blur();
       }
@@ -577,7 +580,7 @@ async function addDoneListToComments() {
   }
 }
 
-function draftCommentForCheckedItems() {
+async function draftCommentForCheckedItems() {
   try {
     let CommentDraftNode = document.createElement('div');
     let CommentHeaderNode = document.createElement("p");
@@ -599,18 +602,17 @@ function draftCommentForCheckedItems() {
       let checkedListNode = document.createElement("ul");
       checkedListNode.style.paddingLeft = "0px";
       checkedListNode.style.listStyleType = "none";
-      checklist.forEach((item) => {
+      checklist.forEach(async(item) => {
         if (item.isCompleted == true || item.note.trim() != "") {
           let itemNode = document.createElement("li");
           itemNode.style.display = "flex";
           itemNode.style.flexDirection = "column";
           itemNode.style.justifyContent = "space-between";
           itemNode.style.alignItems = "flex-start";
-          itemNode.innerHTML = `<li style="color: #333; display:flex; justify-content:flex-start; align-items:center;margin-bottom:2px; "><p style="font-weight: bold; color: #333;margin-bottom:0px;">[${item.isCompleted == true ? "Done" : item.isSelected == true ? "Not Done" : "Not Applicable"}]&nbsp;&nbsp;${DOMPurify.sanitize(item.listContent)}</p><li>`
+          itemNode.innerHTML = `<li style="color: #333; display:flex; justify-content:flex-start; align-items:center;margin-bottom:2px; "><p style="font-weight: bold; color: #333;margin-bottom:0px;">[${item.isCompleted == true ? "Done" : item.isSelected == true ? "Not Done" : "Not Applicable"}]&nbsp;&nbsp;${ DOMPurify.sanitize(item.listContent)}</p><li>`
           if (item.note != "") {
-            itemNode.innerHTML += `<li style="margin-bottom:10px;"><b style="color: #fbbe0c;">Notes:</b><br/>${DOMPurify.sanitize(item.note)}</li>`
+            itemNode.innerHTML += `<li style="margin-bottom:10px;"><b style="color: #fbbe0c;">Notes:</b><br/>${ DOMPurify.sanitize(item.note)}</li>`
           }
-
           checkedListNode.appendChild(itemNode);
         }
       });
