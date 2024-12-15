@@ -38,7 +38,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
           "Actual vs expected behavior is described",
           "Screenshots or logs are attached, if applicable"
         ],
-        "phases": ["New", "Inprogress"]
+        "phases": ["New", "In Progress"]
       },
       "Resolution": {
         "checklist": [
