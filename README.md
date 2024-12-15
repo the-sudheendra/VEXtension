@@ -59,7 +59,7 @@ Right-click the extension icon in your browser's toolbar, then select 'Options' 
           "Expected deliverables are documented",
           "Team has agreed on a timebox for the spike"
         ],
-        "phases": ["New", "Inprogress"]
+        "phases": ["New", "In Progress"]
       },
       "Analysis": {
         "checklist": [
