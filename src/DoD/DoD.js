@@ -555,7 +555,7 @@ async function addDoneListToComments() {
     if (addNewCommentBox)
       addNewCommentBox.click();
     else {
-      utilAPI.notify("Couldn't find the new comment box. Please close the comment box and try again.", "info", true);
+      utilAPI.notify("Couldn't find the new comment box. Please close the opened comment box and try again.", "info", true);
       return;
     }
     await utilAPI.delay(500);
@@ -567,12 +567,12 @@ async function addDoneListToComments() {
         commentBox.blur();
       }
       else {
-        utilAPI.notify("Couldn't find the new comment box. Please close the comment box and try again.", "info", true);
+        utilAPI.notify("Couldn't find the new comment box. Please close the opened comment box and try again.", "info", true);
         return;
       }
     }
     else {
-      utilAPI.notify("Couldn't find the new comment box. Please close the comment box and try again.", "info", true);
+      utilAPI.notify("Couldn't find the new comment box. Please close the opened comment box and try again.", "info", true);
       return;
     }
     let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
