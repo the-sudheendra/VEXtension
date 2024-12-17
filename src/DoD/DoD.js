@@ -608,19 +608,19 @@ async function draftCommentForCheckedItems() {
       categoryNameNode.style.color = "#333"
       categoryNameNode.style.fontWeight = "bold";
       categoryNameNode.innerHTML = `Category:<b> ${categoryName}</b>`;
-      let checkedListNode = document.createElement("ul");
+      let checkedListNode = document.createElement("div");
       checkedListNode.style.paddingLeft = "0px";
       checkedListNode.style.listStyleType = "none";
       checklist.forEach(async (item) => {
         if (item.isCompleted == true || item.note.trim() != "") {
-          let itemNode = document.createElement("li");
+          let itemNode = document.createElement("div");
           itemNode.style.display = "flex";
           itemNode.style.flexDirection = "column";
           itemNode.style.justifyContent = "space-between";
           itemNode.style.alignItems = "flex-start";
-          itemNode.innerHTML = `<li style="color: #333; display:flex; justify-content:flex-start; align-items:center;margin-bottom:2px; "><p style="font-weight: bold; color:#333;margin-bottom:0px;"><span style="color:${setColor(item)};">[${item.isCompleted == true ? "Done" : item.isSelected == true ? "Not Done" : "Not Applicable"}]</span>&nbsp;&nbsp;${DOMPurify.sanitize(item.listContent)}</p><li>`
+          itemNode.innerHTML = `<div style="color: #333; display:flex; justify-content:flex-start; align-items:center;margin-bottom:2px; "><p style="font-weight: bold; color:#333;margin-bottom:0px;"><span style="color:${setColor(item)};">[${item.isCompleted == true ? "Done" : item.isSelected == true ? "Not Done" : "Not Applicable"}]</span>&nbsp;&nbsp;${DOMPurify.sanitize(item.listContent)}</p></div>`
           if (item.note != "") {
-            itemNode.innerHTML += `<li style="margin-bottom:10px;"><b style="color: #333;">Notes:</b><br/>${DOMPurify.sanitize(item.note)}</li>`
+            itemNode.innerHTML += `<div style="margin-bottom:10px;"><b style="color: #333;">Notes:</b><br/>${DOMPurify.sanitize(item.note)}</div>`
           }
           checkedListNode.appendChild(itemNode);
         }
