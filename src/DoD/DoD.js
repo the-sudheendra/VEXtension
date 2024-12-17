@@ -121,7 +121,7 @@ function initTicketTitleMutationObserver() {
   try {
     let targetNode = document.head.querySelector('title');
     if (!targetNode) return;
-    let options = { attributes: true, childList: true, subtree: true };
+    let options = { childList: true };
     veXTicketTitleMutationObserver = new MutationObserver(
       (mutationList, observer) => {
         for (const mutation of mutationList) {
@@ -832,8 +832,9 @@ function onListDoneCheckClick(event, listItemNode) {
   }
 
 }
-async function onTicketTitleChange() {
+async function onTicketTitleChange(change) {
   try {
+    if (change.addedNodes[0] && change.removedNodes[0] && change.addedNodes[0].nodeValue == change.removedNodes[0].nodeValue) return;
     veXReset();
     getCurrentTicketInfo(document.head.querySelector('title').innerText);
     if (utilAPI.isEmptyObject(veXCurrentTicketInfo)) {
