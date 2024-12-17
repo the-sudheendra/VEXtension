@@ -834,7 +834,7 @@ function onListDoneCheckClick(event, listItemNode) {
 }
 async function onTicketTitleChange(change) {
   try {
-    if (change.addedNodes[0] && change.removedNodes[0] && change.addedNodes[0].nodeValue == change.removedNodes[0].nodeValue) return;
+    if (change && change.addedNodes[0] && change.removedNodes[0] && change.addedNodes[0].nodeValue == change.removedNodes[0].nodeValue) return;
     veXReset();
     getCurrentTicketInfo(document.head.querySelector('title').innerText);
     if (utilAPI.isEmptyObject(veXCurrentTicketInfo)) {
