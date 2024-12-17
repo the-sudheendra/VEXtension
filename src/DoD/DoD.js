@@ -262,8 +262,7 @@ async function initView() {
     initSidebarHeaderView();
     initPhaseMap();
     initPhaseDropdownView();
-    let currentPhase = veXCurrentTicketInfo.phase;
-    utilAPI.isEmptyObject(veXPhaseMap[currentPhase]) ? initCategoriesView(veXCurrentTicketChecklist.categories) : initCategoriesView(veXPhaseMap[currentPhase]);
+    initCategoriesView(veXCurrentTicketChecklist.categories);
     updateMainContentView();
     initStyle();
     return true;
@@ -318,7 +317,7 @@ function initStyle() {
 function initSidebarHeaderView() {
   try {
     veXNodes.veXDonePercentageNode.innerHTML = "0%";
-    veXNodes.veXTicketPhaseTextNode.innerHTML = veXCurrentTicketInfo.phase;
+    veXNodes.veXTicketPhaseTextNode.innerHTML = "All Phases";
     veXNodes.veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
   }
   catch (err) {
