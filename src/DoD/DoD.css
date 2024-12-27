@@ -5,7 +5,7 @@
   --vex-hoverColor: #f0f0f0;
   --veX-borderColor: #dcdedf;
   --veX-ticktColor: var(--veX-common-backgroundColor);
-  --veX-successColor: #22BB33;
+  --veX-successColor: #5CB338;
   --veX-checkedItemsPercentage: 0%;
   --veX-common-fontSize: 14px;
   --veX-header-fontSize: 20px;
@@ -14,6 +14,9 @@
   --veX-blackColor: #020202;
   --veX-fontColorAgainstTicketColor: var(--veX-blackColor);
   --veX-common-borderWidth: 2px;
+  --veX-notCompletedColor:#dd4a40;
+  --veX-CompletedColor:var(--veX-successColor);
+  --vex-notApplicableColor:#89A8B2;
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -37,7 +40,14 @@
   border-radius: 10px;
   background-color: #8f8e8e;
 }
-
+#veX-PopUp-Container {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .veX-Button {
   background-color: var(--veX-common-backgroundColor);
   border: none;
@@ -137,7 +147,7 @@
 .veX_content_wrapper {
   display: flex;
   flex: 1;
-  height: 500px;
+  height: 60vh;
 }
 
 .veX_sidebar {
@@ -382,6 +392,7 @@
 }
 
 .veX_footer {
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -413,7 +424,13 @@
 }
 
 .veX_list_item.veX_selected {
-  background-color: var(--vex-hoverColor);
+  background-color: var(--veX-notCompletedColor);
+  color: white;
+}
+.veX_list_item.veX_not_applicable {
+  background-color: var(--vex-notApplicableColor);
+  text-decoration: line-through;
+  color: white;
 }
 
 .veX_done_check {
@@ -467,7 +484,7 @@
 .veX_list_actions {
   width: 5%;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   position: relative;
   height: 100%;
@@ -495,7 +512,8 @@
   display: none;
 }
 
-.veX_checklist_note:focus,.veX_checklist_note:hover {
+.veX_checklist_note:focus,
+.veX_checklist_note:hover {
   outline: var(--veX-blackColor);
   border: 2.5PX solid var(--veX-blackColor);
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -507,4 +525,55 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+}
+
+.footer_icon {
+  width: 25px;
+  height: 25px;
+  padding-top: 2px;
+  margin-right: 5px;
+}
+.veX_footer_options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--veX-ticktColor);
+  padding: 5px;
+  height: 85%;
+  border-radius: 20px;
+  padding: 0px 20px;
+  width: 47.8%;
+  /* background: rgb(2, 0, 36);
+  background: linear-gradient(61deg, rgb(9, 14, 44) 0%, rgb(18, 44, 105) 59%, rgb(7, 141, 179) 100%); */
+  background-color: #12372A;
+  border-radius: 50px;
+}
+
+.footer_icon_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 5px;
+  color: var(--veX-common-backgroundColor);
+  cursor: pointer;
+  padding: 0px 10px;
+}
+.footer_action_selected
+{
+  /* background-color: #436850; */
+  background-color: var(--veX-ticktColor);
+}
+.veX_list_action_icon
+{
+  width: 25px;
+  height: 25px;
+}
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

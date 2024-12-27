@@ -42,7 +42,15 @@
         "icons/notes_24dp.png",
         "icons/check_box_outline_blank_24dp.png",
         "icons/indeterminate_check_box_24dp.png",
-        "icons/check_box_24dp_FFFFFF.png"
+        "icons/check_box_24dp_FFFFFF.png",
+        "icons/indeterminate_check_box_24dp_FFFFFF.png",
+        "icons/add_comment_24.png",
+        "icons/rate_review_24.png",
+        "icons/content_copy_24.png",
+        "icons/NA.png",
+        "icons/NA_0.png",
+        "icons/disabled.png",
+        "icons/remove.png"
       ],
       "matches": ["https://ot-internal.saas.microfocus.com/*"]
     }
