@@ -15,7 +15,7 @@ var veXTicketTitleMutationObserver;
 var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
-var veXChecklistStates = { 0: "UnSelected", 1: "NotCompleted", 2: "NotApplicable", 3: "Completed" };
+var veXChecklistStates = { 0: "UnSelected", 1: "Completed", 2:"NotCompleted",3: "NotApplicable"};
 var root = document.querySelector(':root');
 var utilAPI;
 (async () => {
@@ -441,8 +441,7 @@ function initChecklist() {
             ListContent: listContent,
             CursorState:
             {
-              "position": 0,
-              "direction": 1
+              "position": 0
             }
           }
         );
@@ -521,9 +520,6 @@ function updateChecklist() {
         noteNode.innerText = DOMPurify.sanitize(currentCheckList[index].Note);
         noteIconNode.addEventListener("click", (event) => {
           onListNoteClick(event, listItem);
-        });
-        doneIconNode.addEventListener("click", (event) => {
-          onListDoneCheckClick(event, listItem);
         });
 
         noteNode.addEventListener('click', (event) => {
@@ -795,21 +791,15 @@ function onListItemClick(event, listItemNode) {
     let index = listItemNode.getAttribute('listIndex')
     let previousState = veXChecklistStates[currentCheckList[index].CursorState.position];
     if (previousState == "Completed" || previousState == "NotApplicable") {
-      if (previousState == "Completed")
-        currentCheckList[index].CursorState.direction = -1
       veXTotalCompletedtems--;
     }
-    if (currentCheckList[index].CursorState.direction == 1) {
+
       currentCheckList[index].CursorState.position = (currentCheckList[index].CursorState.position + 1) % 4;
-    }
-    else {
-      currentCheckList[index].CursorState.position = (currentCheckList[index].CursorState.position - 1) % 4;
-    }
+    
     let newState = veXChecklistStates[currentCheckList[index].CursorState.position];
 
     switch (newState) {
       case "UnSelected":
-        currentCheckList[index].CursorState.direction = 1;
         setUnSelectedState(listItemNode, index);
         break;
       case "NotApplicable":

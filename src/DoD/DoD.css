@@ -14,9 +14,9 @@
   --veX-blackColor: #020202;
   --veX-fontColorAgainstTicketColor: var(--veX-blackColor);
   --veX-common-borderWidth: 2px;
-  --veX-notCompletedColor:#dd4a40;
-  --veX-CompletedColor:var(--veX-successColor);
-  --vex-notApplicableColor:#89A8B2;
+  --veX-notCompletedColor: #dd4a40;
+  --veX-CompletedColor: var(--veX-successColor);
+  --vex-notApplicableColor: #74809a;//*fdec83*/
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -40,6 +40,7 @@
   border-radius: 10px;
   background-color: #8f8e8e;
 }
+
 #veX-PopUp-Container {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -48,6 +49,7 @@
   -ms-user-select: none;
   user-select: none;
 }
+
 .veX-Button {
   background-color: var(--veX-common-backgroundColor);
   border: none;
@@ -64,11 +66,16 @@
   word-wrap: break-word;
   line-height: 1.4;
 }
+.veX-Button:hover
+{
+  background-color: rgba(240, 240, 240, 0.5) !important;
+}
 
 .veX-Active-Button {
   background-color: var(--vex-hoverColor) !important;
   border-left: 5px solid var(--veX-ticktColor) !important;
 }
+
 
 #veX-PopUp-Container {
   position: fixed;
@@ -415,7 +422,7 @@
   line-height: 1.4;
   transition: background-color 300ms linear;
   position: relative;
-  margin: 10px 0;
+  margin: 5px 0;
   border: 1px solid var(--veX-borderColor);
   display: flex;
   justify-content: space-between;
@@ -424,13 +431,18 @@
 }
 
 .veX_list_item.veX_selected {
-  background-color: var(--veX-notCompletedColor);
+  background-color: var(--veX-notCompletedColor) !important;
   color: white;
 }
+
 .veX_list_item.veX_not_applicable {
-  background-color: var(--vex-notApplicableColor);
+  background-color: var(--vex-notApplicableColor) !important;
   text-decoration: line-through;
   color: white;
+}
+.veX_list_item:hover
+{
+  background-color: var(--vex-hoverColor);
 }
 
 .veX_done_check {
@@ -533,6 +545,7 @@
   padding-top: 2px;
   margin-right: 5px;
 }
+
 .veX_footer_options {
   display: flex;
   justify-content: space-between;
@@ -549,6 +562,11 @@
   border-radius: 50px;
 }
 
+.footer_icon_container:hover {
+  border-bottom-color: white;
+  opacity: 0.8;
+}
+
 .footer_icon_container {
   display: flex;
   justify-content: center;
@@ -558,17 +576,22 @@
   color: var(--veX-common-backgroundColor);
   cursor: pointer;
   padding: 0px 10px;
+  border-bottom-color: rgba(0, 0, 0, 0);
+  border-bottom-style: solid;
+  border-bottom-width: 4.8px;
+  padding-top:4.8px ;
 }
-.footer_action_selected
-{
+
+.footer_action_selected {
   /* background-color: #436850; */
   background-color: var(--veX-ticktColor);
 }
-.veX_list_action_icon
-{
+
+.veX_list_action_icon {
   width: 25px;
   height: 25px;
 }
+
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

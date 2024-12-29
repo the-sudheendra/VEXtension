@@ -67,7 +67,7 @@ async function openToastNode(type, message) {
     }, 4000)
   }
   catch (err) {
-    alert("An error occurred. Please review the console logs for details and report the issue if needed.");
+    alert("An error occurred. Please refresh the page, if issue persist please report the issue");
     console.dir(err);
   }
 }
