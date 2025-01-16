@@ -2,7 +2,7 @@
   --veX-banner-backgroundColor: rgb(255, 255, 255);
   --veX-common-backgroundColor: #fff;
   --veX-common-fontColor: #202124;
-  --vex-hoverColor: #f0f0f0;
+  --vex-hoverColor: #e5f1fd;
   --veX-borderColor: #dcdedf;
   --veX-ticktColor: var(--veX-common-backgroundColor);
   --veX-successColor: #5CB338;
@@ -79,12 +79,12 @@
 
 #veX-PopUp-Container {
   position: fixed;
-  top: 50%;
   left: 50%;
   z-index: 3000;
-  width: 70%;
+  min-width: 60vw;
+  height: fit-content;
+  top: 50vh;
   transform: translate(-50%, -60%);
-  /*transition: opacity 0.5s ease, transform 0.5s ease;*/
   border-radius: var(--veX-common-borderRadius);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
   border: 2px solid var(--veX-ticktColor);
@@ -154,7 +154,8 @@
 .veX_content_wrapper {
   display: flex;
   flex: 1;
-  height: 60vh;
+  height: fit-content;
+  MIN-HEIGHT: 400PX;
 }
 
 .veX_sidebar {
@@ -220,14 +221,6 @@
   align-items: center;
 }
 
-/* .veX_ticket_phase {
-  display: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-} */
-
 .veX_done_percentage {
   position: absolute;
   top: 60px;
@@ -244,7 +237,6 @@
   height: 40px;
   width: 40px;
   padding: 20px;
-  margin-left: 10px;
   background-color: var(--veX-common-backgroundColor);
 }
 
@@ -414,7 +406,7 @@
 
 .veX_list_item {
   font-size: var(--veX-common-fontSize);
-  padding: 12px 8px 12px 12px;
+  padding: 8px 4px 8px 8px;
   background: var(--veX-common-backgroundColor);
   border-radius: var(--veX-common-borderRadius);
   white-space: normal;
@@ -428,6 +420,7 @@
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .veX_list_item.veX_selected {
@@ -537,9 +530,10 @@
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
+  padding-top: 1.5px;
 }
 
-.footer_icon {
+.veX_footer_icon {
   width: 25px;
   height: 25px;
   padding-top: 2px;
@@ -551,23 +545,18 @@
   justify-content: space-between;
   align-items: center;
   background-color: var(--veX-ticktColor);
-  padding: 5px;
   height: 85%;
-  border-radius: 20px;
-  padding: 0px 20px;
-  width: 47.8%;
-  /* background: rgb(2, 0, 36);
-  background: linear-gradient(61deg, rgb(9, 14, 44) 0%, rgb(18, 44, 105) 59%, rgb(7, 141, 179) 100%); */
+  width: fit-content;
   background-color: #12372A;
-  border-radius: 50px;
+  BORDER-RADIUS: var(--veX-common-borderRadius);
+  PADDING: 0PX;
 }
 
-.footer_icon_container:hover {
-  border-bottom-color: white;
-  opacity: 0.8;
+.veX_footer_icon_container:hover {
+  background-color: var(--veX-ticktColor);
 }
 
-.footer_icon_container {
+.veX_footer_icon_container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -576,27 +565,23 @@
   color: var(--veX-common-backgroundColor);
   cursor: pointer;
   padding: 0px 10px;
-  border-bottom-color: rgba(0, 0, 0, 0);
-  border-bottom-style: solid;
-  border-bottom-width: 4.8px;
   padding-top:4.8px ;
+  BORDER-RADIUS: var(--veX-common-borderRadius);
+  transition: background-color 300ms ease-out;
 }
 
-.footer_action_selected {
-  /* background-color: #436850; */
-  background-color: var(--veX-ticktColor);
-}
 
 .veX_list_action_icon {
   width: 25px;
   height: 25px;
 }
-
-.unselectable {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+/* .veX_leave_comment_btn
+{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
 }
+.veX_edit_comment_btn
+{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+} */

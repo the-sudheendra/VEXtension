@@ -15,7 +15,7 @@ var veXTicketTitleMutationObserver;
 var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
-var veXChecklistStates = { 0: "UnSelected", 1: "Completed", 2:"NotCompleted",3: "NotApplicable"};
+var veXChecklistStates = { 0: "UnSelected", 1: "Completed", 2: "NotCompleted", 3: "NotApplicable" };
 var root = document.querySelector(':root');
 var utilAPI;
 (async () => {
@@ -112,20 +112,14 @@ var vexDODUI = `
 </div>
 <div class="veX_banner veX_footer">
    <div class="veX_footer_options">
-      <div class="footer_icon_container" >
-         <img class="veX_copy_checklist_icon footer_icon  " alt="Copy This Checklist" title="This will create a copy of the checklist." src="${chrome.runtime.getURL("icons/content_copy_24.png")}" alt="Copy This Checklist"/>
-         <span>Copy Checklist</span>
-      </div>
-      <div class="footer_icon_container footer_action_selected">
-         <img class="veX_add_comment_icon footer_icon  " alt="Leave a Comment" title="This will add a new comment with the checklist." src="${chrome.runtime.getURL("icons/add_comment_24.png")}" alt="Add Comment"/>
+      <div class="veX_footer_icon_container veX_leave_comment_btn">
+         <img class="veX_add_comment_icon veX_footer_icon  " alt="Leave a Comment" title="This will add a new comment with the checklist." src="${chrome.runtime.getURL("icons/add_comment_24.png")}" alt="Add Comment"/>
          <span>Leave Comment</span>
       </div>
-      <div class="footer_icon_container">
-         <img class="veX_edit_comment_icon footer_icon  " alt="Edit Comment" title="This will allow you to modify the existing comment." src="${chrome.runtime.getURL("icons/rate_review_24.png")}" alt="Edit Comment"/>
+      <!--<div class="veX_footer_icon_container veX_edit_comment_btn">
+         <img class="veX_edit_comment_icon veX_footer_icon  " alt="Edit Comment" title="This will allow you to modify the existing comment." src="${chrome.runtime.getURL("icons/rate_review_24.png")}" alt="Edit Comment"/>
          <span>Edit Comment</span>
-      </div>
-      
-      
+      </div> -->
    </div>
 </div>
 `;
@@ -141,7 +135,11 @@ function initTicketTitleMutationObserver() {
     veXTicketTitleMutationObserver = new MutationObserver(
       (mutationList, observer) => {
         for (const mutation of mutationList) {
-          onTicketTitleChange(mutation);
+          let currentTitle = mutation.target.innerText;
+          let ticketArr = currentTitle.split(" ");
+          currentTitle = getTicketTitle(currentTitle.slice(ticketArr[0].length + 1))
+          if (currentTitle != veXCurrentTicketInfo.title)
+            onTicketTitleChange(mutation);
         }
       }
     );
@@ -182,7 +180,6 @@ function veXSetup() {
     veXPopUpNode.innerHTML = vexDODUI;
     document.body.appendChild(veXPopUpNode);
     document.body.appendChild(veXPopUpOverlay);
-    //veXPopUpNode.querySelector(".veX_common_btn").addEventListener("click", addDoneListToComments);
     veXPopUpOverlay.addEventListener("click", closeveXPopUp);
     initTicketTitleMutationObserver();
     initVEXNodes();
@@ -202,7 +199,6 @@ function initVEXNodes() {
     veXNodes.veXTicketPhaseNode = veXPopUpNode.querySelector(".veX_ticket_phase");
     veXNodes.veXDonePercentageNode = veXPopUpNode.querySelector(".veX_done_percentage");
     veXNodes.veXPhaseDropDown = veXPopUpNode.querySelector(".veX_all_phases");
-    //veXNodes.veXCategoryButton = veXPopUpNode.querySelectorAll('.veX-Button')
   } catch (err) {
     utilAPI.onError(err, "An error occurred during the setup.");
   }
@@ -215,8 +211,12 @@ function getCurrentTicketInfo(title) {
     ticketArr = title.split(" ");
     if (ticketArr.length < 2) return;
     const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
-    if (!match || match.length == 0) return;
-    let ticketType = (document.querySelector('[ng-if="header.shouldShowEntityLabel"]').innerText).toUpperCase();
+    if (!match || match.length < 2) return;
+    let ticketType = document.querySelector('[ng-if="header.shouldShowEntityLabel"]').innerText;
+    if (!ticketType || ticketType.length == "")
+      return;
+    ticketType = ticketType.toUpperCase();
+
     veXCurrentTicketInfo =
     {
       type: veXEntityMetaData[ticketType].name,
@@ -227,14 +227,7 @@ function getCurrentTicketInfo(title) {
     }
   }
   catch (err) {
-    veXCurrentTicketInfo =
-    {
-      type: "Not Found",
-      id: "Not Found",
-      color: "Not Found",
-      title: "Not Found",
-      phase: "Not Found"
-    }
+    veXCurrentTicketInfo = {}
     utilAPI.onError(err, "An error occurred while attempting to retrieve the current ticket information.");
   }
 }
@@ -302,12 +295,23 @@ async function initHeaderView() {
 async function initFooterView() {
   try {
     veXPopUpNode.querySelector('.veX_add_comment_icon').src = await chrome.runtime.getURL("icons/add_comment_24.png");
-    veXPopUpNode.querySelector('.veX_edit_comment_icon').src = await chrome.runtime.getURL("icons/rate_review_24.png");
-    veXPopUpNode.querySelector('.veX_copy_checklist_icon').src = await chrome.runtime.getURL("icons/content_copy_24.png");
+    // veXPopUpNode.querySelector('.veX_edit_comment_icon').src = await chrome.runtime.getURL("icons/rate_review_24.png");
+    veXPopUpNode.querySelector(".veX_leave_comment_btn").addEventListener("click", onAddToComments)
+    // veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", async (event) => {
+    //  await addDoneListToComments();
+    //  if(event)
+    //   event.stopPropagation();
+    // })
+
   }
   catch (err) {
     utilAPI.onError(err, "An error occurred while initializing the header view.");
   }
+}
+async function onAddToComments(event) {
+  await addDoneListToComments();
+  if (event)
+    event.stopPropagation();
 }
 
 function initPhaseMap() {
@@ -478,7 +482,7 @@ function updateChecklist() {
                     </div>
                 </div>
             </div>
-            <textarea class="veX_checklist_note veX_hide_checklist_note" placeholder="Enter text or HTML...">${currentCheckList[index].Note}</textarea>
+            <textarea class="veX_checklist_note veX_hide_checklist_note" placeholder="Enter text or Markdown...">${currentCheckList[index].Note}</textarea>
         `;
         listItem.innerHTML = listNodeUI;
         listItem.classList.add("veX_list_item")
@@ -502,17 +506,6 @@ function updateChecklist() {
             setCompletedState(listItem, index);
             break;
         }
-        // if (currentCheckList[index].Selected == true) {
-        //   setSelectedState(listItem, index);
-        // }
-        // else if (currentCheckList[index].Completed == true) {
-        //   setCompletedState(listItem, index);
-        // }
-        // else if ( == false) {
-        //   setUnSelectedState(listItem, index);
-        // } else if (currentCheckList[index].NotApplicable == true) {
-        //   setNotApplicableState(listItem, index);
-        // }
         let noteIconNode = listItem.querySelector(".veX_note");
         let doneIconNode = listItem.querySelector(".veX_done_check");
         let noteNode = listItem.querySelector('.veX_checklist_note');
@@ -521,7 +514,9 @@ function updateChecklist() {
         noteIconNode.addEventListener("click", (event) => {
           onListNoteClick(event, listItem);
         });
-
+        // noteNode.addEventListener('blur',(event)=>{
+        //   noteNode.classList.contains("veX_hide_checklist_note");
+        // })
         noteNode.addEventListener('click', (event) => {
           event.stopPropagation();
         });
@@ -558,24 +553,24 @@ function updateNoteIcon(listItem) {
     utilAPI.onError(err, "An error occurred while updating Note Icon", true);
   }
 }
+function getChecklistStatus(list) {
+  return veXChecklistStates[list.CursorState["position"]];
+}
+
 function isCommentAllowed() {
   try {
     let categories = Object.keys(veXChecklistItems);
-    let notSelected = 0;
     for (let i = 0; i < categories.length; i++) {
       let categoryName = categories[i];
       let checklist = veXChecklistItems[categoryName];
       for (let j = 0; j < checklist.length; j++) {
         let item = checklist[j];
-        if (item.Completed == false) {
-          if (item.Selected == true && item.Note.trim() == "")
-            return false;
-          else if (item.Selected == false && item.Note.trim() == "")
-            notSelected++;
-        }
+        let status = getChecklistStatus(item);
+        if (status == "Completed" || status == "NotCompleted" || status == "NotApplicable")
+          return true;
       }
     }
-    return notSelected == veXTotalItems ? false : true;
+    return false;
   }
   catch (err) {
     utilAPI.onError(err, "An error occurred while going through checklist items", true);
@@ -586,10 +581,10 @@ function isCommentAllowed() {
 async function addDoneListToComments() {
   try {
     if (!isCommentAllowed()) {
-      utilAPI.notify("Mark at least one item as completed or add notes to the items that are not completed", "info", true);
+      utilAPI.notify("Select at least one item.", "info", true);
       return;
     }
-    let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-label-commentsPanel']")
+    let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-commentsPanel']")
     if (rightSidebarCommentButton) rightSidebarCommentButton.click();
     await utilAPI.delay(500);
     let addNewCommentBox = document.querySelector("[data-aid='comments-pane-add-new-comment-placeholder-state']")
@@ -638,7 +633,7 @@ async function draftCommentForCheckedItems() {
     CommentDraftNode.id = "veX_checklist_comment_wrapper";
     CommentDraftNode.classList.add("veX_checklist_comment_wrapper");
     CommentDraftNode.setAttribute("veX_checklist_comment_wrapper", "HI")
-    CommentDraftNode.style.color = "red"
+    CommentDraftNode.style.color = "#333"
     let CommentHeaderNode = document.createElement("p");
     let donePercentage = ((veXTotalCompletedtems / veXTotalItems).toFixed(2) * 100).toFixed(0);
     CommentHeaderNode.innerHTML = `<strong>Checklist Completion: <span style="color:#008000;">${donePercentage}%</span></strong>`;
@@ -648,7 +643,7 @@ async function draftCommentForCheckedItems() {
     let categories = Object.keys(veXChecklistItems);
     categories.forEach((categoryName) => {
       let checklist = veXChecklistItems[categoryName];
-      if (!checklist.some((item) => item.Completed == true || item.Note.trim() != ""))
+      if (checklist.every((item) => getChecklistStatus(item) == "UnSelected"))
         return;
       let categoryNameNode = document.createElement("p")
       categoryNameNode.style.borderBottom = "1px dotted gray";
@@ -660,15 +655,16 @@ async function draftCommentForCheckedItems() {
       checkedListNode.style.paddingLeft = "0px";
       checkedListNode.style.listStyleType = "none";
       checklist.forEach(async (item) => {
-        if (item.Completed == true || item.Note.trim() != "") {
+        let status = getChecklistStatus(item);
+        if (status != "UnSelected") {
           let itemNode = document.createElement("div");
           itemNode.style.display = "flex";
           itemNode.style.flexDirection = "column";
           itemNode.style.justifyContent = "space-between";
           itemNode.style.alignItems = "flex-start";
-          itemNode.innerHTML = `<div style="color: #333; display:flex; justify-content:flex-start; align-items:center;margin-bottom:2px; "><p style="font-weight: bold; color:#333;margin-bottom:0px;"><span style="color:${setColor(item)};">[${item.Completed == true ? "Done" : item.Selected == true ? "Not Done" : "Not Applicable"}]</span>&nbsp;&nbsp;${DOMPurify.sanitize(item.ListContent)}</p></div>`
+          itemNode.innerHTML = `<div style="color: #333; display:flex; justify-content:flex-start; align-items:center;margin-bottom:1px; "><p style="font-weight: bold; color:#333;margin-bottom:0px;"><span style="color:${setColor(item)};">[${setPrefixForList(item)}]</span>&nbsp;&nbsp;${DOMPurify.sanitize(item.ListContent)}</p></div>`
           if (item.Note != "") {
-            itemNode.innerHTML += `<div style="margin-bottom:10px;"><b style="color: #333;">Notes:</b><br/>${DOMPurify.sanitize(item.Note)}</div>`
+            itemNode.innerHTML += `<div style="margin-bottom:10px;"><b style="color: #333;">Details:</b><br/>${DOMPurify.sanitize(item.Note)}</div>`
           }
           checkedListNode.appendChild(itemNode);
         }
@@ -685,13 +681,22 @@ async function draftCommentForCheckedItems() {
     utilAPI.onError(ex, "An error occurred while drafting your comment. Please report the issue", true);
   }
 }
-
+function setPrefixForList(item) {
+  let status = getChecklistStatus(item);
+  switch (status) {
+    case "Completed": return "✔";
+    case "NotCompleted": return "✗";
+    case "NotApplicable": return "—";
+  }
+}
 function setColor(item) {
-  if (item.Completed == true)
-    return "#008000";
-  else if (item.Selected == true)
-    return "#faaa3c"
-  return "#008080"
+  let status = getChecklistStatus(item);
+  switch (status) {
+    case "Completed": return "#008000";
+    case "NotCompleted": return "#dd4a40";
+    case "NotApplicable": return "#008080";
+    default: return "#000";
+  }
 }
 function getCurrentTicketPhase() {
   try {
@@ -794,8 +799,8 @@ function onListItemClick(event, listItemNode) {
       veXTotalCompletedtems--;
     }
 
-      currentCheckList[index].CursorState.position = (currentCheckList[index].CursorState.position + 1) % 4;
-    
+    currentCheckList[index].CursorState.position = (currentCheckList[index].CursorState.position + 1) % 4;
+
     let newState = veXChecklistStates[currentCheckList[index].CursorState.position];
 
     switch (newState) {
@@ -863,7 +868,6 @@ function onListNoteChange(event, listItemNode) {
 
 async function onTicketTitleChange(change) {
   try {
-    if (change && change.addedNodes[0] && change.removedNodes[0] && change.addedNodes[0].nodeValue == change.removedNodes[0].nodeValue) return;
     veXReset();
     getCurrentTicketInfo(document.head.querySelector('title').innerText);
     if (utilAPI.isEmptyObject(veXCurrentTicketInfo)) {
