@@ -135,14 +135,14 @@ function initTicketTitleMutationObserver() {
     veXTicketTitleMutationObserver = new MutationObserver(
       (mutationList, observer) => {
         for (const mutation of mutationList) {
-          let currentTitle = mutation.target.innerText;
-          let ticketArr = currentTitle.split(" ");
-          currentTitle = getTicketTitle(currentTitle.slice(ticketArr[0].length + 1))
-          const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
-          if(!match) 
-            break;
-          let curType= veXEntityMetaData[match[1]].name; 
-          if (currentTitle != veXCurrentTicketInfo.title && curType != veXCurrentTicketInfo.type)
+          // let currentTitle = mutation.target.innerText;
+          // let ticketArr = currentTitle.split(" ");
+          // currentTitle = getTicketTitle(currentTitle.slice(ticketArr[0].length + 1))
+          // const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
+          // if(!match) 
+          //   break;
+          // let curType= veXEntityMetaData[match[1]].name; 
+          // if (currentTitle != veXCurrentTicketInfo.title && curType != veXCurrentTicketInfo.type)
             onTicketTitleChange(mutation);
         }
       }
@@ -232,7 +232,8 @@ function getCurrentTicketInfo(title) {
     if (!ticketType || ticketType.length == "")
       return;
     ticketType = ticketType.toUpperCase();
-
+    let pageTicketId=document.querySelector(".entity-form-document-view-header-entity-id-container");
+    let pageTicketTitle=
     veXCurrentTicketInfo =
     {
       type: veXEntityMetaData[ticketType].name,
