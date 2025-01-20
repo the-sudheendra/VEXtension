@@ -5,7 +5,7 @@
   --vex-hoverColor: #e5f1fd;
   --veX-borderColor: #dcdedf;
   --veX-ticktColor: var(--veX-common-backgroundColor);
-  --veX-successColor: #5CB338;
+  --veX-successColor: #1aa364;
   --veX-checkedItemsPercentage: 0%;
   --veX-common-fontSize: 14px;
   --veX-header-fontSize: 20px;
@@ -14,9 +14,9 @@
   --veX-blackColor: #020202;
   --veX-fontColorAgainstTicketColor: var(--veX-blackColor);
   --veX-common-borderWidth: 2px;
-  --veX-notCompletedColor: #dd4a40;
+  --veX-notCompletedColor: #d85c4c;
   --veX-CompletedColor: var(--veX-successColor);
-  --vex-notApplicableColor: #74809a;//*fdec83*/
+  --vex-notApplicableColor: #808080;//*fdec83*/
 }
 
 #veX-PopUp-Container ::-webkit-scrollbar {
@@ -68,7 +68,7 @@
 }
 .veX-Button:hover
 {
-  background-color: rgba(240, 240, 240, 0.5) !important;
+  background-color: rgba(229, 241, 253,0.5) !important;
 }
 
 .veX-Active-Button {
@@ -210,7 +210,7 @@
 
 .veX_phase:hover {
   color: #111827;
-  background: #f1f1f1;
+  background: var(--vex-hoverColor);
 }
 
 .veX_sidebar_header {
@@ -510,7 +510,7 @@
   z-index: 1;
   height: auto;
   max-height: 300px;
-  border: 2.5PX solid var(--veX-blackColor);
+  border: 1px solid #dddddd;
 }
 
 .veX_hide_checklist_note {
@@ -519,8 +519,8 @@
 
 .veX_checklist_note:focus,
 .veX_checklist_note:hover {
-  outline: var(--veX-blackColor);
-  border: 2.5PX solid var(--veX-blackColor);
+  outline: #dddddd;
+  border: 1px solid #dddddd;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -534,10 +534,13 @@
 }
 
 .veX_footer_icon {
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   padding-top: 2px;
-  margin-right: 5px;
+}
+.veX_add_comment_icon
+{
+  margin-left: 5px;
 }
 
 .veX_footer_options {
@@ -547,25 +550,22 @@
   background-color: var(--veX-ticktColor);
   height: 85%;
   width: fit-content;
-  background-color: #12372A;
   BORDER-RADIUS: var(--veX-common-borderRadius);
   PADDING: 0PX;
 }
 
 .veX_footer_icon_container:hover {
-  background-color: var(--veX-ticktColor);
+  opacity: 0.8;
 }
-
 .veX_footer_icon_container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100%;
   padding: 5px;
-  color: var(--veX-common-backgroundColor);
+  color: var(--veX-whiteColor);
   cursor: pointer;
   padding: 0px 10px;
-  padding-top:4.8px ;
   BORDER-RADIUS: var(--veX-common-borderRadius);
   transition: background-color 300ms ease-out;
 }
@@ -574,14 +574,8 @@
 .veX_list_action_icon {
   width: 25px;
   height: 25px;
+  display: none;
 }
-/* .veX_leave_comment_btn
-{
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
+.veX_completed .veX_list_action_icon,.veX_not_applicable .veX_list_action_icon, .veX_selected .veX_list_action_icon{
+  display: block;
 }
-.veX_edit_comment_btn
-{
-  border-top-left-radius: 0px;
-  border-bottom-left-radius: 0px;
-} */

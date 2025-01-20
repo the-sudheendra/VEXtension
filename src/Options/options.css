@@ -21,7 +21,7 @@ body
     padding: 40px;
     color: #fff;
     box-shadow: rgba(34,116,181, 1) 0px 7px 29px 0px;
-    
+    width: 400px;
 }
 .veX_container p{
     font-size: xx-large;
@@ -57,5 +57,5 @@ body
     font-size: medium;
     background-color: var(--vex-hoverColor);
     padding: 10px 24px;
-    border-radius: 20px;
+    border-radius: var(--veX-common-borderRadius);
 }

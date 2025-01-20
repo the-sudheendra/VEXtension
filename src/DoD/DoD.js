@@ -4,7 +4,7 @@ var veXCurrentTicketInfo = {};
 var veXCurrentTicketChecklist = {};
 var veXChecklistItems = {};
 var veXPhaseMap = {};
-var veXTotalCompletedtems = 0;
+var veXTotalCompletedItems = 0;
 var veXCurrentTicketCategoryNames = [];
 var veXTotalItems = 0;
 var veXNodes = {};
@@ -86,41 +86,41 @@ const veXEntityMetaData = {
 
 var vexDODUI = `
 <header class="veX_header veX_banner">
-   <div class="veX_logo_container">
-      <img class="veX_logo  " title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
-   </div>
-   <p class="veX_header_title"></p>
+    <div class="veX_logo_container">
+        <img class="veX_logo  " title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
+    </div>
+    <p class="veX_header_title"></p>
 </header>
 <div class="veX_done_status"></div>
 <div class="veX_content_wrapper">
-   <div class="veX_sidebar">
-      <div class="veX_sidebar_header">
-         <div class="veX_ticket_phase">
-            <p class="veX_ticket_phase_txt">Not Available</p>
-            <div class="veX_all_phases">
+    <div class="veX_sidebar">
+        <div class="veX_sidebar_header">
+            <div class="veX_ticket_phase">
+                <p class="veX_ticket_phase_txt">Not Available</p>
+                <div class="veX_all_phases">
+                </div>
             </div>
-         </div>
-         <div class="veX_done_percentage">0%</div>
-      </div>
-      <div class="veX_dod_categories">No Item</div>
-   </div>
-   <div class="veX_main_content">
-      <div class="veX_dod_title">No Item</div>
-      <div class="veX_dod_list_container">
-      </div>
-   </div>
+            <div class="veX_done_percentage">0%</div>
+        </div>
+        <div class="veX_dod_categories">No Item</div>
+    </div>
+    <div class="veX_main_content">
+        <div class="veX_dod_title">No Item</div>
+        <div class="veX_dod_list_container">
+        </div>
+    </div>
 </div>
 <div class="veX_banner veX_footer">
-   <div class="veX_footer_options">
-      <div class="veX_footer_icon_container veX_leave_comment_btn">
-         <img class="veX_add_comment_icon veX_footer_icon  " alt="Leave a Comment" title="This will add a new comment with the checklist." src="${chrome.runtime.getURL("icons/add_comment_24.png")}" alt="Add Comment"/>
-         <span>Leave Comment</span>
-      </div>
-      <!--<div class="veX_footer_icon_container veX_edit_comment_btn">
-         <img class="veX_edit_comment_icon veX_footer_icon  " alt="Edit Comment" title="This will allow you to modify the existing comment." src="${chrome.runtime.getURL("icons/rate_review_24.png")}" alt="Edit Comment"/>
-         <span>Edit Comment</span>
-      </div> -->
-   </div>
+    <div class="veX_footer_options">
+        <div class="veX_footer_icon_container veX_leave_comment_btn">
+            <span>Leave Comment</span>
+            <img class="veX_add_comment_icon veX_footer_icon  " alt="Leave a Comment" title="This will add a new comment with the selected checklist." src="${chrome.runtime.getURL("icons/add_comment_24.png")}" alt="Add Comment"/>
+        </div>
+        <!--<div class="veX_footer_icon_container veX_edit_comment_btn">
+            <img class="veX_edit_comment_icon veX_footer_icon  " alt="Edit Comment" title="This will allow you to modify the existing comment." src="${chrome.runtime.getURL("icons/rate_review_24.png")}" alt="Edit Comment"/>
+            <span>Edit Comment</span>
+            </div> -->
+    </div>
 </div>
 `;
 
@@ -138,7 +138,11 @@ function initTicketTitleMutationObserver() {
           let currentTitle = mutation.target.innerText;
           let ticketArr = currentTitle.split(" ");
           currentTitle = getTicketTitle(currentTitle.slice(ticketArr[0].length + 1))
-          if (currentTitle != veXCurrentTicketInfo.title)
+          const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
+          if(!match) 
+            break;
+          let curType= veXEntityMetaData[match[1]].name; 
+          if (currentTitle != veXCurrentTicketInfo.title && curType != veXCurrentTicketInfo.type)
             onTicketTitleChange(mutation);
         }
       }
@@ -150,6 +154,18 @@ function initTicketTitleMutationObserver() {
   }
 }
 
+// function getTicketType(title)
+// {
+//   if (!title) return "";
+//   ticketArr = title.split(" ");
+//   if (ticketArr.length < 2) return;
+//   const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
+//   if (!match || match.length < 2) return "";
+//   let ticketType = document.querySelector('[ng-if="header.shouldShowEntityLabel"]').innerText;
+//   if (!ticketType || ticketType.length == "")
+//     return "";
+//   ticketType = ticketType.toUpperCase();
+// }
 function initTicketPhaseMutationObserver() {
   try {
     let targetNode = document.querySelector("[data-aid='entity-life-cycle-widget-phase']").childNodes[3];
@@ -251,7 +267,7 @@ function veXReset() {
     veXCurrentTicketChecklist = {};
     veXCurrentTicketInfo = {};
     veXPhaseMap = {};
-    veXTotalCompletedtems = 0;
+    veXTotalCompletedItems = 0;
     veXTotalItems = 0;
     if (veXTicketPhaseMutationObserver) {
       veXTicketPhaseMutationObserver.disconnect();
@@ -482,7 +498,7 @@ function updateChecklist() {
                     </div>
                 </div>
             </div>
-            <textarea class="veX_checklist_note veX_hide_checklist_note" placeholder="Enter text or Markdown...">${currentCheckList[index].Note}</textarea>
+            <textarea class="veX_checklist_note veX_hide_checklist_note" placeholder="Add details (Markdown Supported)">${currentCheckList[index].Note}</textarea>
         `;
         listItem.innerHTML = listNodeUI;
         listItem.classList.add("veX_list_item")
@@ -581,7 +597,7 @@ function isCommentAllowed() {
 async function addDoneListToComments() {
   try {
     if (!isCommentAllowed()) {
-      utilAPI.notify("Select at least one item.", "info", true);
+      utilAPI.notify("Select at least one item 😅", "info", true);
       return;
     }
     let rightSidebarCommentButton = document.querySelector("[data-aid='panel-item-commentsPanel']")
@@ -591,7 +607,7 @@ async function addDoneListToComments() {
     if (addNewCommentBox)
       addNewCommentBox.click();
     else {
-      utilAPI.notify("Couldn't find the new comment box. Please close the opened comment box and try again.", "info", true);
+      utilAPI.notify("Unable to locate the new comment box 🙁", "info", true);
       return;
     }
     await utilAPI.delay(500);
@@ -603,12 +619,12 @@ async function addDoneListToComments() {
         commentBox.blur();
       }
       else {
-        utilAPI.notify("Couldn't find the new comment box. Please close the opened comment box and try again.", "info", true);
+        utilAPI.notify("Unable to locate the new comment box 🙁", "info", true);
         return;
       }
     }
     else {
-      utilAPI.notify("Couldn't find the new comment box. Please close the opened comment box and try again.", "info", true);
+      utilAPI.notify("Unable to locate the new comment box 🙁", "info", true);
       return;
     }
     let commentSubmitButton = document.querySelector("[ng-click='comments.onAddNewCommentClicked()']");
@@ -617,7 +633,7 @@ async function addDoneListToComments() {
       await utilAPI.delay(500);
       closeveXPopUp();
       commentSubmitButton.click();
-      utilAPI.notify("The checklist has been successfully added to the comments.", "success", true);
+      utilAPI.notify("Checklist added to comments 😊", "success", true);
     }
   }
   catch (ex) {
@@ -635,7 +651,7 @@ async function draftCommentForCheckedItems() {
     CommentDraftNode.setAttribute("veX_checklist_comment_wrapper", "HI")
     CommentDraftNode.style.color = "#333"
     let CommentHeaderNode = document.createElement("p");
-    let donePercentage = ((veXTotalCompletedtems / veXTotalItems).toFixed(2) * 100).toFixed(0);
+    let donePercentage = ((veXTotalCompletedItems / veXTotalItems).toFixed(2) * 100).toFixed(0);
     CommentHeaderNode.innerHTML = `<strong>Checklist Completion: <span style="color:#008000;">${donePercentage}%</span></strong>`;
     CommentHeaderNode.style.color = "#333";
 
@@ -686,15 +702,15 @@ function setPrefixForList(item) {
   switch (status) {
     case "Completed": return "✔";
     case "NotCompleted": return "✗";
-    case "NotApplicable": return "—";
+    case "NotApplicable": return "NA";
   }
 }
 function setColor(item) {
   let status = getChecklistStatus(item);
   switch (status) {
-    case "Completed": return "#008000";
+    case "Completed": return "#1aa364";
     case "NotCompleted": return "#dd4a40";
-    case "NotApplicable": return "#008080";
+    case "NotApplicable": return "#808080"//return "#008080";
     default: return "#000";
   }
 }
@@ -707,7 +723,7 @@ function getCurrentTicketPhase() {
   }
 }
 function updateDonePercentage() {
-  let donePercentage = ((veXTotalCompletedtems / veXTotalItems).toFixed(2) * 100).toFixed(0);
+  let donePercentage = ((veXTotalCompletedItems / veXTotalItems).toFixed(2) * 100).toFixed(0);
   if (donePercentage > 100)
     donePercentage = 100
   else if (donePercentage == 0)
@@ -796,7 +812,7 @@ function onListItemClick(event, listItemNode) {
     let index = listItemNode.getAttribute('listIndex')
     let previousState = veXChecklistStates[currentCheckList[index].CursorState.position];
     if (previousState == "Completed" || previousState == "NotApplicable") {
-      veXTotalCompletedtems--;
+      veXTotalCompletedItems--;
     }
 
     currentCheckList[index].CursorState.position = (currentCheckList[index].CursorState.position + 1) % 4;
@@ -808,14 +824,14 @@ function onListItemClick(event, listItemNode) {
         setUnSelectedState(listItemNode, index);
         break;
       case "NotApplicable":
-        veXTotalCompletedtems++;
+        veXTotalCompletedItems++;
         setNotApplicableState(listItemNode, index);
         break;
       case "NotCompleted":
         setSelectedState(listItemNode, index);
         break;
       case "Completed":
-        veXTotalCompletedtems++;
+        veXTotalCompletedItems++;
         setCompletedState(listItemNode, index);
         break;
       default:
@@ -892,7 +908,7 @@ function onTicketPhaseChange(mutation) {
   try {
     if (!mutation.target) return;
     let newPhase = mutation.target.innerText;
-    let reminderMessage = `Before moving to "${newPhase}" phase, please ensure the checklist for current phase is completed.`;
+    let reminderMessage = `Reminder: Please update the checklist 🙂`;
     utilAPI.notify(reminderMessage, "info", true);
     openVexPopup();
   }
@@ -917,15 +933,15 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
         if (!(utilAPI.isEmptyObject(veXCurrentTicketChecklist) || utilAPI.isEmptyObject(veXCurrentTicketInfo)))
           openVexPopup();
         else if (!utilAPI.isEmptyObject(veXCurrentTicketInfo) && utilAPI.isEmptyObject(veXCurrentTicketChecklist)) {
-          utilAPI.notify(`Unable to find the checklist for '${veXCurrentTicketInfo.type}'`, "info", true);
+          utilAPI.notify(`Unable to find the checklist for '${veXCurrentTicketInfo.type}' 😕`, "info", true);
         }
         else if (utilAPI.isEmptyObject(veXCurrentTicketInfo))
-          utilAPI.notify("To see the checklist, please open a ticket", "info", true)
+          utilAPI.notify("To see the checklist, please open a ticket 🙂", "info", true)
         else if (veXIsViewInitialised === false) {
-          utilAPI.notify("Something went wrong while initializing the view. Please check the logs for more details.", "warning", true)
+          utilAPI.notify("Something went wrong while initializing the view. Please check the logs for more details 😞", "warning", true)
         }
         else
-          utilAPI.notify("Something went wrong", "warning", true);
+          utilAPI.notify("Something went wrong 😞", "warning", true);
         break;
     }
   }

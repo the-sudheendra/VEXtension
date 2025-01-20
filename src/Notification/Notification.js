@@ -2,7 +2,7 @@ var toastNode = document.createElement('div');
 var root = document.querySelector(':root');
 
 toastNode.innerHTML = `
- <div id="veX_icon_wrapper">
+<div id="veX_icon_wrapper">
     <img id="veX_icon"></img>
 </div>
 <div id="veX_toast_message">
@@ -18,13 +18,11 @@ document.body.appendChild(toastNode);
 
 const toastTimerNode = document.querySelector("#veX_timer");
 const closeToastBtnNode = document.querySelector("#veX_toast_close");
-let countdown;
 
 function closeToastNode() {
   try {
     toastNode.style.animation = "close 0.3s cubic-bezier(.87,-1,.57,.97) forwards";
     toastTimerNode.classList.remove("veX_timer_animation");
-    clearTimeout(countdown);
     toastNode.style.visibility = "hidden";
   }
   catch (err) {
@@ -61,9 +59,9 @@ async function openToastNode(type, message) {
     toastNode.style.visibility = "visible";
     toastNode.style.animation = "open 0.3s cubic-bezier(.47,.02,.44,2) forwards";
     toastTimerNode.classList.add("veX_timer_animation");
-    clearTimeout(countdown)
-    countdown = setTimeout(() => {
+    let countdown = setTimeout(() => {
       closeToastNode();
+      clearTimeout(countdown);
     }, 4000)
   }
   catch (err) {

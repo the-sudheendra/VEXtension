@@ -16,19 +16,20 @@ function isEmptyArray(arr) {
 function notify(message, type = "info",display = false) {
   if (display == true) {
     notifyAPI.openToastNode(type, message);
+    return;
   }
-  else {
-    console.info(message);
-  }
+  console.log(message);
 }
 
-function onError(error, info = "Something Went wrong", display = false) {
-  notify(`${info} Please review the console logs for details and report the issue if needed.`, "error", display);
+function onError(error, info = "Something went wrong", display = false) {
+  console.error(`Error From VE-Checklist: ${error.message}`);
   console.dir(error);
+  notify(`${info}, Please review the console logs for details and report the issue if needed.`, "error", display);
 }
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
 export {
   onError, notify, isEmptyArray, isEmptyObject,delay
 }
