@@ -17,7 +17,7 @@ function onFileUpload(event) {
             try {
                 const veXChecklistInfo = JSON.parse(reader.result);
                 if (validateChecklist(veXChecklistInfo) === true && await saveChecklist(veXChecklistInfo) === true) {
-                    utilAPI.notify("VE Checklist saved successfully!", "success", true);
+                    utilAPI.notify("VE Checklist saved successfully 🚀", "success", true);
                 }
                 fileInput.value = '';
             } catch (err) {
@@ -27,14 +27,14 @@ function onFileUpload(event) {
         };
         reader.readAsText(file);
     } else {
-        utilAPI.notify("Please upload a valid JSON file.", "warning", true);
+        utilAPI.notify("Please upload a valid JSON file 👀", "warning", true);
     }
 }
 
 function validateChecklist(veXChecklistInfo) {
     try {
         if (utilAPI.isEmptyObject(veXChecklistInfo)) {
-            utilAPI.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue.", "warning", true);
+            utilAPI.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue 👀", "warning", true);
             return false;
         }
         let entitiesArray = Object.keys(veXChecklistInfo);
