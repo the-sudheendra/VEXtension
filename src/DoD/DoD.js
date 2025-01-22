@@ -911,7 +911,7 @@ function onTicketPhaseChange(mutation) {
     let newPhase = mutation.target.innerText;
     let reminderMessage = `Reminder: Please update the checklist 🙂`;
     utilAPI.notify(reminderMessage, "info", true);
-    openVexPopup();
+    //openVexPopup();
   }
   catch (err) {
     utilAPI.onError(err, undefined, true);
