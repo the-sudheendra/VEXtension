@@ -20,11 +20,7 @@
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
 * In the context menu, you will see an option called **VE Checklist**.
-* Click on it to open a pop-up displaying the Done Checklist for the ticket.
-
-**Upload Checklist?**
-
-Right-click the extension icon in your browser's toolbar, then select 'Options' from the menu. This will open the options page, where you can upload a new DoD file (If you encounter issues, please ensure the file is not empty and follows the below mentioned schema)
+* Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
 #### Example Checklist
 
