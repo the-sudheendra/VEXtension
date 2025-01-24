@@ -17,7 +17,7 @@ function onFileUpload(event) {
             try {
                 const veXChecklistInfo = JSON.parse(reader.result);
                 if (validateChecklist(veXChecklistInfo) === true && await saveChecklist(veXChecklistInfo) === true) {
-                    utilAPI.notify("VE Checklist saved successfully 🚀", "success", true);
+                    utilAPI.notify("Checklist saved successfully! 🙌🏻", "success", true);
                 }
                 fileInput.value = '';
             } catch (err) {

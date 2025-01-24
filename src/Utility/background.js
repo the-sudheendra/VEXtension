@@ -3,7 +3,7 @@ async function onInstalled() {
     chrome.contextMenus.create({
       id: 'veXDoneCheckListMenu',
       title: 'VE Checklist',
-      documentUrlPatterns: ["https://ot-internal.saas.microfocus.com/*"],
+      documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
       contexts: ['page']
     }
     );

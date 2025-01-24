@@ -934,7 +934,7 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
         if (!(utilAPI.isEmptyObject(veXCurrentTicketChecklist) || utilAPI.isEmptyObject(veXCurrentTicketInfo)))
           openVexPopup();
         else if (!utilAPI.isEmptyObject(veXCurrentTicketInfo) && utilAPI.isEmptyObject(veXCurrentTicketChecklist)) {
-          utilAPI.notify(`Unable to find the checklist for '${veXCurrentTicketInfo.type}' 😕`, "info", true);
+          utilAPI.notify(`🤔 Unable to find the checklist for '${veXCurrentTicketInfo.type}'`, "info", true);
         }
         else if (utilAPI.isEmptyObject(veXCurrentTicketInfo))
           utilAPI.notify("To see the checklist, please open a ticket 🙂", "info", true)
