@@ -12,6 +12,7 @@ var veXPopUpNode = document.createElement("div");
 var veXPopUpOverlay = document.createElement("div");
 var veXTicketPhaseMutationObserver;
 var veXTicketTitleMutationObserver;
+var veXTicketTypeMutationObserver;
 var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
@@ -154,6 +155,33 @@ function initTicketTitleMutationObserver() {
   }
 }
 
+//->Initialising Mutation Observers to notify whenever DOM changes.
+function initTicketTypeMutationObserver() {
+  try {
+    let targetNode = document.querySelector('[ng-if="header.shouldShowEntityLabel"]');
+    if (!targetNode) return;
+    let options = { childList: true , characterData: true,subtree:true};
+    veXTicketTypeMutationObserver = new MutationObserver(
+      (mutationList, observer) => {
+        for (const mutation of mutationList) {
+          // let currentTitle = mutation.target.innerText;
+          // let ticketArr = currentTitle.split(" ");
+          // currentTitle = getTicketTitle(currentTitle.slice(ticketArr[0].length + 1))
+          // const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
+          // if(!match) 
+          //   break;
+          // let curType= veXEntityMetaData[match[1]].name; 
+          // if (currentTitle != veXCurrentTicketInfo.title && curType != veXCurrentTicketInfo.type)
+            onTicketTitleChange(mutation);
+        }
+      }
+    );
+    veXTicketTypeMutationObserver.observe(targetNode, options);
+  }
+  catch (err) {
+    utilAPI.onError(err, "An error occurred during the setup.");
+  }
+}
 // function getTicketType(title)
 // {
 //   if (!title) return "";
@@ -231,6 +259,7 @@ function getCurrentTicketInfo(title) {
     let ticketType = document.querySelector('[ng-if="header.shouldShowEntityLabel"]').innerText;
     if (!ticketType || ticketType.length == "")
       return;
+    initTicketTypeMutationObserver();
     ticketType = ticketType.toUpperCase();
     let pageTicketId=document.querySelector(".entity-form-document-view-header-entity-id-container");
     let pageTicketTitle=
@@ -273,6 +302,10 @@ function veXReset() {
     if (veXTicketPhaseMutationObserver) {
       veXTicketPhaseMutationObserver.disconnect();
       veXTicketPhaseMutationObserver = undefined;
+    }
+    if (veXTicketTypeMutationObserver) {
+      veXTicketTypeMutationObserver.disconnect();
+      veXTicketTypeMutationObserver = undefined;
     }
     root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
     root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);

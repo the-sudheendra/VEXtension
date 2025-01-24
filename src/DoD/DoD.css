@@ -454,7 +454,7 @@
   max-height: 30px;
   width: 30px;
   height: 30px;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -570,11 +570,10 @@
 }
 
 
-.veX_list_action_icon {
+.veX_note_icon {
   width: 25px;
   height: 25px;
-  display: none;
-}
-.veX_completed .veX_list_action_icon,.veX_not_applicable .veX_list_action_icon, .veX_selected .veX_list_action_icon{
-  display: block;
+} 
+.veX_completed .veX_note,.veX_not_applicable .veX_note, .veX_selected .veX_note{
+  display: block !important;
 }
