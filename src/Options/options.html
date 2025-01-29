@@ -12,10 +12,18 @@
 <body>
     <div id="overlay"></div>
     <div class="veX_container">
-        <p>Upload Checklist</p>
+        <p>Configure Checklist</p>
+        <div class="veX_file_upload">
+            <label for="veX_dod_url">URL of the JSON:</label>
+            <input type="text" id="veX_dod_url" name="veX_dod_url">
+            <button id="veX_dod_url_save">Save</button>
+        </div>
+        <div >
+            <p>OR</p>
+        </div>
         <div class="veX_file_upload">
             <label for="veX_dod_file">Choose a JSON file:</label>
-            <input type="file" id="veX_dod_file" name="veX_dod_file" accept=".json" required>
+            <input type="file" id="veX_dod_file" name="veX_dod_file" accept=".json">
         </div>
             <a class="veX_submit_btn" target="_blank" href="https://github.com/the-sudheendra/VE-Checklist/blob/main/README.md#example-checklist">View Example</a>
     </div>

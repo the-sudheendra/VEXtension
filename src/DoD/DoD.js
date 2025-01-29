@@ -923,6 +923,12 @@ async function onTicketTitleChange(change) {
     if (utilAPI.isEmptyObject(veXCurrentTicketInfo)) {
       return;
     }
+    // If we are using a remote URL to maintain the checklist,
+    // then refresh the checklist locally first
+    const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
+    if(!remoteRefreshSuccess) {
+      return;
+    }
     let tempDOD = await chrome.storage.sync.get(veXCurrentTicketInfo.type);
     if (!utilAPI.isEmptyObject(tempDOD)) {
       veXCurrentTicketChecklist = tempDOD[veXCurrentTicketInfo.type];
@@ -936,6 +942,41 @@ async function onTicketTitleChange(change) {
   catch (err) {
     utilAPI.onError(err);
   }
+}
+
+/**
+ * This function refreshes the checklist
+ * from the remote URL if it exists.
+ */
+async function refreshChecklistFromRemoteIfExists() {
+  if(await utilAPI.getChecklistMode() != "url") {
+    // We are not using the URL mode.
+    // Hence, we need not refresh anything.
+    return true;
+  }
+  try {
+    // Get the remote URL from sync storage
+    // and fetch the checklist from the remote URL
+    const veX_dod_url = await chrome.storage.sync.get("veX_dod_url");
+    const response = await fetch(veX_dod_url?.veX_dod_url);
+    if (!response.ok) {
+        utilAPI.notify("Couldn't fetch JSON from the URL", "warning", true);
+        return false;
+    }
+    // Validate and update the checklist
+    const veXChecklistInfo = await response.json();
+    if (utilAPI.validateChecklist(veXChecklistInfo) === true && await utilAPI.saveChecklist(veXChecklistInfo, veX_dod_url.veX_dod_url) === true) {
+        utilAPI.notify("Checklist refreshed successfully! 🙌🏻", "success", true);
+    } else {
+      return false;
+    }
+  } catch (error) {
+    utilAPI.onError(error, "Couldn't fetch JSON from the URL", true);
+    return false;
+  }
+  // Return true by default so as to
+  // not break any existing functionality
+  return true;
 }
 
 function onTicketPhaseChange(mutation) {
