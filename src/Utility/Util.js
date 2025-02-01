@@ -1,4 +1,3 @@
-
 var notifyAPI;
 (async () => {
   const notifyUrl = await chrome.runtime.getURL("src/Notification/Notification.js");
@@ -57,9 +56,9 @@ function formatMessage(message, ...params) {
   return message;
 }
 
-function getRandomMessage(notification) { 
+function getRandomMessage(notification) {
   return notification[Math.floor(Math.random() * notification.length)];
 }
 export {
-  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage,getChecklistStatus,getRandomMessage
+  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage
 }

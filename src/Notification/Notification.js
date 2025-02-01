@@ -33,11 +33,11 @@ function closeToastNode() {
 
 async function openToastNode(type, message) {
   try {
-    if(!toastNode) return;
+    if (!toastNode) return;
     let messageNode = toastNode.querySelector("#veX_toast_message");
-    if(!messageNode) return;
+    if (!messageNode) return;
     if (type)
-      messageNode.querySelector('h4').innerHTML=message;
+      messageNode.querySelector('h4').innerHTML = message;
     switch (type) {
       case "success":
         root.style.setProperty('--veX-notification-primary', "#2DD743");
@@ -56,8 +56,8 @@ async function openToastNode(type, message) {
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/info_24.png");
 
     }
-    const baseTime = 2000; 
-    const timePerChar = 50; 
+    const baseTime = 2000;
+    const timePerChar = 50;
     const maxTime = 8000;
     const displayTime = Math.min(
       baseTime + (message.length * timePerChar),

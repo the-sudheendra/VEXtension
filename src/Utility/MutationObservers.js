@@ -6,8 +6,8 @@ var veXTicketTypeMutationObserver;
 (async () => {
     const utilURL = chrome.runtime.getURL("src/Utility/Util.js");
     if (!Util)
-      Util = await import(utilURL);
-  })();
+        Util = await import(utilURL);
+})();
 
 function initTicketTitleMutationObserver(callback) {
     try {
@@ -27,9 +27,9 @@ function initTicketTitleMutationObserver(callback) {
         Util.onError(err, "An error occurred during the setup.");
     }
 }
-function initTicketTypeMutationObserver(onTicketTitleChange,onTicketPhaseChange) {
+function initTicketTypeMutationObserver(onTicketTitleChange, onTicketPhaseChange) {
     try {
-        veXTicketTypeMutationObserver=null;
+        veXTicketTypeMutationObserver = null;
         let targetNode = document.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
         if (!targetNode) return;
         let options = { childList: true, characterData: true, subtree: true };
@@ -49,10 +49,10 @@ function initTicketTypeMutationObserver(onTicketTitleChange,onTicketPhaseChange)
 }
 function initTicketPhaseMutationObserver(onTicketPhaseChange) {
     try {
-        veXTicketPhaseMutationObserver=null;
+        veXTicketPhaseMutationObserver = null;
         let targetNode = document.querySelector("[data-aid='entity-life-cycle-widget-phase']");
         if (!targetNode) return;
-        targetNode=targetNode.childNodes[3];
+        targetNode = targetNode.childNodes[3];
         let options = { attributes: true, childList: true, subtree: true };
         veXTicketPhaseMutationObserver = new MutationObserver(
             (mutationList, observer) => {

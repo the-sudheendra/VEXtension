@@ -4,15 +4,15 @@ var Constants;
 async function loadModules() {
     let URL = chrome.runtime.getURL("src/Utility/Util.js");
     if (!Util)
-      Util = await import(URL);
-     URL = chrome.runtime.getURL("src/Utility/Constants.js");
+        Util = await import(URL);
+    URL = chrome.runtime.getURL("src/Utility/Constants.js");
     if (!Constants)
-      Constants = await import(URL);
-  }
-  async function initialize() {
+        Constants = await import(URL);
+}
+async function initialize() {
     await loadModules();
-  }
-  initialize();
+}
+initialize();
 if (fileInput)
     fileInput.addEventListener('change', onFileUpload);
 else

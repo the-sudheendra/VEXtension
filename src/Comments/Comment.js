@@ -4,7 +4,7 @@ async function loadModules() {
   let URL = chrome.runtime.getURL("src/Utility/Util.js");
   if (!Util)
     Util = await import(URL);
-   URL = chrome.runtime.getURL("src/Utility/Constants.js");
+  URL = chrome.runtime.getURL("src/Utility/Constants.js");
   if (!Constants)
     Constants = await import(URL);
 }
@@ -46,24 +46,24 @@ async function addChecklistToComments(veXChecklistItems) {
     if (addNewCommentBox)
       addNewCommentBox.click();
     else {
-      Util.notify("Unable to locate the new comment box 🙁", "info", true);
+      Util.notify(Util.getRandomMessage(Constants.Notifications.CommentsBoxNotFound), Constants.NotificationType.info, true);
       return;
     }
     await Util.delay(500);
     let commentBox = document.querySelector(Constants.ValueEdgeNodeSelectors.InputCommentBox).querySelector(".fr-wrapper").childNodes[0];
     if (commentBox) {
-      let finalComment = await draftCommentForCheckedItems();
+      let finalComment = await draftChecklistForComments();
       if (finalComment) {
         commentBox.innerHTML = finalComment;
         commentBox.blur();
       }
       else {
-        Util.notify("Unable to locate the new comment box 🙁", "info", true);
+        Util.notify(Util.getRandomMessage(Constants.Notifications.CommentsBoxNotFound), Constants.NotificationType.info, true);
         return;
       }
     }
     else {
-      Util.notify("Unable to locate the new comment box 🙁", "info", true);
+      Util.notify(Util.getRandomMessage(Constants.Notifications.CommentsBoxNotFound), Constants.NotificationType.info, true);
       return;
     }
     let commentSubmitButton = document.querySelector(Constants.ValueEdgeNodeSelectors.AddCommentButton);
@@ -72,14 +72,14 @@ async function addChecklistToComments(veXChecklistItems) {
       await Util.delay(500);
       closeveXPopUp();
       commentSubmitButton.click();
-      Util.notify("Checklist added to comments 😊", "success", true);
+      Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistAddedToComments), Constants.NotificationType.info, true);
     }
   }
   catch (ex) {
     Util.onError(ex, "An exception occurred while trying to open comments in response to a click event", true)
   }
 }
-async function draftCommentForCheckedItems() {
+async function draftChecklistForComments() {
   try {
     let dummyCommentNode = document.createElement('div');
     let CommentDraftNode = document.createElement('div');
@@ -212,5 +212,5 @@ function onSyncChecklistComments() {
   }
 }
 export {
-  getChecklistCommentData,addChecklistToComments,onSyncChecklistComments
+  getChecklistCommentData, addChecklistToComments, onSyncChecklistComments
 }
