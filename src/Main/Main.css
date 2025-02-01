@@ -50,7 +50,7 @@
   user-select: none;
 }
 
-.veX-Button {
+.veX_category_button {
   background-color: var(--veX-common-backgroundColor);
   border: none;
   padding: 12px;
@@ -66,7 +66,7 @@
   word-wrap: break-word;
   line-height: 1.4;
 }
-.veX-Button:hover
+.veX_category_button:hover
 {
   background-color: rgba(229, 241, 253,0.5) !important;
 }
@@ -240,7 +240,7 @@
   background-color: var(--veX-common-backgroundColor);
 }
 
-.veX_dod_categories {
+.veX_ui_categories {
   background-color: var(--veX-common-backgroundColor);
   padding: 10px;
   overflow-y: scroll;
@@ -271,7 +271,7 @@
   top: 53%;
 }
 
-.veX_dod_categories button {
+.veX_ui_categories button {
   width: 100%;
 }
 
@@ -284,25 +284,25 @@
   overflow-y: scroll;
 }
 
-.veX_dod_list_container {
+.veX_ui_list_container {
   padding: 10px;
 }
 
-.veX_dod_title {
+.veX_ui_title {
   font-size: var(--veX-header-fontSize);
   font-weight: 500;
   color: var(--veX-common-fontColor);
   margin-bottom: 10px;
 }
 
-.veX_dod_list_container ul {
+.veX_ui_list_container ul {
   margin: 0;
   padding: 0;
   counter-reset: item;
   list-style-type: none;
 }
 
-.veX_dod_list_container ul li {
+.veX_ui_list_container ul li {
   border: 1px solid var(--veX-borderColor);
   margin: 10px 0px;
   cursor: pointer;
@@ -321,18 +321,18 @@
   transition: background-color 300ms linear;
 }
 
-.veX_dod_list_container ul li:hover {
+.veX_ui_list_container ul li:hover {
   background-color: var(--vex-hoverColor);
 }
 
-.veX_dod_list_container ul li.checked {
+.veX_ui_list_container ul li.checked {
   background: var(--veX-successColor);
   color: var(--veX-whiteColor);
   text-decoration: line-through;
 }
 
 
-.veX_dod_list_container ul li::before {
+.veX_ui_list_container ul li::before {
   position: absolute;
   top: 12px;
   left: 16px;
@@ -343,7 +343,7 @@
   border: none;
 }
 
-.veX_dod_list_container ul li.checked::before {
+.veX_ui_list_container ul li.checked::before {
   content: '';
   position: absolute;
   border-color: #fff;
@@ -576,4 +576,13 @@
 } 
 .veX_completed .veX_note,.veX_not_applicable .veX_note, .veX_selected .veX_note{
   display: block !important;
+}
+.veX_sync_icon
+{
+  width: 30px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  background-color: var(--veX-ticktColor);
 }

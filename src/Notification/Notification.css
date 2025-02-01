@@ -1,5 +1,6 @@
 :root {
   --veX-notification-primary: black;
+  --veX-animation-duration: 0.3s;
 }
 
 #veX_toast {
@@ -139,7 +140,7 @@
 }
 
 .veX_timer_animation {
-  animation: countdown 4s linear forwards;
+  animation: countdown var(--veX-animation-duration) linear forwards;
 }
 
 @keyframes countdown {

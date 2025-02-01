@@ -1,13 +1,22 @@
 const fileInput = document.getElementById('veX_dod_file');
-var utilAPI;
-(async () => {
-    const utilURL = chrome.runtime.getURL("src/Utility/util.js");
-    utilAPI = await import(utilURL);
-})();
+var Util;
+var Constants;
+async function loadModules() {
+    let URL = chrome.runtime.getURL("src/Utility/Util.js");
+    if (!Util)
+      Util = await import(URL);
+     URL = chrome.runtime.getURL("src/Utility/Constants.js");
+    if (!Constants)
+      Constants = await import(URL);
+  }
+  async function initialize() {
+    await loadModules();
+  }
+  initialize();
 if (fileInput)
     fileInput.addEventListener('change', onFileUpload);
 else
-    utilAPI.onError(err, undefined, true);
+    Util.onError(err, undefined, true);
 
 function onFileUpload(event) {
     const file = event.target.files[0];
@@ -17,40 +26,40 @@ function onFileUpload(event) {
             try {
                 const veXChecklistInfo = JSON.parse(reader.result);
                 if (validateChecklist(veXChecklistInfo) === true && await saveChecklist(veXChecklistInfo) === true) {
-                    utilAPI.notify("Checklist saved successfully! 🙌🏻", "success", true);
+                    Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), "success", true);
                 }
                 fileInput.value = '';
             } catch (err) {
-                utilAPI.onError(err, undefined, true);
+                Util.onError(err, undefined, true);
                 fileInput.value = '';
             }
         };
         reader.readAsText(file);
     } else {
-        utilAPI.notify("Please upload a valid JSON file 👀", "warning", true);
+        Util.notify("Please upload a valid JSON file 👀", "warning", true);
     }
 }
 
 function validateChecklist(veXChecklistInfo) {
     try {
-        if (utilAPI.isEmptyObject(veXChecklistInfo)) {
-            utilAPI.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue 👀", "warning", true);
+        if (Util.isEmptyObject(veXChecklistInfo)) {
+            Util.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue 👀", "warning", true);
             return false;
         }
         let entitiesArray = Object.keys(veXChecklistInfo);
         for (let i = 0; i < entitiesArray.length; i++) {
             let ticketEntityName = entitiesArray[i];
             let entityChecklist = veXChecklistInfo[ticketEntityName];
-            if (utilAPI.isEmptyObject(entityChecklist)) {
-                utilAPI.notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, "warning", true);
+            if (Util.isEmptyObject(entityChecklist)) {
+                Util.notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, "warning", true);
                 return false;
             }
             if (!entityChecklist.hasOwnProperty("categories")) {
-                utilAPI.notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
+                Util.notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
                 return false;
             }
-            if (utilAPI.isEmptyObject(entityChecklist["categories"])) {
-                utilAPI.notify(`No categories are specified in the '${ticketEntityName}'. Please add atleast one, as it is a mandatory field.`, "warning", true);
+            if (Util.isEmptyObject(entityChecklist["categories"])) {
+                Util.notify(`No categories are specified in the '${ticketEntityName}'. Please add atleast one, as it is a mandatory field.`, "warning", true);
                 return false;
             }
             if (validateChecklistCategories(entityChecklist["categories"], ticketEntityName) === false)
@@ -58,7 +67,7 @@ function validateChecklist(veXChecklistInfo) {
         }
         return true;
     } catch (err) {
-        utilAPI.onError(err, undefined, true);
+        Util.onError(err, undefined, true);
         return false;
     }
 }
@@ -69,21 +78,21 @@ function validateChecklistCategories(ChecklistCategories, ticketEntityName) {
         for (let i = 0; i < categories.length; i++) {
             let categoryName = categories[i];
             if (!ChecklistCategories[categoryName].hasOwnProperty("checklist")) {
-                utilAPI.notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
+                Util.notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
                 return false;
             }
-            if (utilAPI.isEmptyArray(ChecklistCategories[categoryName].checklist)) {
-                utilAPI.notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
+            if (Util.isEmptyArray(ChecklistCategories[categoryName].checklist)) {
+                Util.notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
                 return false;
             }
             if (ChecklistCategories[categoryName].checklist.every(list => list.length >= 1) === false) {
-                utilAPI.notify(`One of the checklist item is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
+                Util.notify(`One of the checklist item is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
                 return false;
             }
         }
         return true;
     } catch (err) {
-        utilAPI.onError(err, undefined, true);
+        Util.onError(err, undefined, true);
         return false;
     }
 }
@@ -95,7 +104,7 @@ async function saveChecklist(veXChecklistInfo) {
         for (let i = 0; i < entites.length; i++) {
             let ticketEntityName = entites[i];
             let keyValue = {};
-            if (utilAPI.isEmptyObject(veXChecklistInfo[ticketEntityName]))
+            if (Util.isEmptyObject(veXChecklistInfo[ticketEntityName]))
                 return false;
             keyValue[ticketEntityName] = veXChecklistInfo[ticketEntityName];
             await chrome.storage.sync.set(keyValue);
@@ -103,7 +112,7 @@ async function saveChecklist(veXChecklistInfo) {
         return true;
     }
     catch (err) {
-        utilAPI.onError(err, undefined, true);
+        Util.onError(err, undefined, true);
         return false;
     }
 }
