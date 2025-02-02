@@ -39,15 +39,15 @@ async function openToastNode(type, message) {
     if (type)
       messageNode.querySelector('h4').innerHTML = message;
     switch (type) {
-      case "success":
+      case Constants.NotificationType.Success:
         root.style.setProperty('--veX-notification-primary', "#2DD743");
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/check_circle_24.png");
         break;
-      case "warning":
+      case Constants.NotificationType.Warning:
         root.style.setProperty('--veX-notification-primary', "#F29208");
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/warning_24.png");
         break;
-      case "error":
+      case Constants.NotificationType.Error:
         root.style.setProperty('--veX-notification-primary', "#E63435");
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/error_24.png");
         break;
@@ -68,6 +68,7 @@ async function openToastNode(type, message) {
       closeToastNode();
       clearTimeout(countdown);
     }, displayTime);
+
     toastNode.style.visibility = "visible";
     toastNode.style.animation = `open 0.3s cubic-bezier(.47,.02,.44,2) forwards`;
     toastTimerNode.classList.add("veX_timer_animation");

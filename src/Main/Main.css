@@ -533,23 +533,6 @@
   padding-top: 1.5px;
 }
 
-.veX_footer_icon {
-  width: 20px;
-  height: 20px;
-}
-
-
-.veX_footer_options {
-  /* display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: var(--veX-ticktColor);
-  height: 85%;
-  width: fit-content;
-  BORDER-RADIUS: var(--veX-common-borderRadius);
-  PADDING: 0PX; */
-}
-
 .veX_footer_icon_container:hover {
   opacity: 0.8;
 }
@@ -566,7 +549,6 @@
   BORDER-RADIUS: var(--veX-common-borderRadius);
   transition: background-color 300ms ease-out;
 }
-
 
 .veX_note_icon {
   width: 25px;
@@ -589,7 +571,7 @@
 }
 
 .veX_banner.veX_footer {
-  background-color: #f8f9fa; /* Light gray background */
+  background-color: #f8f9fa; 
   padding: 10px;
   display: flex;
   justify-content: center;
@@ -597,13 +579,12 @@
   border-top: 1px solid #ddd;
 }
 
-/* Footer options container */
+
 .veX_footer_options {
   display: flex;
   gap: 12px; /* Space between buttons */
 }
 
-/* Icon button container */
 .veX_footer_icon_container {
   width: 50px;
   height: 50px;
@@ -615,13 +596,11 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-/* Button icons */
 .veX_footer_icon {
   width: 30px;
   height: 30px;
 }
 
-/* Leave Comment Button */
 .veX_leave_comment_btn {
   background-color: #007bff; /* Blue */
 }
