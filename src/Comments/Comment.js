@@ -251,10 +251,9 @@ async function editExistingComment(veXChecklistItems) {
 
     let lastComment = getLastChecklistComment();
     if (!lastComment) {
-      Util.notify(Util.getRandomMessage(Constants.Notifications.NoChecklistFoundInComments), Constants.NotificationType.info, true);
+      addChecklistToComments(veXChecklistItems);
       return;
     }
-
     lastComment.querySelectorAll("[data-aid='inline-menu-Edit-cmd']")[0].click();
     await Util.delay(500);
     lastComment.querySelector('.veX_checklist_comment_wrapper').innerHTML = await draftChecklistForComments(veXChecklistItems);
@@ -265,7 +264,7 @@ async function editExistingComment(veXChecklistItems) {
       await Util.delay(500);
       closeveXPopUp();
       commentSubmitButton.click();
-      Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistAddedToComments), Constants.NotificationType.info, true);
+      Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistEditSuccess), Constants.NotificationType.info, true);
     }
   }
   catch (err) {
