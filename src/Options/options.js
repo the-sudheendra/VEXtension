@@ -89,6 +89,16 @@ function validateChecklistCategories(ChecklistCategories, ticketEntityName) {
                 Util.notify(`One of the checklist item is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
                 return false;
             }
+          /*  let phases = ChecklistCategories[categoryName].phases;
+            if (!Util.isEmptyArray(phases)) {
+                for (let i = 0; i < phases.length; i++) {
+                    let ps = Object.keys(Constants.VEPhaseOrder);
+                    if (ps.includes(phases[i].toLowerCase()) === false) {
+                        Util.notify(`The phase '${phases[i]}' is not valid in the '${categoryName}' category for the '${ticketEntityName}' entity."`, "warning", true);
+                        return false;
+                    }
+                }
+            }*/
         }
         return true;
     } catch (err) {
