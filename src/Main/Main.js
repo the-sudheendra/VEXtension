@@ -13,7 +13,6 @@ var veXPopUpOverlay = document.createElement("div");
 var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
-var veXChecklistCommentData = {};
 var veXSelectors;
 var root = document.querySelector(':root');
 var Util;
@@ -173,8 +172,8 @@ async function initView() {
 async function initHeaderView() {
   try {
     veXNodes.veXLogo.src = await chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png");
-    veXNodes.veXSyncIcon.src = await chrome.runtime.getURL("icons/sync_24.png");
-    veXNodes.veXSyncIconContainer.addEventListener('click', Comments.onSyncChecklistComments)
+    //veXNodes.veXSyncIcon.src = await chrome.runtime.getURL("icons/sync_24.png");
+    //veXNodes.veXSyncIconContainer.addEventListener('click', Comments.onSyncChecklistComments)
     veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
   }
   catch (err) {
@@ -185,6 +184,8 @@ async function initFooterView() {
   try {
     veXPopUpNode.querySelector('.veX_add_comment_icon').src = await chrome.runtime.getURL("icons/add_comment_24.png");
     veXPopUpNode.querySelector(".veX_leave_comment_btn").addEventListener("click", onAddToComments);
+    veXPopUpNode.querySelector(".veX_edit_comment_icon").src = await chrome.runtime.getURL("icons/rate_review_24.png");
+    veXPopUpNode.querySelector(".veX_edit_comment_icon").addEventListener("click", onEditComment);
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Constants.ErrorMessages.UnHandledException, "Footer View initializing", err.message), true);
@@ -192,6 +193,11 @@ async function initFooterView() {
 }
 async function onAddToComments(event) {
   await Comments.addChecklistToComments(veXChecklistItems);
+  if (event)
+    event.stopPropagation();
+}
+async function onEditComment(event) {
+  await Comments.editExistingComment(veXChecklistItems);
   if (event)
     event.stopPropagation();
 }

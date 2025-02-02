@@ -61,9 +61,9 @@ const ChecklistUI = `
         <img class="veX_logo" title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
     </div>
     <p class="veX_header_title"></p>
-    <div class="veX_sync_icon_container">
+   <!-- <div class="veX_sync_icon_container">
         <img class="veX_sync_icon" title="Sync checklist data from existing comment" alt="Sync checklist">
-    </div>
+    </div> -->
 </header>
 <div class="veX_done_status"></div>
 <div class="veX_content_wrapper">
@@ -87,16 +87,18 @@ const ChecklistUI = `
 <div class="veX_banner veX_footer">
     <div class="veX_footer_options">
         <div class="veX_footer_icon_container veX_leave_comment_btn">
-            <span>Leave Comment</span>
-            <img class="veX_add_comment_icon veX_footer_icon  " alt="Leave a Comment" title="This will add a new comment with the selected checklist." src="${chrome.runtime.getURL("icons/add_comment_24.png")}" alt="Add Comment"/>
+            <!-- <span class="veX_leave_comment_btn_txt">Leave Comment</span> -->
+            <img class="veX_add_comment_icon veX_footer_icon" alt="Leave a Comment" title="Add New Comment" src="${chrome.runtime.getURL("icons/add_comment_24.png")}" alt="Add Comment"/>
+
         </div>
-        <!--<div class="veX_footer_icon_container veX_edit_comment_btn">
-            <img class="veX_edit_comment_icon veX_footer_icon  " alt="Edit Comment" title="This will allow you to modify the existing comment." src="${chrome.runtime.getURL("icons/rate_review_24.png")}" alt="Edit Comment"/>
-            <span>Edit Comment</span>
-            </div> -->
+       <div class="veX_footer_icon_container veX_edit_comment_btn">
+            <img class="veX_edit_comment_icon veX_footer_icon" alt="Edit Comment" title="Edit Existing Comment." src="${chrome.runtime.getURL("icons/rate_review_24.png")}" alt="Edit Comment"/>
+            <!-- <span>Edit Comment</span> -->
+        </div> 
     </div>
 </div>
 `;
+
 const VEChecklistNodeSelectors = {
     root: ":root",
     UITitle: '.veX_ui_title',

@@ -538,19 +538,16 @@
   height: 20px;
 }
 
-.veX_add_comment_icon {
-  margin-left: 5px;
-}
 
 .veX_footer_options {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--veX-ticktColor);
   height: 85%;
   width: fit-content;
   BORDER-RADIUS: var(--veX-common-borderRadius);
-  PADDING: 0PX;
+  PADDING: 0PX; */
 }
 
 .veX_footer_icon_container:hover {
@@ -589,4 +586,57 @@
   top: 10px;
   cursor: pointer;
   background-color: var(--veX-ticktColor);
+}
+
+.veX_banner.veX_footer {
+  background-color: #f8f9fa; /* Light gray background */
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #ddd;
+}
+
+/* Footer options container */
+.veX_footer_options {
+  display: flex;
+  gap: 12px; /* Space between buttons */
+}
+
+/* Icon button container */
+.veX_footer_icon_container {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--veX-common-borderRadius);
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Button icons */
+.veX_footer_icon {
+  width: 30px;
+  height: 30px;
+}
+
+/* Leave Comment Button */
+.veX_leave_comment_btn {
+  background-color: #007bff; /* Blue */
+}
+
+.veX_leave_comment_btn:hover {
+  background-color: #0056b3; /* Darker blue */
+  transform: scale(1.1);
+}
+
+/* Edit Comment Button */
+.veX_edit_comment_btn {
+  background-color: #28a745; /* Green */
+}
+
+.veX_edit_comment_btn:hover {
+  background-color: #1e7e34; /* Darker green */
+  transform: scale(1.1);
 }

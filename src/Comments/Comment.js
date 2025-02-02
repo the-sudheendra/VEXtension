@@ -1,5 +1,6 @@
 var Util;
 var Constants;
+var veXChecklistCommentData = {};
 async function loadModules() {
   let URL = chrome.runtime.getURL("src/Utility/Util.js");
   if (!Util)
@@ -15,6 +16,8 @@ initialize();
 
 function isCommentAllowed(veXChecklistItems) {
   try {
+    if(Util.isEmptyObject(veXChecklistItems))
+      return false;
     let categories = Object.keys(veXChecklistItems);
     for (let i = 0; i < categories.length; i++) {
       let categoryName = categories[i];
@@ -30,6 +33,7 @@ function isCommentAllowed(veXChecklistItems) {
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Constants.ErrorMessages.UnHandledException, "Comment Allowed Check", err.message), true);
+    return false;
   }
 }
 
@@ -39,9 +43,13 @@ async function addChecklistToComments(veXChecklistItems) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.info, true);
       return;
     }
+
+    // Open comment sidebar
     let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
     if (rightSidebarCommentButton) rightSidebarCommentButton.click();
     await Util.delay(500);
+
+    // Click on add new comment box
     let addNewCommentBox = document.querySelector(Constants.ValueEdgeNodeSelectors.NewCommentBox)
     if (addNewCommentBox)
       addNewCommentBox.click();
@@ -49,11 +57,16 @@ async function addChecklistToComments(veXChecklistItems) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.CommentsBoxNotFound), Constants.NotificationType.info, true);
       return;
     }
+
+    // getting new input comment box
     await Util.delay(500);
     let commentBox = document.querySelector(Constants.ValueEdgeNodeSelectors.InputCommentBox).querySelector(".fr-wrapper").childNodes[0];
+
+    // Draft checklist for comments
     if (commentBox) {
       let finalComment = await draftChecklistForComments();
       if (finalComment) {
+
         commentBox.innerHTML = finalComment;
         commentBox.blur();
       }
@@ -152,7 +165,7 @@ function setColor(item) {
 function getChecklistCommentData() {
   try {
     let commentData = document.querySelector(".veX_checklist_comment_wrapper");
-    if (!commentData) return;
+    if (!commentData) return {};
     let doneNode = commentData.querySelector(".veX_checklist_comment_done_percentage");
     let doneNodeData = doneNode.classList[1].split("@")[1];
     if (doneNodeData.startsWith("totalCompletedItems"))
@@ -211,6 +224,51 @@ function onSyncChecklistComments() {
     initView();
   }
 }
+
+function getLastChecklistComment() {
+  let CommentsContainer = document.querySelectorAll('.comment-container');
+  for (let i = 0; i < CommentsContainer.length; i++) {
+    let comment = CommentsContainer[i];
+    if (comment.querySelector('.veX_checklist_comment_wrapper')) {
+      return comment;
+    }
+  }
+  return null;
+}
+
+async function editExistingComment(veXChecklistItems) {
+  try {
+    if (!isCommentAllowed(veXChecklistItems)) {
+      Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.info, true);
+      return;
+    }
+    let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
+    if (rightSidebarCommentButton) rightSidebarCommentButton.click();
+    await Util.delay(500);
+
+    let lastComment = getLastChecklistComment();
+    if (!lastComment) 
+      {
+        Util.notify("No checklist found in the comments", "info", true);
+        return;
+      }
+    lastComment.querySelectorAll("[data-aid='inline-menu-Edit-cmd']")[0].click();
+    await Util.delay(500);
+    lastComment.querySelector('.veX_checklist_comment_wrapper').innerHTML = await draftChecklistForComments(veXChecklistItems);
+    lastComment.querySelector('.veX_checklist_comment_wrapper').blur();
+    let commentSubmitButton = document.querySelector("[ng-click='commentLines.saveComment(comment)']");
+    if (commentSubmitButton) {
+      commentSubmitButton.removeAttribute("disabled");
+      await Util.delay(500);
+      closeveXPopUp();
+      commentSubmitButton.click();
+      Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistAddedToComments), Constants.NotificationType.info, true);
+    }
+  }
+  catch (err) {
+    Util.onError(err, "An error occurred while attempting to edit the existing comment.", true);
+  }
+}
 export {
-  getChecklistCommentData, addChecklistToComments, onSyncChecklistComments
+  getChecklistCommentData, addChecklistToComments, onSyncChecklistComments, editExistingComment
 }
