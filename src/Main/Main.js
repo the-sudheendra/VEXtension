@@ -85,9 +85,9 @@ function initVEXNodes() {
 
 function getCurrentTicketInfo(title) {
   try {
-    if (!title) return false;
+    if (!title) return ;
     const ticketArr = title.split(" ");
-    if (ticketArr.length < 2) return false;
+    if (!ticketArr  || ticketArr.length < 2) return ;
     const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
     if (!match || match.length < 2) return;
     let ticketType = document.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
