@@ -92,11 +92,16 @@ function getCurrentTicketInfo(title) {
     if (!match || match.length < 2) return;
     let ticketType = document.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
     if (!ticketType || ticketType.length == "")
-      return false;
+      return;
     ticketType = ticketType.innerText;
     MutationObservers.initTicketTypeMutationObserver(onTicketTitleChange, onTicketPhaseChange);
     ticketType = ticketType.toUpperCase();
     //let pageTicketId = document.querySelector(Util.ValueEdgeNodeSelectors.CurrentTicketId);
+    if(!Constants.EntityMetaData.hasOwnProperty(ticketType))
+    {
+      veXCurrentTicketInfo={};
+      return;
+    }
     veXCurrentTicketInfo =
     {
       type: Constants.EntityMetaData[ticketType].name,
@@ -105,12 +110,10 @@ function getCurrentTicketInfo(title) {
       title: getTicketTitle(title.slice(ticketArr[0].length + 1)),
       phase: getCurrentTicketPhase()
     }
-    return true;
   }
   catch (err) {
     veXCurrentTicketInfo = {}
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "getCurrentTicketInfo", err.message), true);
-    return false;
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "getCurrentTicketInfo", err.message), false);
   }
 
 }
@@ -676,10 +679,11 @@ function onTicketPhaseChange(mutation) {
     let oldPhase = veXCurrentTicketInfo.phase;
     if (newPhase && oldPhase && Constants.VEPhaseOrder[newPhase.toLowerCase()] > Constants.VEPhaseOrder[oldPhase.toLowerCase()]) {
       let reminderMessage = Util.getRandomMessage(Constants.Notifications.ReminderToUpdateChecklist);
-      Util.notify(reminderMessage, Constants.NotificationType.info, true);
+      Util.notify(reminderMessage, Constants.NotificationType.Info, true);
     }
     veXCurrentTicketInfo.phase = newPhase;
     //openVexPopup();
+
 
   }
   catch (err) {
@@ -705,15 +709,16 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
         if (!(Util.isEmptyObject(veXCurrentTicketChecklist) || Util.isEmptyObject(veXCurrentTicketInfo)))
           openVexPopup();
         else if (!Util.isEmptyObject(veXCurrentTicketInfo) && Util.isEmptyObject(veXCurrentTicketChecklist)) {
-          Util.notify(Util.formatMessage(Util.getRandomMessage(Constants.Notifications.UnableToFindChecklist), veXCurrentTicketInfo.type), Constants.NotificationType.info, true);
+          Util.notify(Util.formatMessage(Util.getRandomMessage(Constants.Notifications.UnableToFindChecklist), veXCurrentTicketInfo.type), Constants.NotificationType.Info, true);
         }
         else if (Util.isEmptyObject(veXCurrentTicketInfo))
-          Util.notify(Util.getRandomMessage(Constants.Notifications.OpenTicketToSeeChecklist), Constants.NotificationType.info, true)
+          Util.notify(Util.getRandomMessage(Constants.Notifications.OpenTicketToSeeChecklist), Constants.NotificationType.Info, true)
         else if (veXIsViewInitialised === false) {
-          Util.notify(Util.getRandomMessage(Constants.ErrorMessages.SomethingWentWrong), Constants.NotificationType.error, true);
+          Util.notify(Util.getRandomMessage(Constants.ErrorMessages.SomethingWentWrong), Constants.NotificationType.Error, true);
         }
         else
-          Util.notify(Util.getRandomMessage(Constants.ErrorMessages.SomethingWentWrong), Constants.NotificationType.error, true);
+          Util.notify(Util.getRandomMessage(Constants.ErrorMessages.SomethingWentWrong), Constants.NotificationType.Error, true);
+
         break;
     }
   }

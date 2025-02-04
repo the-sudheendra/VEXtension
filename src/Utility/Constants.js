@@ -358,16 +358,18 @@ const VEPhaseOrder = {
     'closed': 17,
 }
 const CheckListStatus = {
-    'Completed': 1,
-    'NotCompleted': 0,
-    'NotApplicable': -1,
-    'NotSelected': -2,
+    Completed: 1,
+    NotCompleted: 0,
+    NotApplicable: -1,
+    NotSelected: -2,
 }
+
 const NotificationType = {
-    'info': 1,
-    'warning': 2,
-    'error': 3,
-    'success': 4
+    Info: 1,
+    Warning: 2,
+    Error: 3,
+    Success: 4
 }
+
 const VERSION = "2.3.4";
 export { EntityMetaData, ChecklistUI, ValueEdgeNodeSelectors, VEChecklistNodeSelectors, ErrorMessages, Notifications, VEPhaseOrder, CheckListStatus, NotificationType };
