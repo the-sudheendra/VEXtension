@@ -333,8 +333,19 @@ const Notifications = {
         "🧐 Checklist updated! Please check it and hit save.",
         "🎯 Boom! Checklist updated. Give it a quick review and save.",
         " Edits done! Give it a look and don’t forget to save.",
+    ],
+    NotAbleToEditComment: [
+        "You can’t edit this comment, but a new one is just a click away! 😃",
+        "⚡ Quick tip! This comment isn’t editable, but you can drop a new one right away!😃",
+        "💡 Heads up! This comment can’t be edited, but feel free to add a new one instead.",
+        "😯 Hmm… looks like this comment can’t be changed. Maybe try adding a new one?",
+        "🌟 Keep the conversation going! You can’t edit this comment, but adding a new one keeps things flowing!",
+        "Oops! Editing is locked, but hey, who doesn’t love a fresh new comment? 😃",
+        "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
     ]
 }
+
+
 
 const VEPhaseOrder = {
     'new': 0,

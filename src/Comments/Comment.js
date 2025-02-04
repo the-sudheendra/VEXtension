@@ -257,12 +257,12 @@ async function editExistingComment(veXChecklistItems) {
       return;
     }
     if (!lastComment.querySelectorAll("[data-aid='inline-menu-Edit-cmd']") || lastComment.querySelectorAll("[data-aid='inline-menu-Edit-cmd']").length == 0) {
-      Util.notify("Not able to edit the comment", Constants.NotificationType.Warning, true);
+      Util.notify(Util.getRandomMessage(Constants.Notifications.NotAbleToEditComment), Constants.NotificationType.Warning, true);
       return;
     }
     lastComment.querySelectorAll("[data-aid='inline-menu-Edit-cmd']")[0].click();
     await Util.delay(500);
-    lastComment.querySelector('.veX_checklist_comment_wrapper').innerHTML = await draftChecklistForComments(veXChecklistItems);
+    lastComment.querySelector('.veX_checklist_comment_wrapper').parentElement.innerHTML = await draftChecklistForComments(veXChecklistItems);
     lastComment.querySelector('.veX_checklist_comment_wrapper').blur();
     let commentSubmitButton = document.querySelector("[ng-click='commentLines.saveComment(comment)']");
     if (!commentSubmitButton) {
