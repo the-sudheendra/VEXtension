@@ -382,5 +382,4 @@ const NotificationType = {
     Success: 4
 }
 
-const VERSION = "2.3.4";
 export { EntityMetaData, ChecklistUI, ValueEdgeNodeSelectors, VEChecklistNodeSelectors, ErrorMessages, Notifications, VEPhaseOrder, CheckListStatus, NotificationType };
