@@ -1,10 +1,19 @@
 const fileInput = document.getElementById('veX_dod_file');
 const urlInputSaveBtn = document.getElementById('veX_dod_url_save');
 var Util;
-(async () => {
-    const utilURL = chrome.runtime.getURL("src/Utility/util.js");
-    Util = await import(utilURL);
-})();
+var Constants;
+async function loadModules() {
+    let URL = chrome.runtime.getURL("src/Utility/Util.js");
+    if (!Util)
+        Util = await import(URL);
+    URL = chrome.runtime.getURL("src/Utility/Constants.js");
+    if (!Constants)
+        Constants = await import(URL);
+}
+async function initialize() {
+    await loadModules();
+}
+initialize();
 if (fileInput)
     fileInput.addEventListener('change', onFileUpload);
 else
@@ -57,7 +66,7 @@ async function onURLSave() {
         }
         const veXChecklistInfo = await response.json();
         if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistURL(url) === true) {
-            Util.notify("Checklist URL saved successfully! 🙌🏻", "success", true);
+            Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), "success", true);
         }
     } catch (error) {
         Util.onError(error, "Couldn't fetch JSON from the URL", true);
@@ -72,7 +81,7 @@ function onFileUpload(event) {
             try {
                 const veXChecklistInfo = JSON.parse(reader.result);
                 if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo) === true) {
-                    Util.notify("Checklist saved successfully! 🙌🏻", "success", true);
+                    Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), "success", true);
                     // clear the url input box since
                     // we are now using the file mode
                     document.getElementById('veX_dod_url').value = '';

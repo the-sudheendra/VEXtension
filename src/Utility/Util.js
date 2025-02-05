@@ -19,6 +19,7 @@ function notify(message, type = "info", display = false) {
   }
   console.info(message);
 }
+
 /**
  * An util method to show an error message.
  * @param {*} error the exception object
@@ -64,6 +65,7 @@ function formatMessage(message, ...params) {
 function getRandomMessage(notification) {
   return notification[Math.floor(Math.random() * notification.length)];
 }
+
 /**
  * This function returns a string that says whether
  * we have either stored the JSON locally or we
