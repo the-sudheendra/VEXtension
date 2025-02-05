@@ -683,7 +683,7 @@ async function onTicketTitleChange(change) {
  * from the remote URL if it exists.
  */
 async function refreshChecklistFromRemoteIfExists() {
-  if(await utilAPI.getChecklistMode() != "url") {
+  if(await Util.getChecklistMode() != "url") {
     // We are not using the URL mode.
     // Hence, we need not refresh anything.
     return true;
@@ -694,18 +694,18 @@ async function refreshChecklistFromRemoteIfExists() {
     const veX_dod_url = await chrome.storage.sync.get("veX_dod_url");
     const response = await fetch(veX_dod_url?.veX_dod_url);
     if (!response.ok) {
-        utilAPI.notify("Couldn't fetch JSON from the URL", "warning", true);
+        Util.notify("Couldn't fetch JSON from the URL", "warning", true);
         return false;
     }
     // Validate and update the checklist
     const veXChecklistInfo = await response.json();
-    if (utilAPI.validateChecklist(veXChecklistInfo) === true && await utilAPI.saveChecklist(veXChecklistInfo, veX_dod_url.veX_dod_url) === true) {
-        utilAPI.notify("Checklist refreshed successfully! 🙌🏻", "success", true);
+    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url.veX_dod_url) === true) {
+        Util.notify("Checklist refreshed successfully! 🙌🏻", "success", true);
     } else {
       return false;
     }
   } catch (error) {
-    utilAPI.onError(error, "Couldn't fetch JSON from the URL", true);
+    Util.onError(error, "Couldn't fetch JSON from the URL", true);
     return false;
   }
   // Return true by default so as to
