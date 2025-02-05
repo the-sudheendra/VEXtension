@@ -65,7 +65,7 @@ async function onURLSave() {
             return;
         }
         const veXChecklistInfo = await response.json();
-        if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistURL(url) === true) {
+        if (Util.validateChecklist(veXChecklistInfo) === true && await saveChecklistURL(url) === true) {
             Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), "success", true);
         }
     } catch (error) {
