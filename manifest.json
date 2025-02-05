@@ -1,22 +1,22 @@
 {
   "name": "VE Checklist",
   "description": "Checklist Tool for OpenText ValueEdge",
-  "version": "2.2.3",
+  "version": "2.3.2",
   "manifest_version": 3,
   "permissions": ["contextMenus", "storage"],
   "content_scripts": [
     {
       "matches": ["https://*.saas.microfocus.com/*"],
-      "js": ["./src/DoD/DoD.js"],
-      "css": ["./src/DoD/DoD.css", "./src/Notification/Notification.css"]
+      "js": ["./src/Main/Main.js"],
+      "css": ["./src/Main/Main.css", "./src/Notification/Notification.css"]
     }
   ],
   "action": {
-    "default_popup": "./src/Popup/popup.html",
+    "default_popup": "./src/Popup/Popup.html",
     "default_title": "VE Checklist"
   },
   "background": {
-    "service_worker": "./src/Utility/background.js",
+    "service_worker": "./src/Utility/Background.js",
     "type": "module"
   },
   "web_accessible_resources": [
@@ -27,11 +27,14 @@
         "icons/fact_check_48.png",
         "icons/fact_check_128.png",
         "icons/fact_check_48_FFFFFF.png",
-        "src/DoD/DoD.js",
-        "src/Popup/popup.html",
-        "src/Options/options.js",
-        "src/Utility/util.js",
-        "src/Utility/purify.min.js",
+        "src/Main/Main.js",
+        "src/Popup/Popup.html",
+        "src/Options/Options.js",
+        "src/Utility/Util.js",
+        "src/Utility/Constants.js",
+        "src/Utility/MutationObservers.js",
+        "src/Comments/Comment.js",
+        "src/External/purify.min.js",
         "src/Notification/Notification.js",
         "icons/check_circle_24.png",
         "icons/error_24.png",
@@ -46,7 +49,8 @@
         "icons/add_comment_24.png",
         "icons/rate_review_24.png",
         "icons/content_copy_24.png",
-        "icons/disabled.png"
+        "icons/disabled.png",
+        "icons/sync_24.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
@@ -58,7 +62,7 @@
     "128": "icons/fact_check_128.png"
   },
   "options_ui": {
-    "page": "./src/Options/options.html",
+    "page": "./src/Options/Options.html",
     "open_in_tab": true
   }
 }

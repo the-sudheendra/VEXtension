@@ -1,5 +1,6 @@
 :root {
   --veX-notification-primary: black;
+  --veX-animation-duration: 0.3s;
 }
 
 #veX_toast {
@@ -39,12 +40,11 @@
   object-fit: cover;
 }
 
-
 #veX_toast_message {
   padding: 5px 20px 5px 10px;
 }
 
-#veX_toast_message h4{
+#veX_toast_message h4 {
   margin: 0;
   line-height: 1.2em;
 }
@@ -52,7 +52,7 @@
 #veX_toast_message h4 {
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
   color: #404040;
 }
 
@@ -73,7 +73,7 @@
 #veX_toast_close::before,
 #veX_toast_close::after {
   position: absolute;
-  content: '';
+  content: "";
   height: 12px;
   width: 1px;
   border-radius: 5px;
@@ -139,7 +139,7 @@
 }
 
 .veX_timer_animation {
-  animation: countdown 4s linear forwards;
+  animation: countdown var(--veX-animation-duration) linear forwards;
 }
 
 @keyframes countdown {

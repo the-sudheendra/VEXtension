@@ -33,21 +33,21 @@ function closeToastNode() {
 
 async function openToastNode(type, message) {
   try {
-    if(!toastNode) return;
+    if (!toastNode) return;
     let messageNode = toastNode.querySelector("#veX_toast_message");
-    if(!messageNode) return;
+    if (!messageNode) return;
     if (type)
-      messageNode.querySelector('h4').innerHTML=message;
+      messageNode.querySelector('h4').innerHTML = message;
     switch (type) {
-      case "success":
+      case Constants.NotificationType.Success:
         root.style.setProperty('--veX-notification-primary', "#2DD743");
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/check_circle_24.png");
         break;
-      case "warning":
+      case Constants.NotificationType.Warning:
         root.style.setProperty('--veX-notification-primary', "#F29208");
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/warning_24.png");
         break;
-      case "error":
+      case Constants.NotificationType.Error:
         root.style.setProperty('--veX-notification-primary', "#E63435");
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/error_24.png");
         break;
@@ -56,13 +56,23 @@ async function openToastNode(type, message) {
         toastNode.querySelector("#veX_icon").src = await chrome.runtime.getURL("icons/info_24.png");
 
     }
-    toastNode.style.visibility = "visible";
-    toastNode.style.animation = "open 0.3s cubic-bezier(.47,.02,.44,2) forwards";
-    toastTimerNode.classList.add("veX_timer_animation");
+    const baseTime = 2000;
+    const timePerChar = 50;
+    const maxTime = 8000;
+    const displayTime = Math.min(
+      baseTime + (message.length * timePerChar),
+      maxTime
+    );
+    root.style.setProperty('--veX-animation-duration', `${displayTime / 1000}s`);
     let countdown = setTimeout(() => {
       closeToastNode();
       clearTimeout(countdown);
-    }, 4000)
+    }, displayTime);
+
+    toastNode.style.visibility = "visible";
+    toastNode.style.animation = `open 0.3s cubic-bezier(.47,.02,.44,2) forwards`;
+    toastTimerNode.classList.add("veX_timer_animation");
+
   }
   catch (err) {
     alert("An error occurred. Please refresh the page, if issue persist please report the issue");
