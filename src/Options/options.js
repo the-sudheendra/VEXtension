@@ -1,7 +1,10 @@
-const fileInput = document.getElementById('veX_dod_file');
-const urlInputSaveBtn = document.getElementById('veX_dod_url_save');
+const fileInput = document.getElementById('jsonFile');
+const urlInputSaveBtn = document.getElementById('SaveChecklistBtn');
+var veX_dod_url = "";
+var veX_loadOnStart = false;
 var Util;
 var Constants;
+
 async function loadModules() {
     let URL = chrome.runtime.getURL("src/Utility/Util.js");
     if (!Util)
@@ -10,63 +13,86 @@ async function loadModules() {
     if (!Constants)
         Constants = await import(URL);
 }
+
 async function initialize() {
-    await loadModules();
-}
-initialize();
-if (fileInput)
-    fileInput.addEventListener('change', onFileUpload);
-else
-    Util.onError(err, undefined, true);
-
-// Add event listeners for the URL items
-if(urlInputSaveBtn) {
-    urlInputSaveBtn.addEventListener('click', onURLSave);
-    window.addEventListener('load', onURLInputLoad);
-} else {
-    Util.onError(undefined, 'Could not find the URL input box', true);
+    try {
+        await loadModules();
+        setupEventListeners();
+    }
+    catch (err) {
+        Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "initialize", err.message), true);
+    }
 }
 
-/**
+function setupEventListeners() {
+    if (urlInputSaveBtn) {
+        urlInputSaveBtn.addEventListener('click', onSaveURL);
+    } else {
+        Util.onError(undefined, 'Could not find the URL input box', true);
+    }
+
+    loadUrlURLMetaData();
+
+    document.querySelector(".file-upload").addEventListener("click", () => {
+        document.getElementById("jsonFile").click();
+    });
+
+    document.getElementById("jsonFile").addEventListener("change", (event) => {
+        onFileUpload(event);
+        const fileName = event.target.files[0] ? event.target.files[0].name : "No file chosen";
+        document.querySelector(".file-upload span").textContent = fileName;
+    });
+}
+
+/*
  * Load the saved URL from sync storage
  * when the page loads. Pre-fill it in
  * the URL input box.
  */
-async function onURLInputLoad() {
-    const veX_dod_url = await chrome.storage.sync.get('veX_dod_url');
-    // If the url exists, show it.
-    // Else, show an empty string
-    document.getElementById('veX_dod_url').value = veX_dod_url?.veX_dod_url ?? "";
+async function loadUrlURLMetaData() {
+    let temp_url = await chrome.storage.sync.get('veX_dod_url');
+    let temp_loadOnStart=await chrome.storage.sync.get('veX_loadOnStart');
+    if(temp_url)
+    {
+        veX_dod_url=temp_url?.veX_dod_url;
+    }
+    if(temp_loadOnStart)
+    {
+        veX_loadOnStart=temp_loadOnStart?.veX_loadOnStart;
+    }
+    if (veX_dod_url)
+        document.getElementById('veX_dod_url').value = veX_dod_url;
+    document.getElementById('loadOnStart').checked = veX_loadOnStart;
+
 }
 
-/**
+/*
  * Invoked when the user clicks on
  * the Save button for the URL input
  */
-async function onURLSave() {
+async function onSaveURL() {
     const url = document.getElementById('veX_dod_url').value;
-    if(!url || url === '') {
-        // user is trying to clear the URL.
-        // So, just clear it and return the execution
-        if (await saveChecklistURL('') === true) {
-            Util.notify("Checklist URL cleared successfully! 🙌🏻", "success", true);
+    const loadOnStart = document.getElementById("loadOnStart")?.checked;;
+    if (!url || url === '') {
+        if (!veX_dod_url) {
+            Util.notify("Please enter a valid remote URL 👀", Constants.NotificationType.Warning, true);
+            return;
+        }
+        if (await saveURLMetaData('') === true) {
+            Util.notify("Checklist URL cleared successfully! 🙌🏻", Constants.NotificationType.Success, true);
         }
         return;
     }
     try {
-        // Fetch the checklist from the remote URL,
-        // validate it, and save the URL only if it is valid.
-        // Note that the actual content of the JSON will be
-        // retrieved on demand only - that is, whenever the user
-        // loads the ValueEdge page.
         const response = await fetch(url);
         if (!response.ok) {
             Util.notify("Couldn't fetch JSON from the URL", "warning", true);
             return;
         }
         const veXChecklistInfo = await response.json();
-        if (Util.validateChecklist(veXChecklistInfo) === true && await saveChecklistURL(url) === true) {
-            Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), "success", true);
+
+        if (Util.validateChecklist(veXChecklistInfo) === true && await saveURLMetaData(url, veXChecklistInfo, loadOnStart) === true) {
+            Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
         }
     } catch (error) {
         Util.onError(error, "Couldn't fetch JSON from the URL", true);
@@ -81,31 +107,41 @@ function onFileUpload(event) {
             try {
                 const veXChecklistInfo = JSON.parse(reader.result);
                 if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo) === true) {
-                    Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), "success", true);
+                    Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
                     // clear the url input box since
                     // we are now using the file mode
                     document.getElementById('veX_dod_url').value = '';
+                    document.getElementById('loadOnStart').checked = false;
+
+
                 }
                 fileInput.value = '';
             } catch (err) {
-                Util.onError(err, undefined, true);
+                Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Uploading Checklist", err.message), true);
                 fileInput.value = '';
             }
         };
         reader.readAsText(file);
     } else {
-        Util.notify("Please upload a valid JSON file 👀", "warning", true);
+        Util.notify("Please upload a valid JSON file 👀", Constants.NotificationType.Warning, true);
     }
 }
 
-async function saveChecklistURL(veX_dod_url) {
+
+async function saveURLMetaData(veX_dod_url, veXChecklistInfo, loadOnStart) {
     try {
         await chrome.storage.sync.clear();
-        await chrome.storage.sync.set({"veX_dod_url": veX_dod_url});
+        if (veX_dod_url && veXChecklistInfo) {
+            if (await Util.saveChecklist(veXChecklistInfo,veX_dod_url,loadOnStart) === false) return false;
+            await chrome.storage.sync.set({ "veX_dod_url": veX_dod_url });
+            await chrome.storage.sync.set({ "veX_loadOnStart": loadOnStart });
+        }
         return true;
     }
     catch (err) {
-        Util.onError(err, "Error occured when saving the Checklist URL", true);
+        Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Saving the Checklist Metadata", err.message), true);
         return false;
     }
 }
+
+initialize();

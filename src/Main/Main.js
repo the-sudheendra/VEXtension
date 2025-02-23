@@ -50,18 +50,25 @@ async function initialize() {
 
 function veXSetup() {
   try {
-    veXPopUpNode.id = "veX-PopUp-Container";
-    veXPopUpNode.classList.add("veX_pop_deactive");
-    veXPopUpOverlay.id = "veX-PopUp-Overlay";
-    veXPopUpNode.innerHTML = Constants.ChecklistUI;
-    veXPopUpOverlay.addEventListener("click", closeveXPopUp);
-    MutationObservers.initTicketTitleMutationObserver(onTicketTitleChange);
-    document.body.appendChild(veXPopUpNode);
-    document.body.appendChild(veXPopUpOverlay);
+    setupPopUpNode();
+    setupPopUpOverlay();
     initVEXNodes();
+    MutationObservers.initTicketTitleMutationObserver(onTicketTitleChange);
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup", err.message), true);
   }
+}
+function setupPopUpNode() {
+  veXPopUpNode.id = "veX-PopUp-Container";
+  veXPopUpNode.classList.add("veX_pop_deactive");
+  veXPopUpNode.innerHTML = Constants.ChecklistUI;
+  document.body.appendChild(veXPopUpNode);
+}
+
+function setupPopUpOverlay() {
+  veXPopUpOverlay.id = "veX-PopUp-Overlay";
+  veXPopUpOverlay.addEventListener("click", closeveXPopUp);
+  document.body.appendChild(veXPopUpOverlay);
 }
 
 function initVEXNodes() {
@@ -85,38 +92,39 @@ function initVEXNodes() {
 
 function getCurrentTicketInfo(title) {
   try {
-    if (!title) return ;
+    if (!title?.trim()) return;
+
     const ticketArr = title.split(" ");
-    if (!ticketArr  || ticketArr.length < 2) return ;
+    if (!ticketArr || ticketArr.length < 2) return;
+
     const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
     if (!match || match.length < 2) return;
-    let ticketType = document.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
-    if (!ticketType || ticketType.length == "")
-      return;
-    ticketType = ticketType.innerText;
-    MutationObservers.initTicketTypeMutationObserver(onTicketTitleChange, onTicketPhaseChange);
-    ticketType = ticketType.toUpperCase();
-    //let pageTicketId = document.querySelector(Util.ValueEdgeNodeSelectors.CurrentTicketId);
-    if(!Constants.EntityMetaData.hasOwnProperty(ticketType))
-    {
-      veXCurrentTicketInfo={};
+
+    const ticketTypeElement = document.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
+    if (!ticketTypeElement?.innerText) return;
+
+    const ticketType = ticketTypeElement.innerText.toUpperCase();
+    if (!Constants.EntityMetaData[ticketType]) {
+      veXCurrentTicketInfo = {};
       return;
     }
-    veXCurrentTicketInfo =
-    {
+
+    MutationObservers.initTicketTypeMutationObserver(onTicketTitleChange, onTicketPhaseChange);
+
+    veXCurrentTicketInfo = {
       type: Constants.EntityMetaData[ticketType].name,
       id: match[2],
       color: Constants.EntityMetaData[ticketType].colorHex,
       title: getTicketTitle(title.slice(ticketArr[0].length + 1)),
       phase: getCurrentTicketPhase()
-    }
+    };
   }
   catch (err) {
     veXCurrentTicketInfo = {}
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "getCurrentTicketInfo", err.message), false);
   }
-
 }
+
 function getTicketTitle(title) {
   try {
     if (title.endsWith("- Core Software Delivery Platform")) {
@@ -138,14 +146,8 @@ function veXReset() {
     veXPhaseMap = {};
     veXTotalCompletedItems = 0;
     veXTotalItems = 0;
-    if (MutationObservers.veXTicketPhaseMutationObserver) {
-      MutationObservers.veXTicketPhaseMutationObserver.disconnect();
-      MutationObservers.veXTicketPhaseMutationObserver = undefined;
-    }
-    if (MutationObservers.veXTicketTypeMutationObserver) {
-      MutationObservers.veXTicketTypeMutationObserver.disconnect();
-      MutationObservers.veXTicketTypeMutationObserver = undefined;
-    }
+    Util.cleanupMutationObserver(MutationObservers.veXTicketPhaseMutationObserver);
+    Util.cleanupMutationObserver(MutationObservers.veXTicketTypeMutationObserver);
     root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
     root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);
     root.style.setProperty('--veX-ticktColor', `#fff`);
@@ -194,42 +196,32 @@ async function initFooterView() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
   }
 }
-async function onAddToComments(event) {
-  await Comments.addChecklistToComments(veXChecklistItems);
-  if (event)
-    event.stopPropagation();
-}
-async function onEditComment(event) {
-  await Comments.editExistingComment(veXChecklistItems);
-  if (event)
-    event.stopPropagation();
-}
 
 function initPhaseMap() {
   try {
-    let categories = Object.keys(veXCurrentTicketChecklist.categories);
-    veXPhaseMap["All Categories"] = {};
-    categories.forEach(
-      (categoryName) => {
-        let phases = veXCurrentTicketChecklist.categories[categoryName]["phases"];
-        if (!Util.isEmptyArray(phases)) {
-          phases.forEach((phase) => {
-            if (phase in veXPhaseMap) {
-              veXPhaseMap[phase][categoryName] = veXCurrentTicketChecklist.categories[categoryName];
-            }
-            else {
-              veXPhaseMap[phase] = {};
-              veXPhaseMap[phase][categoryName] = veXCurrentTicketChecklist.categories[categoryName];
-            }
-          });
-        }
-        veXPhaseMap["All Categories"][categoryName] = veXCurrentTicketChecklist.categories[categoryName];
+    veXPhaseMap = {
+      "All Categories": {}
+    };
+    const categories = Object.keys(veXCurrentTicketChecklist?.categories || {});
+    if (!categories.length) return;
+
+    categories.forEach(categoryName => {
+      const category = veXCurrentTicketChecklist.categories[categoryName];
+      const phases = category?.phases || [];
+
+      veXPhaseMap["All Categories"][categoryName] = category;
+
+      if (Util.isEmptyArray(phases)) return;
+
+      phases.forEach(phase => {
+        veXPhaseMap[phase] = veXPhaseMap[phase] || {};
+        veXPhaseMap[phase][categoryName] = category;
       });
+    });
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phases initializing", err.message), true);
   }
-
 }
 
 function initStyle() {
@@ -272,7 +264,6 @@ function initPhaseDropdownView() {
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phase dropdown initializing", err.message), true);
   }
-
 }
 
 function initCategoriesView(categories) {
@@ -302,25 +293,6 @@ function initCategoriesView(categories) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Categories View initializing", err.message), true);
   }
 }
-
-function updateMainContentView() {
-  try {
-    if (Util.isEmptyObject(veXCurrentCategory)) {
-      veXNodes.veXCategoryTitleNode.innerHTML = "No Category Found";
-      veXNodes.veXChecklistParentNode.innerHTML = "No Item";
-      return;
-    }
-    veXNodes.veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
-    veXNodes.veXSidebarParentNode.querySelectorAll(".veX_category_button").forEach((buttonNode) => {
-      buttonNode.classList.remove("veX-Active-Button");
-    });
-    veXNodes.veXSidebarParentNode.querySelector(`[categoryName="${veXCurrentCategory.name}"]`).classList.add("veX-Active-Button");
-    updateChecklist();
-  } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
-  }
-}
-
 
 function initChecklist() {
   veXTotalItems = 0;
@@ -354,82 +326,112 @@ function initChecklist() {
   }
 }
 
+function updateMainContentView() {
+  try {
+    if (Util.isEmptyObject(veXCurrentCategory)) {
+      veXNodes.veXCategoryTitleNode.innerHTML = "No Category Found";
+      veXNodes.veXChecklistParentNode.innerHTML = "No Item";
+      return;
+    }
+    veXNodes.veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
+    veXNodes.veXSidebarParentNode.querySelectorAll(".veX_category_button").forEach((buttonNode) => {
+      buttonNode.classList.remove("veX-Active-Button");
+    });
+    veXNodes.veXSidebarParentNode.querySelector(`[categoryName="${veXCurrentCategory.name}"]`).classList.add("veX-Active-Button");
+    updateChecklist();
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
+  }
+}
+
+function createChecklistItem({ itemValue, index, currentCheckList }) {
+  const iconUrls = {
+    checkbox: chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png"),
+    notes: chrome.runtime.getURL("icons/notes_24dp.png")
+  };
+
+  const listItem = document.createElement('div');
+  const sanitizedNote = DOMPurify.sanitize(currentCheckList[index].Note);
+  const listNodeUI = `
+    <div class="veX_done_check">
+      <img class="veX_done_icon" alt="checkbox" title="Checklist" src="${iconUrls.checkbox}">
+    </div>
+    <div class="veX_list_content">
+      <div class="veX_list_text">${itemValue}</div>
+      <div class="veX_list_actions">
+        <div class="veX_note">
+          <img class="veX_note_icon veX_list_action_icon" alt="checkbox" title="Add details here." src="${iconUrls.notes}">
+        </div>
+      </div>
+    </div>
+    <textarea class="veX_checklist_note veX_hide_checklist_note" 
+      placeholder="Add details (Markdown Supported)">${sanitizedNote}</textarea>
+  `;
+
+  listItem.innerHTML = listNodeUI;
+  listItem.classList.add("veX_list_item");
+  listItem.setAttribute('listIndex', index);
+  return listItem;
+}
+
+
+
 function updateChecklist() {
   try {
-    let checklist = veXCurrentCategory.value.checklist;
-    veXNodes.veXChecklistParentNode.innerHTML = "";
+    const { checklist } = veXCurrentCategory.value;
+    const parentNode = veXNodes.veXChecklistParentNode;
+    parentNode.innerHTML = "";
+
     if (Util.isEmptyArray(checklist)) {
       return;
     }
-    let currentCheckList = veXChecklistItems[veXCurrentCategory.name];
-    let index = 0;
-    checklist.forEach(
-      (itemValue) => {
-        let listItem = document.createElement('div');
-        let listNodeUI = `
-            <div class="veX_done_check">
-                <img class="veX_done_icon  " alt="checkbox" title="Checklist" src="${chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png")}">
-            </div>
-            <div class="veX_list_content">
-                <div class="veX_list_text  ">${itemValue}</div>
-                <div class="veX_list_actions">
-                    <div class="veX_note">
-                        <img class="veX_note_icon veX_list_action_icon  " alt="checkbox" title="Add details here." src="${chrome.runtime.getURL("icons/notes_24dp.png")}">
-                    </div>
-                </div>
-            </div>
-            <textarea class="veX_checklist_note veX_hide_checklist_note" placeholder="Add details (Markdown Supported)">${currentCheckList[index].Note}</textarea>
-        `;
-        listItem.innerHTML = listNodeUI;
-        listItem.classList.add("veX_list_item")
-        listItem.setAttribute('listIndex', index);
-        listItem.addEventListener("click", (event) => {
-          onListItemClick(event, listItem);
-        });
-        let currentListState = Util.getChecklistStatus(currentCheckList[index]);
-        updateNoteIcon(listItem);
-        switch (currentListState) {
-          case Constants.CheckListStatus.NotSelected:
-            setNotSelected(listItem, index);
-            break;
-          case Constants.CheckListStatus.NotCompleted:
-            setNotCompleted(listItem, index);
-            break;
-          case Constants.CheckListStatus.NotApplicable:
-            setNotApplicableState(listItem, index);
-            break;
-          case Constants.CheckListStatus.Completed:
-            setCompletedState(listItem, index);
-            break;
-        }
-        let noteIconNode = listItem.querySelector(".veX_note");
-        let doneIconNode = listItem.querySelector(".veX_done_check");
-        let noteNode = listItem.querySelector('.veX_checklist_note');
-        let naNode = listItem.querySelector('.veX_na');
-        noteNode.innerText = DOMPurify.sanitize(currentCheckList[index].Note);
-        noteIconNode.addEventListener("click", (event) => {
-          onListNoteClick(event, listItem);
-        });
-        // noteNode.addEventListener('blur',(event)=>{
-        //   noteNode.classList.contains("veX_hide_checklist_note");
-        // })
-        noteNode.addEventListener('click', (event) => {
-          event.stopPropagation();
-        });
 
-        noteNode.addEventListener('input', () => {
-          noteNode.style.height = 'auto'; // Reset height
-          noteNode.style.height = `${Math.min(noteNode.scrollHeight, 250)}px`; // Adjust height up to max-height
-        });
-        listItem.querySelector('.veX_checklist_note').addEventListener('change', (event) => {
-          onListNoteChange(event, listItem);
-        });
-        veXNodes.veXChecklistParentNode.appendChild(listItem);
-        index++;
-      }
-    );
+    const currentCheckList = veXChecklistItems[veXCurrentCategory.name];
+    const fragment = document.createDocumentFragment();
+
+    checklist.forEach((itemValue, index) => {
+      const listItem = createChecklistItem({
+        itemValue,
+        index,
+        currentCheckList
+      });
+
+      const currentListState = Util.getChecklistStatus(currentCheckList[index]);
+      updateNoteIcon(listItem);
+      updateListItemState(listItem, currentListState, index);
+      attachChecklistItemListeners(listItem, index);
+      fragment.appendChild(listItem);
+    });
+    parentNode.appendChild(fragment);
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Updation Checklist", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Checklist", err.message), true);
+  }
+}
+
+function attachChecklistItemListeners(listItem, index) {
+  const noteNode = listItem.querySelector('.veX_checklist_note');
+  const noteIconNode = listItem.querySelector(".veX_note");
+  listItem.addEventListener("click", (event) => onListItemClick(event, listItem));
+  noteIconNode.addEventListener("click", (event) => onListNoteClick(event, listItem));
+  noteNode.addEventListener('click', (event) => event.stopPropagation());
+  noteNode.addEventListener('input', () => {
+    noteNode.style.height = 'auto';
+    noteNode.style.height = `${Math.min(noteNode.scrollHeight, 250)}px`;
+  });
+  noteNode.addEventListener('change', (event) => onListNoteChange(event, listItem));
+}
+
+function updateListItemState(listItem, state, index) {
+  const stateHandlers = {
+    [Constants.CheckListStatus.NotSelected]: () => setNotSelected(listItem, index),
+    [Constants.CheckListStatus.NotCompleted]: () => setNotCompleted(listItem, index),
+    [Constants.CheckListStatus.NotApplicable]: () => setNotApplicableState(listItem, index),
+    [Constants.CheckListStatus.Completed]: () => setCompletedState(listItem, index)
+  };
+
+  const handler = stateHandlers[state];
+  if (handler) {
+    handler();
   }
 }
 
@@ -438,7 +440,7 @@ function updateNoteIcon(listItem) {
     let noteIconNode = listItem.querySelector(".veX_note_icon");
     if (listItem.querySelector('.veX_checklist_note').value.trim() == "") {
       noteIconNode.src = chrome.runtime.getURL("icons/notes_24dp.png");
-      noteIconNode.title = "Add details here. Use HTML tags for formatting and structure."
+      noteIconNode.title = "Add details here."
     }
     else {
       noteIconNode.src = chrome.runtime.getURL("icons/edit_note_24dp.png");
@@ -448,10 +450,7 @@ function updateNoteIcon(listItem) {
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
   }
-
 }
-
-
 
 function getCurrentTicketPhase() {
   try {
@@ -461,13 +460,10 @@ function getCurrentTicketPhase() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Fetching Current Ticket Phase", err.message), true);
   }
 }
+
 function updateDonePercentage() {
   try {
-    let donePercentage = ((veXTotalCompletedItems / veXTotalItems).toFixed(2) * 100).toFixed(0);
-    if (donePercentage > 100)
-      donePercentage = 100
-    else if (donePercentage == 0)
-      donePercentage = 0;
+    let donePercentage = Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems);
     veXNodes.veXDonePercentageNode.innerHTML = `${donePercentage}%`;
     root.style.setProperty('--veX-checkedItemsPercentage', `${donePercentage}%`);
   }
@@ -475,6 +471,7 @@ function updateDonePercentage() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Done Percentage", err.message), true);
   }
 }
+
 function setNotApplicableState(listItemNode, listIndex) {
   try {
     veXChecklistItems[veXCurrentCategory.name][listIndex].NotApplicable = true;
@@ -557,59 +554,126 @@ function openVexPopup() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Open Vex Popup", err.message), true);
   }
 }
+/**
+ * This function refreshes the checklist
+ * from the remote URL if it exists.
+ */
+async function refreshChecklistFromRemoteIfExists() {
+  if (await Util.getChecklistMode() != "url") {
+    // We are not using the URL mode.
+    // Hence, we need not refresh anything.
+    return true;
+  }
+  try {
+    // Get the remote URL from sync storage
+    // and fetch the checklist from the remote URL
+    const veX_dod_url = await chrome.storage.sync.get("veX_dod_url");
+    const veX_loadOnStart = await chrome.storage.sync.get("veX_loadOnStart");
+    const response = await fetch(veX_dod_url?.veX_dod_url);
+    if (!response.ok) {
+      Util.notify("Couldn't fetch checklist JSON from the URL", "warning", true);
+      return false;
+    }
+    // Validate and update the checklist
+    const veXChecklistInfo = await response.json();
+    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url?.veX_dod_url,veX_loadOnStart?.veX_loadOnStart) === true) {
+    } else {
+      return false;
+    }
+  } catch (error) {
+    Util.onError(error, "Couldn't fetch JSON from the URL", true);
+    return false;
+  }
+  // Return true by default so as to
+  // not break any existing functionality
+  return true;
+}
 
 
 function onCategoryChange(event) {
   let categoryName = event.target.getAttribute('categoryName');
   veXCurrentCategory = {
+
     name: categoryName,
     value: veXCurrentTicketChecklist.categories[categoryName]
   };
   updateMainContentView();
 }
+
 function onListItemClick(event, listItemNode) {
   try {
-    let currentNode = listItemNode;
-    if (!currentNode.querySelector(".veX_checklist_note").classList.contains("veX_hide_checklist_note")) {
-      currentNode.querySelector(".veX_checklist_note").classList.add("veX_hide_checklist_note");
-      updateNoteIcon(listItemNode);
-      event.stopPropagation(currentNode);
-      return;
-    }
-    let currentCheckList = veXChecklistItems[veXCurrentCategory.name];
-    let index = listItemNode.getAttribute('listIndex')
-    let previousState = Util.getChecklistStatus(currentCheckList[index]);
-    if (previousState == Constants.CheckListStatus.Completed || previousState == Constants.CheckListStatus.NotApplicable) {
-      veXTotalCompletedItems--;
-    }
+        if (!listItemNode || !event) {
+          throw new Error('Invalid input parameters for List Item Click');
+        }
 
-    currentCheckList[index].CursorState.position = (currentCheckList[index].CursorState.position + 1) % 4;
+        if (handleNoteVisibility(listItemNode)) {
+          event.stopPropagation();
+          return;
+        }
+        updateChecklistItemState(listItemNode);
 
-    let newState = Util.getChecklistStatus(currentCheckList[index]);
-
-    switch (newState) {
-      case Constants.CheckListStatus.NotSelected:
-        setNotSelected(listItemNode, index);
-        break;
-      case Constants.CheckListStatus.NotApplicable:
-        veXTotalCompletedItems++;
-        setNotApplicableState(listItemNode, index);
-        break;
-      case Constants.CheckListStatus.NotCompleted:
-        setNotCompleted(listItemNode, index);
-        break;
-      case Constants.CheckListStatus.Completed:
-        veXTotalCompletedItems++;
-        setCompletedState(listItemNode, index);
-        break;
-      default:
-        break;
-    }
-    updateDonePercentage();
-    if (event)
-      event.stopPropagation();
+        event.stopPropagation();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "ListItem Click", err.message), true);
+  }
+}
+
+function handleNoteVisibility(listItemNode) {
+  const noteElement = listItemNode.querySelector(".veX_checklist_note");
+  if (!noteElement.classList.contains("veX_hide_checklist_note")) {
+    noteElement.classList.add("veX_hide_checklist_note");
+    updateNoteIcon(listItemNode);
+    return true;
+  }
+  return false;
+}
+
+function updateChecklistItemState(listItemNode) {
+  const index = listItemNode.getAttribute('listIndex');
+  const currentCheckList = veXChecklistItems[veXCurrentCategory.name];
+  
+  if (!currentCheckList?.[index]) {
+    throw new Error('Invalid checklist item index');
+  }
+  updateCompletionCount(currentCheckList[index]);
+
+  currentCheckList[index].CursorState.position = 
+    (currentCheckList[index].CursorState.position + 1) % Object.keys(Constants.CheckListStatus).length;
+
+  const newState = Util.getChecklistStatus(currentCheckList[index]);
+  applyNewState(listItemNode, index, newState);
+  updateDonePercentage();
+}
+
+function updateCompletionCount(checklistItem) {
+  const previousState = Util.getChecklistStatus(checklistItem);
+  if (previousState === Constants.CheckListStatus.Completed || 
+      previousState === Constants.CheckListStatus.NotApplicable) {
+    veXTotalCompletedItems = Math.max(0, veXTotalCompletedItems - 1);
+  }
+}
+
+function applyNewState(listItemNode, index, newState) {
+  const stateHandlers = {
+    [Constants.CheckListStatus.NotSelected]: () => {
+      setNotSelected(listItemNode, index);
+    },
+    [Constants.CheckListStatus.NotApplicable]: () => {
+      veXTotalCompletedItems++;
+      setNotApplicableState(listItemNode, index);
+    },
+    [Constants.CheckListStatus.NotCompleted]: () => {
+      setNotCompleted(listItemNode, index);
+    },
+    [Constants.CheckListStatus.Completed]: () => {
+      veXTotalCompletedItems++;
+      setCompletedState(listItemNode, index);
+    }
+  };
+
+  const handler = stateHandlers[newState];
+  if (handler) {
+    handler();
   }
 }
 
@@ -657,20 +721,26 @@ async function onTicketTitleChange(change) {
     if (Util.isEmptyObject(veXCurrentTicketInfo)) {
       return;
     }
+
     // If we are using a remote URL to maintain the checklist,
     // then refresh the checklist locally first
-    const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
-    if(!remoteRefreshSuccess) {
-      return;
+    let veX_loadOnStart = await chrome.storage.sync.get("veX_loadOnStart")
+    if(veX_loadOnStart?.veX_loadOnStart===true)
+    {
+      const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
+      if (!remoteRefreshSuccess) {
+        return;
+      }
     }
     let tempDOD = await chrome.storage.sync.get(veXCurrentTicketInfo.type);
     if (!Util.isEmptyObject(tempDOD)) {
       veXCurrentTicketChecklist = tempDOD[veXCurrentTicketInfo.type];
     }
+
     if (!Util.isEmptyObject(veXCurrentTicketChecklist)) {
-      MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
       initChecklist();
       veXIsViewInitialised = initView();
+      MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
     }
   }
   catch (err) {
@@ -678,40 +748,7 @@ async function onTicketTitleChange(change) {
   }
 }
 
-/**
- * This function refreshes the checklist
- * from the remote URL if it exists.
- */
-async function refreshChecklistFromRemoteIfExists() {
-  if(await Util.getChecklistMode() != "url") {
-    // We are not using the URL mode.
-    // Hence, we need not refresh anything.
-    return true;
-  }
-  try {
-    // Get the remote URL from sync storage
-    // and fetch the checklist from the remote URL
-    const veX_dod_url = await chrome.storage.sync.get("veX_dod_url");
-    const response = await fetch(veX_dod_url?.veX_dod_url);
-    if (!response.ok) {
-        Util.notify("Couldn't fetch JSON from the URL", "warning", true);
-        return false;
-    }
-    // Validate and update the checklist
-    const veXChecklistInfo = await response.json();
-    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url.veX_dod_url) === true) {
-        Util.notify("Checklist refreshed successfully! 🙌🏻", "success", true);
-    } else {
-      return false;
-    }
-  } catch (error) {
-    Util.onError(error, "Couldn't fetch JSON from the URL", true);
-    return false;
-  }
-  // Return true by default so as to
-  // not break any existing functionality
-  return true;
-}
+
 
 function onTicketPhaseChange(mutation) {
   try {
@@ -743,9 +780,22 @@ function OnTicketPhaseClick() {
 
 }
 
+async function onAddToComments(event) {
+  await Comments.addChecklistToComments(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
+  if (event)
+    event.stopPropagation();
+}
+async function onEditComment(event) {
+  await Comments.editExistingComment(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
+  if (event)
+    event.stopPropagation();
+}
+//End of Event Handlers
+
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   try {
     switch (request) {
+
       case "openVexPopup":
         if (!(Util.isEmptyObject(veXCurrentTicketChecklist) || Util.isEmptyObject(veXCurrentTicketInfo)))
           openVexPopup();

@@ -12,13 +12,14 @@ function isEmptyArray(arr) {
   return !Array.isArray(arr) || arr.length === 0;
 }
 
-function notify(message, type = "info", display = false) {
+function notify(message, type = Constants.NotificationType.Info, display = false) {
   if (display == true) {
     notifyAPI.openToastNode(type, message);
     return;
   }
   console.info(message);
 }
+
 
 /**
  * An util method to show an error message.
@@ -29,7 +30,7 @@ function notify(message, type = "info", display = false) {
 function onError(error, info = "Something went wrong", display = false) {
   console.error(`Error From VE-Checklist: ${error?.message}`);
   console.dir(error);
-  notify(`${info}`, "error", display);
+  notify(`${info}`, Constants.NotificationType.Error, display);
 }
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -78,7 +79,6 @@ async function getChecklistMode() {
 	if (veX_dod_url?.veX_dod_url && veX_dod_url.veX_dod_url != "") {
 		return "url";
 	} else {
-    console.log("checklist mode local");
 		return "local";
 	}
 }
@@ -140,7 +140,7 @@ function validateChecklistCategories(ChecklistCategories, ticketEntityName) {
     }
 }
 
-async function saveChecklist(veXChecklistInfo, veX_dod_url) {
+async function saveChecklist(veXChecklistInfo, veX_dod_url,loadOnStart) {
   try {
       await chrome.storage.sync.clear();
       let entites = Object.keys(veXChecklistInfo);
@@ -156,6 +156,10 @@ async function saveChecklist(veXChecklistInfo, veX_dod_url) {
       if(veX_dod_url) {
         await chrome.storage.sync.set({"veX_dod_url": veX_dod_url});
       }
+      if(loadOnStart===true || loadOnStart===false)
+      {
+        await chrome.storage.sync.set({ "veX_loadOnStart": loadOnStart });
+      }
       return true;
   }
   catch (err) {
@@ -163,7 +167,21 @@ async function saveChecklist(veXChecklistInfo, veX_dod_url) {
       return false;
   }
 }
+function cleanupMutationObserver(observer) {
+  if (observer) {
+    observer.takeRecords();
+    observer.disconnect();
+    return undefined;
+  }
+  return observer;
+}
+
+function calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems) {
+  if (veXTotalItems === 0) return 0;
+  const percentage = (veXTotalCompletedItems / veXTotalItems) * 100;
+  return Math.min(Math.round(percentage), 100);
+}
 
 export {
-  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage, getChecklistMode, validateChecklist, saveChecklist
+  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage, getChecklistMode, validateChecklist, saveChecklist, cleanupMutationObserver, calculateCompletionPercentage
 }

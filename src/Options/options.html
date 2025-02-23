@@ -10,23 +10,30 @@
 </head>
 
 <body>
-    <div id="overlay"></div>
-    <div class="veX_container">
-        <p>Configure Checklist</p>
-        <div class="veX_file_upload">
-            <label for="veX_dod_url">URL of the JSON:</label>
-            <input type="text" id="veX_dod_url" name="veX_dod_url">
-            <button id="veX_dod_url_save">Save</button>
+    <div class="container">
+        <h2>Upload Checklist</h2>
+        
+        <label for="veX_dod_url">URL of the JSON:</label>
+        <div class="url-container">
+            <input type="text" id="veX_dod_url" placeholder="Enter Remote Url">
         </div>
-        <div >
-            <p>OR</p>
+
+        <div class="checkbox-container">
+            <input type="checkbox" id="loadOnStart">
+            <label for="loadOnStart">Load checklist on every page load</label>
         </div>
-        <div class="veX_file_upload">
-            <label for="veX_dod_file">Choose a JSON file:</label>
-            <input type="file" id="veX_dod_file" name="veX_dod_file" accept=".json">
+
+        <button class="btn" id="SaveChecklistBtn">Save</button>
+
+        <div class="divider">OR</div>
+
+        <label for="jsonFile">Choose a JSON file:</label>
+        <div class="file-upload">
+            <input type="file" id="jsonFile" accept=".json">
+            <span>Choose File</span>
         </div>
-            <a class="veX_submit_btn" target="_blank" href="https://github.com/the-sudheendra/VE-Checklist/blob/main/README.md#example-checklist">View Example</a>
-    </div>
+
+        <a class="example-btn" target="_blank" href="https://github.com/the-sudheendra/VE-Checklist/blob/main/README.md#example-checklist">View Example</a>
     <script src="./Options.js"></script>
 </body>
 

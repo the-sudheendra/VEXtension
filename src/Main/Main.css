@@ -147,7 +147,7 @@
   transition: width 0.5s ease;
   margin-bottom: 5px;
   background: var(--veX-whiteColor);
-  background: linear-gradient(90deg, var(--veX-whiteColor) 0%, var(--veX-successColor) var(--veX-checkedItemsPercentage));
+  background: var(--veX-successColor);
   border-radius: var(--veX-common-borderRadius);
 }
 
@@ -155,7 +155,10 @@
   display: flex;
   flex: 1;
   height: fit-content;
-  MIN-HEIGHT: 400PX;
+  MIN-HEIGHT: 50vh;
+  max-height: 50vh;
+  height: 50vh;
+  
 }
 
 .veX_sidebar {

@@ -72,10 +72,9 @@ async function openToastNode(type, message) {
     toastNode.style.visibility = "visible";
     toastNode.style.animation = `open 0.3s cubic-bezier(.47,.02,.44,2) forwards`;
     toastTimerNode.classList.add("veX_timer_animation");
-
   }
   catch (err) {
-    alert("An error occurred. Please refresh the page, if issue persist please report the issue");
+    //alert("An error occurred. Please refresh the page, if issue persist please report the issue");
     console.dir(err);
   }
 }
