@@ -182,6 +182,62 @@ function calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems) {
   return Math.min(Math.round(percentage), 100);
 }
 
+function makeElementDraggable(element) {
+  let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (element) {
+    element.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    
+    // set the element's new position:
+    element.style.top = (element.offsetTop - pos2) + "px";
+    element.style.left = (element.offsetLeft - pos1) + "px";
+    
+  }
+
+  function closeDragElement(e) {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+
+function getDoneMessage(percentage) {
+  if (percentage < 1 || percentage > 100) {
+    return "";
+  }
+  if (percentage <= 10) {
+    return getRandomMessage(Constants.Notifications.DoneMessages[10]);
+  } else if (percentage <= 25) {
+    return getRandomMessage(Constants.Notifications.DoneMessages[25]);
+  } else if (percentage <= 50) {
+    return getRandomMessage(Constants.Notifications.DoneMessages[50]);
+  } else if (percentage <= 75) {
+    return getRandomMessage(Constants.Notifications.DoneMessages[75]);
+  } else if (percentage <= 90) {
+    return getRandomMessage(Constants.Notifications.DoneMessages[90]);
+  } else if (percentage <= 100) {
+    return getRandomMessage(Constants.Notifications.DoneMessages[100]);
+  }
+}
 export {
-  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage, getChecklistMode, validateChecklist, saveChecklist, cleanupMutationObserver, calculateCompletionPercentage
+  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage, getChecklistMode, validateChecklist, saveChecklist, cleanupMutationObserver, calculateCompletionPercentage,makeElementDraggable,getDoneMessage
 }

@@ -78,17 +78,25 @@
 
 
 #veX-PopUp-Container {
-  position: fixed;
-  left: 50%;
-  z-index: 3000;
-  min-width: 60vw;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; 
+  min-width: 600px;
+  max-width: 800px;
+  width: 70vw;
   height: fit-content;
-  top: 50vh;
-  transform: translate(-50%, -60%);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3000;
   border-radius: var(--veX-common-borderRadius);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-  border: 2px solid var(--veX-ticktColor);
   background-color: var(--veX-common-backgroundColor);
+  position: fixed;
+  border-radius: 10px;
 }
 
 .veX_pop_deactive {
@@ -113,6 +121,8 @@
   justify-content: start;
   align-items: center;
   background-color: var(--veX-ticktColor);
+  cursor: grab;
+  border-radius: 8px 8px 0px 0px;
 }
 
 .veX_logo_container {
@@ -209,6 +219,7 @@
   line-height: 1.25rem;
   color: var(--veX-common-fontColor);
   width: 100%;
+  text-align: center;
 }
 
 .veX_phase:hover {

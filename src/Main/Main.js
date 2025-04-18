@@ -63,6 +63,7 @@ function setupPopUpNode() {
   veXPopUpNode.classList.add("veX_pop_deactive");
   veXPopUpNode.innerHTML = Constants.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
+  Util.makeElementDraggable(veXPopUpNode);
 }
 
 function setupPopUpOverlay() {
@@ -740,7 +741,7 @@ async function onTicketTitleChange(change) {
     if (!Util.isEmptyObject(veXCurrentTicketChecklist)) {
       initChecklist();
       veXIsViewInitialised = initView();
-      MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
+     // MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
     }
   }
   catch (err) {

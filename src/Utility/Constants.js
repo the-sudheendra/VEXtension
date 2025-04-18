@@ -209,7 +209,7 @@ const Notifications = {
         "🔔 Oops! Open a ticket to view the checklist. 😊",
         "📝 The checklist is only available in a ticket. Open one to see it! 🙂",
         "🚀 Open a ticket first, then the checklist will be ready! 🙂",
-        "✅ No ticket, no checklist! 😄  Open a ticket to access it.",
+        "No ticket, no checklist! 😄  Open a ticket to access it.",
         "📌 Just a quick step! Open a ticket to check the checklist.",
         "🤔 Where’s the ticket? Open one to see the checklist!",
         "🚦 First stop: Open a ticket! Then, your checklist will appear.😄",
@@ -221,7 +221,7 @@ const Notifications = {
     UnableToFindChecklist: [
         "🤔 No checklist found for '$0'. Maybe it wasn't uploaded?",
         " Checklist not available. Consider adding one for '$0'.😊",
-        "💡 No checklist found. Want to upload one for '$0'?",  
+        "💡 No checklist found. Want to upload one for '$0'?",
         "🤔 Hmm… No checklist for '$0' yet. Time to upload?",
         "No checklist here! Want to add one for '$0'?",
         "🤷‍♂️ Checklist for '$0' is missing. Time to create one?",
@@ -236,7 +236,7 @@ const Notifications = {
         "🔥 Checklist is live in the comments. Go take a look!",
         "✅ Your checklist is now in the comments. No worries!😊",
         "🚀 Your checklist has landed in the comments section!",
-      
+
     ],
     CommentsBoxNotFound: [
         "Unable to locate the new comment box 🙁",
@@ -274,7 +274,39 @@ const Notifications = {
         "🌟 Keep the conversation going! You can’t edit this comment, but adding a new one keeps things flowing!",
         "Oops! Editing is locked, but hey, who doesn’t love a fresh new comment? 😃",
         "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
-    ]
+    ],
+    DoneMessages: {
+        25: [
+            "Let's go!  🎉  Keep those tasks moving! 🚀",
+            "Work started! 👍 Let's get this done! 😄✨",
+            "Just getting warmed up! 🔥"
+        ],
+        50: [
+            "Great work progressing through your tasks! Keep the momentum going! 😊🚀",
+            "Making progress like a boss! Keep that energy flowing! 😄"
+        ],
+        75: [
+            "More than halfway! 🎉 Keep pushing! 🚀",
+            "So close! 🎉 Just a bit more! 🚀",
+            "Almost all tasks complete! 🎉 Just a few more to go! 😄🚀",
+            "Just a handful of items left! 🤏Keep that energy flowing! 😄",
+            "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",
+        ],
+        90: [
+           "So close! 🎉 Just a bit more! 🚀",
+            "Almost all tasks complete! 🎉 Just a few more to go! 😄🚀",
+            "Just a handful of items left! 🤏 Keep the quality high! 😄",
+            "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",
+        ],
+        100: [
+            "Mission accomplished! 🚀 Excellent work! 👍",
+            "All done! 🫡 Nailed it! 💪",
+            "Definition of Done met! 🥇 You're a task master! 🫡 ",
+            "All tasks completed! 🎉 You're a work superstar! 🫡 ",
+        ],
+        "Common": "Great work progressing through your tasks! Keep the momentum going! 😊🚀"
+    }
+
 }
 
 
