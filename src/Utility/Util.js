@@ -207,10 +207,10 @@ function makeElementDraggable(element) {
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
-    
+    let targetElement=document.getElementById("veX-PopUp-Container");
     // set the element's new position:
-    element.style.top = (element.offsetTop - pos2) + "px";
-    element.style.left = (element.offsetLeft - pos1) + "px";
+    targetElement.style.top = (targetElement.offsetTop - pos2) + "px";
+    targetElement.style.left = (targetElement.offsetLeft - pos1) + "px";
     
   }
 

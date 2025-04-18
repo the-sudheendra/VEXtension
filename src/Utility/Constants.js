@@ -287,7 +287,6 @@ const Notifications = {
         ],
         75: [
             "More than halfway! 🎉 Keep pushing! 🚀",
-            "So close! 🎉 Just a bit more! 🚀",
             "Almost all tasks complete! 🎉 Just a few more to go! 😄🚀",
             "Just a handful of items left! 🤏Keep that energy flowing! 😄",
             "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",

@@ -63,7 +63,6 @@ function setupPopUpNode() {
   veXPopUpNode.classList.add("veX_pop_deactive");
   veXPopUpNode.innerHTML = Constants.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
-  Util.makeElementDraggable(veXPopUpNode);
 }
 
 function setupPopUpOverlay() {
@@ -181,6 +180,7 @@ async function initHeaderView() {
     //veXNodes.veXSyncIcon.src = await chrome.runtime.getURL("icons/sync_24.png");
     //veXNodes.veXSyncIconContainer.addEventListener('click', Comments.onSyncChecklistComments)
     veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
+    Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'));
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Header View initializing", err.message), true);
