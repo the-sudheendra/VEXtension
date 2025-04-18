@@ -621,15 +621,20 @@
 
 
 .veX_leave_comment_btn {
-  background: linear-gradient(135deg, var(--veX-successColor), var(--veX-ticktColor));
+  background: linear-gradient(to right, var(--veX-successColor), var(--veX-ticktColor));
+  background-size: 200% auto;
+  background-position: 0% center;
   border: none;
   color: white;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  BORDER-RADIUS: 16px;
-  PADDING: 10px 24px;
+  transition: background-position 0.5s ease;
+  border-radius: 16px;
+  padding: 10px 24px;
 }
 
+.veX_leave_comment_btn:hover {
+  background-position: 100% center;
+}

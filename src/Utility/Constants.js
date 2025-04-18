@@ -151,7 +151,6 @@ const Notifications = {
         "Wait a sec! You need to select at least one item before adding to comments. ⏳",
         "You're so close! Just pick one item to continue. You got this! 💪",
         "Hmm... looks like you didn’t select anything. Please pick at least one item! 🤔",
-        "Phew! Just select one item, and we’ll check this off in no time! ✅",
         "Wait a minute! You forgot to pick an item. Choose one and let’s roll! 😃",
     ],
     ChecklistSavedSuccessfully: [
@@ -198,7 +197,6 @@ const Notifications = {
         "No ticket, no checklist! 😄  Open a ticket to access it.",
         "🤔 Where’s the ticket? Open one to see the checklist!",
         "✨ Almost there! Open a ticket to see the checklist.",
-        "🚀 Just one step away! Open a ticket to access the checklist.",
     ],
     UnableToFindChecklist: [
         "🤔 No checklist found for '$0'. Maybe it wasn't uploaded?",
@@ -258,7 +256,7 @@ const Notifications = {
         "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
     ],
     DoneMessages: {
-        0:[
+        0: [
             "Time to get started! 😄 Let's move these tasks towards 'Done'! 🌟",
             "Let's begin! 🚀 Excited to see these tasks progress! 😄👍"
         ],
@@ -274,11 +272,11 @@ const Notifications = {
         75: [
             "More than halfway! 🎉 Keep pushing! 🚀",
             "Almost all tasks complete! 🎉 Just a few more to go! 😄🚀",
-            "Just a handful of items left! 🤏Keep that energy flowing! 😄",
+            "Just a handful of items left! 🤏 Keep that energy flowing! 😄",
             "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",
         ],
         90: [
-           "So close! 🎉 Just a bit more! 🚀",
+            "So close! 🎉 Just a bit more! 🚀",
             "Almost all tasks complete! 🎉 Just a few more to go! 😄🚀",
             "Just a handful of items left! 🤏 Keep the quality high! 😄",
             "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",
