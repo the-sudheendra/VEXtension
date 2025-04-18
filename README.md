@@ -74,6 +74,8 @@
   }
 }
 ```
+🔗 Check out **[DoD Checklists Repo](https://github.com/the-sudheendra/DOD-Checklists)** for predefined checklist JSONs ✅.
+
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
