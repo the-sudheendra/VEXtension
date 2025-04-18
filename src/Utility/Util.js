@@ -221,8 +221,11 @@ function makeElementDraggable(element) {
 }
 
 function getDoneMessage(percentage) {
-  if (percentage < 1 || percentage > 100) {
+  if (percentage < 0 || percentage > 100) {
     return "";
+  }
+  if (percentage == 0) {
+    return getRandomMessage(Constants.Notifications.DoneMessages[0]);
   }
   if (percentage <= 10) {
     return getRandomMessage(Constants.Notifications.DoneMessages[10]);
@@ -238,6 +241,70 @@ function getDoneMessage(percentage) {
     return getRandomMessage(Constants.Notifications.DoneMessages[100]);
   }
 }
+function createCelebration() {
+  // Create a container for the celebration elements
+  const celebrationContainer = document.createElement('div');
+
+  celebrationContainer.style.position = 'fixed';
+  celebrationContainer.style.top = '0';
+  celebrationContainer.style.left = '0';
+  celebrationContainer.style.width = '100%';
+  celebrationContainer.style.height = '100%';
+  celebrationContainer.style.pointerEvents = 'none'; // Allow clicks to pass through
+  celebrationContainer.style.zIndex = '9999'; // Ensure it's on top
+  document.body.appendChild(celebrationContainer);
+
+  // Function to create a single confetti element
+  function createConfetti() {
+    const confetti = document.createElement('div');
+    confetti.style.position = 'absolute';
+    confetti.style.width = '10px';
+    confetti.style.height = '10px';
+
+    confetti.style.backgroundColor = getRandomColor();
+    confetti.style.borderRadius = '50%';
+    confetti.style.left = Math.random() * 100 + '%';
+    confetti.style.animation = `confetti-fall ${Math.random() * 2 + 1}s ease-in-out infinite`;
+    celebrationContainer.appendChild(confetti);
+  }
+
+  // Function to get a random color for confetti
+  function getRandomColor() {
+    const colors = ['#f06292', '#ba68c8', '#9575cd', '#7986cb', '#64b5f6', '#4dd0e1', '#4db6ac', '#81c784', '#aed581', '#dce775', '#fff176', '#ffd54f', '#ffb74d', '#ff8a65', '#a1887f', '#e0e0e0', '#90a4ae'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+  // Create multiple confetti elements
+  for (let i = 0; i < 100; i++) {
+    createConfetti();
+  }
+  
+    // Add keyframes for confetti animation if not already present
+    if (!document.getElementById('confetti-keyframes')) {
+        const style = document.createElement('style');
+        style.id = 'confetti-keyframes';
+        style.innerHTML = `
+          @keyframes confetti-fall {
+            0% {
+              transform: translateY(0) rotate(0deg);
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(100vh) rotate(${Math.random() * 360}deg);
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+    }
+
+  // Remove the celebration after a few seconds (e.g., 5 seconds)
+  setTimeout(() => {
+    celebrationContainer.remove();
+  }, 5000);
+}
+
+
 export {
-  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage, getChecklistMode, validateChecklist, saveChecklist, cleanupMutationObserver, calculateCompletionPercentage,makeElementDraggable,getDoneMessage
+  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage, getChecklistMode, validateChecklist, saveChecklist, cleanupMutationObserver, calculateCompletionPercentage,makeElementDraggable,getDoneMessage,createCelebration
 }

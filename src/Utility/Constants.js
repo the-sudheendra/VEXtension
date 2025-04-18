@@ -155,16 +155,10 @@ const Notifications = {
         "Oops! You forgot to select an item. Pick at least one and you’re good to go! 🎉",
         "Almost there! Just select at least one item, and you’re all set! 🚀✨",
         "Wait a sec! You need to select at least one item before adding to comments. ⏳",
-        "Hey there! Don’t forget to select at least one item before adding to comments. 😊",
         "You're so close! Just pick one item to continue. You got this! 💪",
         "Hmm... looks like you didn’t select anything. Please pick at least one item! 🤔",
         "Phew! Just select one item, and we’ll check this off in no time! ✅",
-        "Wait a minute! 🎈 You forgot to pick an item. Choose one and let’s roll! 😃",
-        "Oopsie! No worries, just select at least one item and you’re all set! 🤗",
-        "💡 Just a little reminder: You need to select at least one item first.",
-        "One small step left! Just pick an item, and you’re ready to go! 🎯",
-        "Whoops! Looks like you missed a step. Just tap an item, and we’re golden! 😜",
-        "One small click is all we need! Choose an item to continue! 🚀"
+        "Wait a minute! You forgot to pick an item. Choose one and let’s roll! 😃",
     ],
     ChecklistSavedSuccessfully: [
         "🚀 Boom! Your checklist is saved! Time to tackle those tasks! 💪",
@@ -207,15 +201,9 @@ const Notifications = {
     OpenTicketToSeeChecklist: [
         "🤔 Looks like you haven't opened a ticket yet. Open a ticket to see the checklist 🙂",
         "🔔 Oops! Open a ticket to view the checklist. 😊",
-        "📝 The checklist is only available in a ticket. Open one to see it! 🙂",
-        "🚀 Open a ticket first, then the checklist will be ready! 🙂",
         "No ticket, no checklist! 😄  Open a ticket to access it.",
-        "📌 Just a quick step! Open a ticket to check the checklist.",
         "🤔 Where’s the ticket? Open one to see the checklist!",
-        "🚦 First stop: Open a ticket! Then, your checklist will appear.😄",
-        "🔍 Can’t find the checklist? Open a ticket, and it’ll be there!",
-        "✨ Almost there! Open a ticket to reveal the checklist.",
-        "🛠 Checklist loading… wait! You need to open a ticket first.🙂",
+        "✨ Almost there! Open a ticket to see the checklist.",
         "🚀 Just one step away! Open a ticket to access the checklist.",
     ],
     UnableToFindChecklist: [
@@ -276,6 +264,10 @@ const Notifications = {
         "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
     ],
     DoneMessages: {
+        0:[
+            "Time to get started! 😄 Let's move these tasks towards 'Done'! 🌟",
+            "Let's begin! 🚀 Excited to see these tasks progress! 😄👍"
+        ],
         25: [
             "Let's go!  🎉  Keep those tasks moving! 🚀",
             "Work started! 👍 Let's get this done! 😄✨",
@@ -298,7 +290,7 @@ const Notifications = {
             "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",
         ],
         100: [
-            "Mission accomplished! 🚀 Excellent work! 👍",
+            "Mission accomplished! 🚀 Excellent work! 🫡",
             "All done! 🫡 Nailed it! 💪",
             "Definition of Done met! 🥇 You're a task master! 🫡 ",
             "All tasks completed! 🎉 You're a work superstar! 🫡 ",

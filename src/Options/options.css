@@ -122,19 +122,23 @@ input::placeholder {
 }
 
 .example-btn {
-display:block;
+
+ color: white;
+ text-decoration: underline;
+}
+
+.checklist-repo
+{
+  cursor: auto;
+color: #ddd;
+  text-align: center;
+  display:block;
   background: transparent;
-  color: #fff;
-  /* //border: 2px solid rgba(255, 255, 255, 0.5); */
   padding: 8px 12px;
   cursor: pointer;
   margin-top: 10px;
   border-radius: 6px;
   font-size: 14px;
-  transition: 0.3s;
-text-decoration:none;
-}
-
-.example-btn:hover {
- text-decoration: underline;
+  line-height: 22px;
+    text-align: center;
 }

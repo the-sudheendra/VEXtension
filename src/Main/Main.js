@@ -139,6 +139,7 @@ function getTicketTitle(title) {
 
 function veXReset() {
   try {
+    closeveXPopUp();
     veXCurrentCategory = {};
     veXChecklistItems = {};
     veXCurrentTicketChecklist = {};
@@ -536,12 +537,13 @@ function setCompletedState(listItemNode, listIndex) {
 //->Event Handlers
 function closeveXPopUp() {
   try {
+    if(!veXPopUpOverlay || !veXPopUpNode) return;
     veXPopUpOverlay.style.visibility = "hidden";
     veXPopUpNode.classList.remove("veX_pop_active");
     veXPopUpNode.classList.add("veX_pop_deactive");
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Close Vex Popup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Popup", err.message), true);
   }
 
 }
@@ -552,7 +554,7 @@ function openVexPopup() {
     veXPopUpNode.classList.add("veX_pop_active");
     veXPopUpNode.classList.remove("veX_pop_deactive");
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Open Vex Popup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Popup", err.message), true);
   }
 }
 /**

@@ -91,6 +91,9 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
       closeveXPopUp();
       commentSubmitButton.click();
       Util.notify(`${donePercentage}% done! ${Util.getDoneMessage(donePercentage)}`, Constants.NotificationType.Success, true);
+      if (donePercentage == 100) {
+       Util.createCelebration();
+        }
     }
   }
   catch (ex) {
