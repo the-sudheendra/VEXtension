@@ -87,14 +87,8 @@ const ChecklistUI = `
 <div class="veX_banner veX_footer">
     <div class="veX_footer_options">
         <div class="veX_footer_icon_container veX_leave_comment_btn">
-            <!-- <span class="veX_leave_comment_btn_txt">Leave Comment</span> -->
-            <img class="veX_add_comment_icon veX_footer_icon" alt="Leave a Comment" title="Add New Comment" src="${chrome.runtime.getURL("icons/add_comment_24.png")}" alt="Add Comment"/>
-
+             <span class="veX_leave_comment_btn_txt">Leave Comment</span> 
         </div>
-       <div class="veX_footer_icon_container veX_edit_comment_btn">
-            <img class="veX_edit_comment_icon veX_footer_icon" alt="Edit Comment" title="Edit Existing Comment." src="${chrome.runtime.getURL("icons/rate_review_24.png")}" alt="Edit Comment"/>
-            <!-- <span>Edit Comment</span> -->
-        </div> 
     </div>
 </div>
 `;
