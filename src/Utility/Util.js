@@ -235,9 +235,9 @@ function getDoneMessage(percentage) {
     return getRandomMessage(Constants.Notifications.DoneMessages[50]);
   } else if (percentage <= 75) {
     return getRandomMessage(Constants.Notifications.DoneMessages[75]);
-  } else if (percentage <= 90) {
+  } else if (percentage < 100) {
     return getRandomMessage(Constants.Notifications.DoneMessages[90]);
-  } else if (percentage <= 100) {
+  } else if (percentage == 100) {
     return getRandomMessage(Constants.Notifications.DoneMessages[100]);
   }
 }
