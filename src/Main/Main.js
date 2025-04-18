@@ -367,7 +367,7 @@ function createChecklistItem({ itemValue, index, currentCheckList }) {
       </div>
     </div>
     <textarea class="veX_checklist_note veX_hide_checklist_note" 
-      placeholder="Notes..">${sanitizedNote}</textarea>
+      placeholder="Notes..✍️">${sanitizedNote}</textarea>
   `;
 
   listItem.innerHTML = listNodeUI;

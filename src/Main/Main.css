@@ -147,6 +147,9 @@
   color: var(--veX-fontColorAgainstTicketColor);
   padding: 5px;
   margin: 0px;
+  width: 85%;
+  max-width: 85%;
+  overflow: hidden;
 }
 
 .veX_done_status {

@@ -257,37 +257,44 @@ const Notifications = {
     ],
     DoneMessages: {
         0: [
-            "Time to get started! 😄 Let's move these tasks towards 'Done'! 🌟",
-            "Let's begin! 🚀 Excited to see these tasks progress! 😄👍"
+            "Let's start the work! 🚀",
+            "Chalo shuru karte hain! 👍",
+            "Babu Rao style mein—‘Chalu kar re baba!’ 😄"
         ],
         25: [
-            "Let's go!  🎉  Keep those tasks moving! 🚀",
-            "Work started! 👍 Let's get this done! 😄✨",
-            "Just getting warmed up! 🔥"
+            "Good start! Keep it up! 💪",
+            "Work has begun! Let's go! 🔥",
+            "Kaam toh bas start hua hai... asli mazaa toh ab aayega! 😉",
+            'Abhi toh party shuru hui hai! 🔥' 
         ],
         50: [
-            "Great work progressing through your tasks! Keep the momentum going! 😊🚀",
-            "Making progress like a boss! Keep that energy flowing! 😄"
+            "Half work done! Great going! 👏",
+            "You're doing well! Keep going! 💯",
+            "Aadha kaam ho gaya, 'Bohot hard'! 🔥",
+            "Bas thoda sa push aur – ‘All is well!’ 💫",
         ],
         75: [
-            "More than halfway! 🎉 Keep pushing! 🚀",
-            "Almost all tasks complete! 🎉 Just a few more to go! 😄🚀",
-            "Just a handful of items left! 🤏 Keep that energy flowing! 😄",
-            "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",
+            "Almost there! Just a bit left! 😊",
+            "Few tasks left! Keep it up! 🚀",
+            "Picture abhi baaki hai mere dost! 😄",
+             "Bas kuch hi kaam baaki hai, 'Jhakaas' progress! 😄"
         ],
         90: [
-            "So close! 🎉 Just a bit more! 🚀",
-            "Almost all tasks complete! 🎉 Just a few more to go! 😄🚀",
-            "Just a handful of items left! 🤏 Keep the quality high! 😄",
-            "So close to 'Done'! ✨ Just a little more effort on this last one! 😊",
+            "Last few steps! You got this! 🙌",
+            "Almost done! Just a little more! 🚀",
+            "Final touch left! Finish it well! 😎",
+            "So close! One last push! ✨",
+            "Picture abhi baaki hai mere dost! 😄",
+            "Bas thoda aur! 🎉 'Abhi maza aayega na bhidu!' 😄"
         ],
         100: [
-            "Mission accomplished! 🚀 Excellent work! 🫡",
-            "All done! 🫡 Nailed it! 💪",
-            "Definition of Done met! 🥇 You're a task master! 🫡 ",
-            "All tasks completed! 🎉 You're a work superstar! 🫡 ",
+            "DoD completed! Super work! 🥇",
+            "Bhai ne bola karne ka, toh kar diya! 😄",
+            "Yeh kaam dekh ke mummy bhi proud hogi!' 😄",
+            "Kaam khatam – ‘How’s the josh?’ HIGH, Sir! 🫡",
+            "Definition of Done met! 🥇 You're a task master! 🫡"
         ],
-        "Common": "Great work progressing through your tasks! Keep the momentum going! 😊🚀"
+        "Common": "Good progress! Keep it going! 🚀"
     }
 
 }
