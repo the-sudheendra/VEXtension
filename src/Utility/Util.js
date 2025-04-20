@@ -221,25 +221,29 @@ function makeElementDraggable(element) {
 }
 
 function getDoneMessage(percentage) {
-  if (percentage < 0 || percentage > 100) {
-    return "";
+  try
+  {
+    if (percentage < 0 || percentage > 100) {
+      return "";
+    }
+    if (percentage <= 10) {
+      return getRandomMessage(Constants.Notifications.DoneMessages[10]);
+    } else if (percentage <= 25) {
+      return getRandomMessage(Constants.Notifications.DoneMessages[25]);
+    } else if (percentage <= 50) {
+      return getRandomMessage(Constants.Notifications.DoneMessages[50]);
+    } else if (percentage <= 75) {
+      return getRandomMessage(Constants.Notifications.DoneMessages[75]);
+    } else if (percentage < 100) {
+      return getRandomMessage(Constants.Notifications.DoneMessages[90]);
+    } else if (percentage == 100) {
+      return getRandomMessage(Constants.Notifications.DoneMessages[100]);
+    }
+  }catch
+  {
+   return "Good progress! Keep it going! 🚀";
   }
-  if (percentage == 0) {
-    return getRandomMessage(Constants.Notifications.DoneMessages[0]);
-  }
-  if (percentage <= 10) {
-    return getRandomMessage(Constants.Notifications.DoneMessages[10]);
-  } else if (percentage <= 25) {
-    return getRandomMessage(Constants.Notifications.DoneMessages[25]);
-  } else if (percentage <= 50) {
-    return getRandomMessage(Constants.Notifications.DoneMessages[50]);
-  } else if (percentage <= 75) {
-    return getRandomMessage(Constants.Notifications.DoneMessages[75]);
-  } else if (percentage < 100) {
-    return getRandomMessage(Constants.Notifications.DoneMessages[90]);
-  } else if (percentage == 100) {
-    return getRandomMessage(Constants.Notifications.DoneMessages[100]);
-  }
+ 
 }
 function createCelebration() {
   // Create a container for the celebration elements

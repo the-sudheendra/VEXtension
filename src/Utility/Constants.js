@@ -157,7 +157,7 @@ const Notifications = {
         "🚀 Boom! Your checklist is saved! Time to tackle those tasks! 💪",
         "💾 Checklist saved! Ready for the next step? ⏳",
         "📌 Your checklist is saved. You’re good to go! 😊",
-        "😌 Phew! Your checklist is saved. No worries, it's all there!",
+        "😌 Your checklist is saved. No worries, it's all there!",
         "Checklist saved! That was easy, right? 😏",
         "🚀 Saved successfully! Ready to check things off? ",
         "🎊 Your checklist is saved. Let’s get things done! 🤗",
@@ -256,7 +256,7 @@ const Notifications = {
         "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
     ],
     DoneMessages: {
-        0: [
+        10: [
             "Let's start the work! 🚀",
             "Chalo shuru karte hain! 👍",
             "Babu Rao style mein—‘Chalu kar re baba!’ 😄"
@@ -271,7 +271,7 @@ const Notifications = {
             "Half work done! Great going! 👏",
             "You're doing well! Keep going! 💯",
             "Aadha kaam ho gaya, 'Bohot hard'! 🔥",
-            "Bas thoda sa push aur – ‘All is well!’ 💫",
+            "Bas thoda sa push aur – ‘All is well!’ 😄",
         ],
         75: [
             "Almost there! Just a bit left! 😊",
