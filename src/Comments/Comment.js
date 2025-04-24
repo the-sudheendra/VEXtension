@@ -93,8 +93,8 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
       Util.notify(`${donePercentage}% done. ${Util.getDoneMessage(donePercentage)}`, Constants.NotificationType.Success, true);
       if (donePercentage == 100) {
         await Util.delay(1500);
-       Util.createCelebration();
-        }
+        Util.createCelebration();
+      }
     }
   }
   catch (ex) {
@@ -118,7 +118,7 @@ async function draftChecklistForComments(veXChecklistItems, donePercentage) {
     const commentWrapper = createCommentWrapper();
     fragment.appendChild(commentWrapper);
     commentWrapper.appendChild(createCommentHeader(donePercentage));
-    await processCategories(commentWrapper, veXChecklistItems);
+    await processCategories(commentWrapper, veXChecklistItems, donePercentage);
     const finalComment = fragment.innerHTML;
     return finalComment;
 
@@ -146,7 +146,7 @@ function createCommentHeader(donePercentage) {
   return headerNode;
 }
 
-function createCategorySection(categoryName) {
+function createCategorySection(categoryName, doneItemsInCategory, totalItemsInCategory) {
   const categoryNode = document.createElement("p");
   Object.assign(categoryNode.style, {
     borderBottom: "1px dotted gray",
@@ -154,7 +154,15 @@ function createCategorySection(categoryName) {
     color: COMMENT_STYLES.DEFAULT_COLOR,
     fontWeight: "bold"
   });
-  categoryNode.innerHTML = `Category:<b class="veX_checklist_comment_category_name @category_${categoryName}"> ${categoryName}</b>`;
+
+  let tickMark = `<span style="color:#1aa364;">✔</span>`;
+  if (doneItemsInCategory == totalItemsInCategory) {
+    categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}"> ${tickMark} ${categoryName} : </b>`;
+
+  } else {
+    categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}">${categoryName} - ${doneItemsInCategory} of ${totalItemsInCategory} items done: </b>`;
+  }
+
   return categoryNode;
 }
 
@@ -181,7 +189,7 @@ function createNoteSection(item) {
 }
 
 
-async function processCategories(commentWrapper, veXChecklistItems) {
+async function processCategories(commentWrapper, veXChecklistItems, donePercentage) {
   const categories = Object.keys(veXChecklistItems);
   for (const categoryName of categories) {
 
@@ -190,18 +198,19 @@ async function processCategories(commentWrapper, veXChecklistItems) {
       Util.getChecklistStatus(item) === Constants.CheckListStatus.NotSelected)) {
       continue;
     }
-
-    const categorySection = createCategorySection(categoryName);
     const checklistNode = document.createElement("div");
     checklistNode.style.paddingLeft = "0px";
     checklistNode.style.listStyleType = "none";
 
+    let doneItemsInCategory = 0;
     for (const item of checklist) {
       if (Util.getChecklistStatus(item) !== Constants.CheckListStatus.NotSelected) {
+        if (Util.getChecklistStatus(item) == Constants.CheckListStatus.Completed || Util.getChecklistStatus(item) == Constants.CheckListStatus.NotApplicable) doneItemsInCategory++;
         checklistNode.appendChild(createItemNode(item, categoryName));
       }
     }
 
+    const categorySection = createCategorySection(categoryName, doneItemsInCategory, checklist.length,);
     commentWrapper.appendChild(categorySection);
     commentWrapper.appendChild(checklistNode);
   }

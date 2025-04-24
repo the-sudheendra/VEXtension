@@ -121,7 +121,7 @@
   justify-content: start;
   align-items: center;
   background-color: var(--veX-ticktColor);
-  cursor: grab;
+  cursor: move;
   border-radius: 8px 8px 0px 0px;
 }
 
