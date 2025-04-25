@@ -78,7 +78,7 @@
   }
 }
 ```
-🔗 Check out **[DoD Checklists Repo](https://github.com/the-sudheendra/DOD-Checklists)** for predefined checklist JSONs ✅.
+Get started with the **[predefined checklists](https://github.com/the-sudheendra/DOD-Checklists)** ✅.
 
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
