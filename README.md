@@ -1,14 +1,18 @@
 <div align="center">
-     <h3>VE Checklist</h3>
-    <h4>Checklist Tool for OpenText ValueEdge platform.</h4>
-    <div align="center">
-        <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews">
-          <img  src="https://img.shields.io/badge/Google_chrome-4285F4?style=for-the-badge&logo=Google-chrome&logoColor=white">
-        </a>
-        <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews">
-          <img  src="https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white">
-        </a>
-    </div>
+   <div align="center" style="text-align: center;">
+      <b>VE Checklist </b> 
+      <span><img alt="Version" src="https://img.shields.io/chrome-web-store/v/aeiiagpokicaeifancpnndjanamdmmdn?style=flat-square&label=latest&labelColor=white&color=white&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fve-checklist%2Faeiiagpokicaeifancpnndjanamdmmdn%2Freviews"/> </span> 
+   </div>
+   <h4>Checklist Tool for OpenText ValueEdge platform.</h4>
+<div style="text-align: center;">
+  <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews" target="_blank" rel="noopener noreferrer">
+    Download from Chrome Web Store
+  </a>
+</div>
+
+<p style="text-align: center;">
+  Above link works with all Chromium-based browsers, including <b>Microsoft Edge</b>, <b>Brave</b>, <b>Opera</b>, and others.
+</p>
 </div>
 
 
@@ -74,7 +78,7 @@
   }
 }
 ```
-🔗 Check out **[DoD Checklists Repo](https://github.com/the-sudheendra/DOD-Checklists)** for predefined checklist JSONs ✅.
+Get started with the **[predefined checklists](https://github.com/the-sudheendra/DOD-Checklists)** ✅.
 
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
