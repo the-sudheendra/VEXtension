@@ -1,5 +1,7 @@
 <div align="center">
-     <h3>VE Checklist</h3>
+     <div align="center" style="text-align: center;">
+     <b>VE Checklist </b> <span><img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/aeiiagpokicaeifancpnndjanamdmmdn"></span>
+     </div>
     <h4>Checklist Tool for OpenText ValueEdge platform.</h4>
     <div align="center">
         <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews">
