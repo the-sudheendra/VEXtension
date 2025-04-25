@@ -4,14 +4,15 @@
       <span><img alt="Version" src="https://img.shields.io/chrome-web-store/v/aeiiagpokicaeifancpnndjanamdmmdn?style=flat-square&label=latest&labelColor=white&color=white&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fve-checklist%2Faeiiagpokicaeifancpnndjanamdmmdn%2Freviews"/> </span> 
    </div>
    <h4>Checklist Tool for OpenText ValueEdge platform.</h4>
-   <div align="center">
-      <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews">
-      <img  src="https://img.shields.io/badge/Google_chrome-4285F4?style=for-the-badge&logo=Google-chrome&logoColor=white">
-      </a>
-      <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews">
-      <img  src="https://img.shields.io/badge/Microsoft_Edge-0078D7?style=for-the-badge&logo=Microsoft-edge&logoColor=white">
-      </a>
-   </div>
+<div style="text-align: center;">
+  <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews" target="_blank" rel="noopener noreferrer">
+    Download from Chrome Web Store
+  </a>
+</div>
+
+<p style="text-align: center;">
+  Above link works with all Chromium-based browsers, including <b>Microsoft Edge</b>, <b>Brave</b>, <b>Opera</b>, and others.
+</p>
 </div>
 
 
