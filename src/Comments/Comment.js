@@ -160,7 +160,7 @@ function createCategorySection(categoryName, doneItemsInCategory, totalItemsInCa
     categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}"> ${tickMark} ${categoryName} : </b>`;
 
   } else {
-    categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}">${categoryName} - ${doneItemsInCategory} of ${totalItemsInCategory} items done: </b>`;
+    categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}">${categoryName} - ${doneItemsInCategory} of ${totalItemsInCategory} items done : </b>`;
   }
 
   return categoryNode;
