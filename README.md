@@ -78,7 +78,7 @@
   }
 }
 ```
-Get started with the **[predefined checklists](https://github.com/the-sudheendra/DOD-Checklists)** ✅.
+Get started with the **[predefined checklists](https://github.com/the-sudheendra/ChecklistHub)** ✅.
 
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
