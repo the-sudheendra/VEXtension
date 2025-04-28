@@ -537,7 +537,7 @@ function setCompletedState(listItemNode, listIndex) {
 //->Event Handlers
 function closeveXPopUp() {
   try {
-    if(!veXPopUpOverlay || !veXPopUpNode) return;
+    if (!veXPopUpOverlay || !veXPopUpNode) return;
     veXPopUpOverlay.style.visibility = "hidden";
     veXPopUpNode.classList.remove("veX_pop_active");
     veXPopUpNode.classList.add("veX_pop_deactive");
@@ -552,9 +552,22 @@ function openVexPopup() {
   try {
     veXPopUpOverlay.style.visibility = "visible";
     veXPopUpNode.classList.add("veX_pop_active");
+    centerThePopup(veXPopUpNode);
     veXPopUpNode.classList.remove("veX_pop_deactive");
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Popup", err.message), true);
+  }
+}
+
+function centerThePopup(veXPopUpNode) {
+  try {
+    if (veXPopUpNode) {
+      veXPopUpNode.style.left = "50%";
+      veXPopUpNode.style.top = "50%";
+      veXPopUpNode.style.transform = "translate(-50%, -50%) !important";
+    }
+  } catch {
+
   }
 }
 /**
@@ -579,7 +592,7 @@ async function refreshChecklistFromRemoteIfExists() {
     }
     // Validate and update the checklist
     const veXChecklistInfo = await response.json();
-    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url?.veX_dod_url,veX_loadOnStart?.veX_loadOnStart) === true) {
+    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url?.veX_dod_url, veX_loadOnStart?.veX_loadOnStart) === true) {
     } else {
       return false;
     }
@@ -605,17 +618,17 @@ function onCategoryChange(event) {
 
 function onListItemClick(event, listItemNode) {
   try {
-        if (!listItemNode || !event) {
-          throw new Error('Invalid input parameters for List Item Click');
-        }
+    if (!listItemNode || !event) {
+      throw new Error('Invalid input parameters for List Item Click');
+    }
 
-        if (handleNoteVisibility(listItemNode)) {
-          event.stopPropagation();
-          return;
-        }
-        updateChecklistItemState(listItemNode);
+    if (handleNoteVisibility(listItemNode)) {
+      event.stopPropagation();
+      return;
+    }
+    updateChecklistItemState(listItemNode);
 
-        event.stopPropagation();
+    event.stopPropagation();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "ListItem Click", err.message), true);
   }
@@ -634,13 +647,13 @@ function handleNoteVisibility(listItemNode) {
 function updateChecklistItemState(listItemNode) {
   const index = listItemNode.getAttribute('listIndex');
   const currentCheckList = veXChecklistItems[veXCurrentCategory.name];
-  
+
   if (!currentCheckList?.[index]) {
     throw new Error('Invalid checklist item index');
   }
   updateCompletionCount(currentCheckList[index]);
 
-  currentCheckList[index].CursorState.position = 
+  currentCheckList[index].CursorState.position =
     (currentCheckList[index].CursorState.position + 1) % Object.keys(Constants.CheckListStatus).length;
 
   const newState = Util.getChecklistStatus(currentCheckList[index]);
@@ -650,8 +663,8 @@ function updateChecklistItemState(listItemNode) {
 
 function updateCompletionCount(checklistItem) {
   const previousState = Util.getChecklistStatus(checklistItem);
-  if (previousState === Constants.CheckListStatus.Completed || 
-      previousState === Constants.CheckListStatus.NotApplicable) {
+  if (previousState === Constants.CheckListStatus.Completed ||
+    previousState === Constants.CheckListStatus.NotApplicable) {
     veXTotalCompletedItems = Math.max(0, veXTotalCompletedItems - 1);
   }
 }
@@ -728,8 +741,7 @@ async function onTicketTitleChange(change) {
     // If we are using a remote URL to maintain the checklist,
     // then refresh the checklist locally first
     let veX_loadOnStart = await chrome.storage.sync.get("veX_loadOnStart")
-    if(veX_loadOnStart?.veX_loadOnStart===true)
-    {
+    if (veX_loadOnStart?.veX_loadOnStart === true) {
       const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
       if (!remoteRefreshSuccess) {
         return;
@@ -743,7 +755,7 @@ async function onTicketTitleChange(change) {
     if (!Util.isEmptyObject(veXCurrentTicketChecklist)) {
       initChecklist();
       veXIsViewInitialised = initView();
-     // MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
+      // MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
     }
   }
   catch (err) {
@@ -784,12 +796,12 @@ function OnTicketPhaseClick() {
 }
 
 async function onAddToComments(event) {
-  await Comments.addChecklistToComments(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
+  await Comments.addChecklistToComments(veXChecklistItems, Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
   if (event)
     event.stopPropagation();
 }
 async function onEditComment(event) {
-  await Comments.editExistingComment(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
+  await Comments.editExistingComment(veXChecklistItems, Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
   if (event)
     event.stopPropagation();
 }
