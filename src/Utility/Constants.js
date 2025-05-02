@@ -89,6 +89,9 @@ const ChecklistUI = `
         <div class="veX_footer_icon_container veX_leave_comment_btn">
              <span class="veX_leave_comment_btn_txt">Leave Comment</span> 
         </div>
+         <div class="veX_footer_icon_container veX_edit_comment_btn">
+             <span class="veX_edit_comment_btn_txt">Edit Comment</span> 
+        </div>
     </div>
 </div>
 `;
@@ -116,7 +119,9 @@ const ValueEdgeNodeSelectors = {
     NewCommentBox: "[data-aid='comments-pane-add-new-comment-placeholder-state']",
     InputCommentBox: ".mqm-writing-new-comment-div",
     AddCommentButton: "[ng-click='comments.onAddNewCommentClicked()']",
-    PhaseNode: "[data-aid='entity-life-cycle-widget-phase']"
+    PhaseNode: "[data-aid='entity-life-cycle-widget-phase']",
+    CollapseRightSidebar: ".collapsable-panel",
+    CommentsContainer:"comment-lines"
 
 }
 const ErrorMessages = {

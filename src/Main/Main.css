@@ -623,7 +623,7 @@
 }
 
 
-.veX_leave_comment_btn {
+.veX_leave_comment_btn, .veX_edit_comment_btn  {
   background: linear-gradient(to right, var(--veX-successColor), var(--veX-ticktColor));
   background-size: 200% auto;
   background-position: 0% center;
@@ -638,6 +638,6 @@
   padding: 10px 24px;
 }
 
-.veX_leave_comment_btn:hover {
+.veX_leave_comment_btn:hover, .veX_edit_comment_btn:hover {
   background-position: center;
 }

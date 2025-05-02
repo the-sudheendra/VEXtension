@@ -44,13 +44,11 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
       return;
     }
     // Open comment sidebar
-    let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
-
-    if (!rightSidebarCommentButton) {
+    if(openCommentSideBar()==false)
+    {
       Util.notify("Comment box icon not found in the sidebar. Please try again.", Constants.NotificationType.Error, true);
       return;
     }
-    rightSidebarCommentButton.click();
     await Util.delay(500);
 
     // Click on add new comment box
@@ -102,6 +100,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
   }
 
 }
+
 const COMMENT_STYLES = {
   DEFAULT_COLOR: '#333',
   SUCCESS_COLOR: '#008000',
@@ -247,15 +246,20 @@ function getLastChecklistComment() {
 
 async function editExistingComment(veXChecklistItems, donePercentage) {
   try {
+    if(!isVexChecklistCommentAvailable())
+    {
+      Util.notify(Util.getRandomMessage(Constants.Notifications.NoChecklistFoundInComments), Constants.NotificationType.Info, true);
+      return;
+    }
     if (!isCommentAllowed(veXChecklistItems)) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
       return;
     }
-    let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
-    if (!rightSidebarCommentButton) {
+    if(openCommentSideBar()==false)
+    {
       Util.notify("Comment box icon not found in the sidebar. Please try again.", Constants.NotificationType.Error, true);
       return;
-    } rightSidebarCommentButton.click();
+    }
     await Util.delay(500);
 
     let lastComment = getLastChecklistComment();
@@ -359,6 +363,54 @@ function onSyncChecklistComments() {
   }
 }
 
+function isVexChecklistCommentAvailable() {
+  let doWeOpenedCommentBox=false;
+  try
+  {
+    if(!isCommentBarOpen())
+    {
+      doWeOpenedCommentBox=openCommentSideBar();
+    }
+    let commentData = document.querySelector(".veX_checklist_comment_wrapper");
+    if (!commentData) return false;
+    return true;
+  }
+  finally
+  {
+    if(doWeOpenedCommentBox==true)
+      closeCommentSideBar();
+  }
+}
+
+function isCommentBarOpen()
+{
+  let CommentsContainer = document.querySelector(Constants.ValueEdgeNodeSelectors.CommentsContainer);
+  if(CommentsContainer)
+    return true;
+  return false;
+}
+
+function openCommentSideBar()
+{
+  
+  let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
+
+  if (!rightSidebarCommentButton) {
+    return false;
+  }
+  rightSidebarCommentButton.click();
+  return true;
+}
+
+function closeCommentSideBar()
+{
+  let rightSidebarCollapseBtn = document.querySelector(Constants.ValueEdgeNodeSelectors.CollapseRightSidebar)
+  if (!rightSidebarCollapseBtn) {
+    return false;
+  }
+  rightSidebarCollapseBtn.click();
+  return true;
+}
 
 export {
   getChecklistCommentData, addChecklistToComments, onSyncChecklistComments, editExistingComment
