@@ -19,7 +19,7 @@
 ## Features 🚀
 
 - 📌 **Context-Aware Checklists**  
-  Shows the **Definition of Done (DoD)** and **Definition of Ready (DoR)** checklist based on the ticket you're viewing and its current status.
+  Shows the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
 
 - 🛠️ **Customizable & Remote Checklists**  
   You can create your own checklist to match your project needs, or load one from a link (remote URL).
@@ -88,7 +88,7 @@
   }
 }
 ```
-Get started with the **[predefined checklists](https://github.com/the-sudheendra/ChecklistHub)** ✅.
+**Get started with [predefined checklists](https://github.com/the-sudheendra/ChecklistHub) and learn more about the checklist schema** ✅.
 
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
