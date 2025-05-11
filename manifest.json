@@ -50,7 +50,9 @@
         "icons/rate_review_24.png",
         "icons/content_copy_24.png",
         "icons/disabled.png",
-        "icons/sync_24.png"
+        "icons/sync_24.png",
+        "icons/add_24dp_000000.png",
+        "icons/edit_24dp_000000.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }

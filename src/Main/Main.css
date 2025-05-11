@@ -550,22 +550,6 @@
   padding-top: 1.5px;
 }
 
-.veX_footer_icon_container:hover {
-  opacity: 0.8;
-}
-
-.veX_footer_icon_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 5px;
-  color: var(--veX-whiteColor);
-  cursor: pointer;
-  padding: 0px 10px;
-  BORDER-RADIUS: var(--veX-common-borderRadius);
-  transition: background-color 300ms ease-out;
-}
 
 .veX_note_icon {
   width: 25px;
@@ -597,19 +581,6 @@
 }
 
 
-.veX_footer_options {
-  display: flex;
-  gap: 12px; /* Space between buttons */
-}
-
-.veX_footer_icon_container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: var(--veX-common-borderRadius);
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
 
 .veX_footer_icon {
   width: 30px;
@@ -617,27 +588,48 @@
 }
 
 
-/* Edit Comment Button */
-.veX_edit_comment_btn {
-  background-color: #28a745; /* Green */
+
+.veX_segmented-button {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  color: black;
 }
 
-
-.veX_leave_comment_btn, .veX_edit_comment_btn  {
-  background: linear-gradient(to right, var(--veX-successColor), var(--veX-ticktColor));
-  background-size: 200% auto;
-  background-position: 0% center;
-  border: none;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
+.veX_segment {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
   cursor: pointer;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-  transition: background-position 0.5s ease;
-  border-radius: 16px;
-  padding: 10px 24px;
+  transition: background-color 0.3s ease;
 }
 
-.veX_leave_comment_btn:hover, .veX_edit_comment_btn:hover {
-  background-position: center;
+.veX_segment i.material-icons {
+  font-size: 18px;
+}
+
+.veX_segment:first-child {
+  background-color: #e8def8;
+  color: #3f0071;
+}
+
+.veX_segment:first-child:hover {
+  background-color: #d1c3eb;
+}
+
+.veX_segment:last-child {
+  background-color: #fff;
+  color: #333;
+}
+
+.veX_segment:last-child:hover {
+  background-color: #f0f0f0;
+}
+.veX_leave_comment_btn_txt,.veX_edit_comment_btn_txt
+{
+color: var(--veX-common-fontColor);
 }

@@ -192,7 +192,7 @@ async function initFooterView() {
     // veXPopUpNode.querySelector('.veX_add_comment_icon').src = await chrome.runtime.getURL("icons/add_comment_24.png");
     veXPopUpNode.querySelector(".veX_leave_comment_btn").addEventListener("click", onAddToComments);
     // veXPopUpNode.querySelector(".veX_edit_comment_icon").src = await chrome.runtime.getURL("icons/rate_review_24.png");
-    // veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
+     veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);

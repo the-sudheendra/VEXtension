@@ -55,6 +55,10 @@ const EntityMetaData = {
         'colorHex': '#1365c0'
     }
 }
+const iconUrls = {
+    add: chrome.runtime.getURL("icons/add_24dp_000000.png"),
+    edit: chrome.runtime.getURL("icons/edit_24dp_000000.png")
+  };
 const ChecklistUI = `
 <header class="veX_header veX_banner">
     <div class="veX_logo_container">
@@ -84,12 +88,14 @@ const ChecklistUI = `
         </div>
     </div>
 </div>
-<div class="veX_banner veX_footer">
-    <div class="veX_footer_options">
-        <div class="veX_footer_icon_container veX_leave_comment_btn">
+<div class="veX_banner veX_footer ">
+    <div class="veX_segmented-button">
+        <div class="veX_segment veX_footer_icon_container veX_leave_comment_btn">
+        <img class="material-icons" alt="Leave a new comment" title="Leave a new comment" src="${iconUrls.add}"/>
              <span class="veX_leave_comment_btn_txt">Leave Comment</span> 
         </div>
-         <div class="veX_footer_icon_container veX_edit_comment_btn">
+         <div class=" veX_segment veX_footer_icon_container veX_edit_comment_btn">
+         <img class="material-icons" alt="Edit exisiting comment" title="Edit exisiting comment" src="${iconUrls.edit}"/>
              <span class="veX_edit_comment_btn_txt">Edit Comment</span> 
         </div>
     </div>
@@ -224,26 +230,10 @@ const Notifications = {
 
     ],
     CommentsBoxNotFound: [
-        "Unable to locate the new comment box 🙁",
-        "🤔 Can’t find the comment box. Try again!",
-        "🤔 No comment box detected. Please check and retry!",
-        "❌ Oops! Can’t locate the comment box right now.",
-        "📝 Comment box not found. Is it already open?",
-        "⚠️ Can’t add checklist—no comment box found.",
-        "🔄 No comment input detected. Check if it's already open!",
-        "📝 Can’t post checklist comment box not detected.",
-        "🚀 Checklist failed to post: No comment box detected.",
-        "❌ Error: Unable to locate a comment input box.",
-        "💡No comment box available. Check if one is already open.",
-        "💡Comment box missing. Try refreshing or closing any open ones.",
+        "🤔 Can't add comment — finish or close the one already open."
     ],
     NoChecklistFoundInComments: [
-        "🔍 No checklist found in the comments. Try adding one!",
-        "📝 Hmm… Can’t find a checklist in the comments.",
-        "😅 No checklist here! Maybe try adding one?",
-        "⚠️ No checklist detected in comments. Try creating one!",
-        "⏳ Can’t edit—no checklist found in the comments.",
-        "🤔 No checklist available. Want to add a new one?",
+        "🤔 Hmm… No existing checklist found in the comments. Try adding new one!",
     ],
     ChecklistEditSuccess: [
         "📝 Checklist updated! Review the changes and save.",
