@@ -237,21 +237,22 @@ function createItemNode(item, categoryName) {
   const itemNode = document.createElement("div");
   const status = Util.getChecklistStatus(item);
   const baseClassName = `veX_checklist_comment_item @category_${categoryName}@status_${status}`;
+  const noteContent = item["RichTextNote"].getSemanticHTML();
   const itemContent = `
     <div class="${baseClassName}" style="${COMMENT_STYLES.ITEM_STYLES.wrapper}">
       <p style="${COMMENT_STYLES.ITEM_STYLES.text}"><span style="color:${setColor(item)};">[${setPrefixForList(item)}]</span>&nbsp;&nbsp;<span class="veX_checklist_comment_item_value">${DOMPurify.sanitize(item.ListContent)}</span>
       </p>
-      ${item.Note ? createNoteSection(item) : ''}
+      ${item["RichTextNote"].getLength()>1 ? createNoteSection(noteContent) : ''}
     </div>`;
   itemNode.innerHTML = itemContent;
   return itemNode;
 }
 
-function createNoteSection(item) {
+function createNoteSection(noteContent) {
   return `
     <div style="${COMMENT_STYLES.ITEM_STYLES.details}">
-      <span style="${COMMENT_STYLES.ITEM_STYLES.text}">Details:</span><br/>
-      <span class="veX_checklist_comment_item_note">${DOMPurify.sanitize(item.Note)}</span>
+      <b style="${COMMENT_STYLES.ITEM_STYLES.text}">Notes:</b><br/>
+      <span class="veX_checklist_comment_item_note">${DOMPurify.sanitize(noteContent)}</span>
     </div>`;
 }
 

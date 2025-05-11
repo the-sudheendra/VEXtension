@@ -514,31 +514,22 @@
 }
 
 .veX_checklist_note {
-  resize: none;
-  border-radius: 3px;
-  padding: 10px;
-  font-size: 16px;
-  font-family: inherit;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+
   position: absolute;
   width: 90%;
   top: 100%;
   left: 10%;
   z-index: 1;
-  height: auto;
+  background-color: white;
+}
+.ql-editor
+{
   max-height: 300px;
-  border: 1px solid #dddddd;
+  color: black;
 }
 
 .veX_hide_checklist_note {
   display: none;
-}
-
-.veX_checklist_note:focus,
-.veX_checklist_note:hover {
-  outline: #dddddd;
-  border: 1px solid #dddddd;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
 

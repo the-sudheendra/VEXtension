@@ -83,3 +83,14 @@ Get started with the **[predefined checklists](https://github.com/the-sudheendra
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
+
+
+## Third-Party Libraries
+
+This project uses the following open-source libraries:
+
+- [Quill](https://quilljs.com) — BSD 3-Clause License
+- [DOMPurify](https://github.com/cure53/DOMPurify) — Apache License 2.0
+
+See the [THIRD_PARTY_LICENSES](./third_party_licenses) folder for full license texts and attribution notices.
+
