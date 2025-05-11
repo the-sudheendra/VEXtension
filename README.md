@@ -95,7 +95,7 @@
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
 
 
-### Third-Party Libraries Shoutout
+### Shoutout to libraries 🔥
 
 This project uses the following open-source libraries:
 
