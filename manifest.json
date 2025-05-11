@@ -7,8 +7,8 @@
   "content_scripts": [
     {
       "matches": ["https://*.saas.microfocus.com/*"],
-      "js": ["./src/Main/Main.js"],
-      "css": ["./src/Main/Main.css", "./src/Notification/Notification.css"]
+      "js": ["./src/Main/Main.js","src/External/Quill-TextEditor/quill.js"],
+      "css": ["./src/Main/Main.css", "./src/Notification/Notification.css","./src/External/Quill-TextEditor/quill.snow.css"]
     }
   ],
   "action": {
@@ -35,6 +35,7 @@
         "src/Utility/MutationObservers.js",
         "src/Comments/Comment.js",
         "src/External/purify.min.js",
+        "src/External/Quill-TextEditor/quill.js",
         "src/Notification/Notification.js",
         "icons/check_circle_24.png",
         "icons/error_24.png",
@@ -50,7 +51,9 @@
         "icons/rate_review_24.png",
         "icons/content_copy_24.png",
         "icons/disabled.png",
-        "icons/sync_24.png"
+        "icons/sync_24.png",
+        "icons/add_24dp_000000.png",
+        "icons/edit_24dp_000000.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }

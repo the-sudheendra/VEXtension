@@ -20,6 +20,7 @@ var DomPurify;
 var Constants;
 var MutationObservers;
 var Comments;
+var Quill;
 // < veX Objects Declarations
 
 // > Loading Modules 
@@ -40,6 +41,9 @@ async function loadModules() {
   URL = chrome.runtime.getURL("src/Comments/Comment.js");
   if (!Comments)
     Comments = await import(URL);
+  URL = chrome.runtime.getURL("src/External/Quill-TextEditor/quill.js");
+  if (!Quill)
+    Quill = await import(URL);
 }
 
 async function initialize() {
@@ -192,7 +196,7 @@ async function initFooterView() {
     // veXPopUpNode.querySelector('.veX_add_comment_icon').src = await chrome.runtime.getURL("icons/add_comment_24.png");
     veXPopUpNode.querySelector(".veX_leave_comment_btn").addEventListener("click", onAddToComments);
     // veXPopUpNode.querySelector(".veX_edit_comment_icon").src = await chrome.runtime.getURL("icons/rate_review_24.png");
-    // veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
+    veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
@@ -353,24 +357,55 @@ function createChecklistItem({ itemValue, index, currentCheckList }) {
   };
 
   const listItem = document.createElement('div');
-  const sanitizedNote = DOMPurify.sanitize(currentCheckList[index].Note);
   const listNodeUI = `
-    <div class="veX_done_check">
+      <div class="veX_done_check">
       <img class="veX_done_icon" alt="checkbox" title="Checklist" src="${iconUrls.checkbox}">
     </div>
     <div class="veX_list_content">
       <div class="veX_list_text">${itemValue}</div>
       <div class="veX_list_actions">
-        <div class="veX_note">
-          <img class="veX_note_icon veX_list_action_icon" alt="checkbox" title="Add details here." src="${iconUrls.notes}">
-        </div>
+          <div class="veX_note">
+            <img class="veX_note_icon veX_list_action_icon" alt="checkbox" title="Add notes here." src="${iconUrls.notes}">
+          </div>
       </div>
     </div>
-    <textarea class="veX_checklist_note veX_hide_checklist_note" 
-      placeholder="Notes..✍️">${sanitizedNote}</textarea>
+    <div class="veX_checklist_note veX_hide_checklist_note" >
+      <div id="veX_note_editor">
+      </div>
+    </div>
   `;
 
   listItem.innerHTML = listNodeUI;
+  const quillContainer = listItem.querySelector('#veX_note_editor');
+  if (quillContainer) {
+    const quillOptions = {
+      modules: {
+        toolbar: [
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          ['bold', 'italic', 'underline'],
+          ['code-block'],
+          ['link', 'image'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          [{ 'color': [] }, { 'background': [] }]
+        ],
+      },
+      placeholder: 'Notes..✍️',
+      theme: 'snow',
+    };
+
+    if(!currentCheckList[index].RichTextNote)
+    {
+      const quill = new Quill(quillContainer, quillOptions);
+      currentCheckList[index]["RichTextNote"] = quill;
+    }
+    else
+    {
+      const delta = currentCheckList[index]["RichTextNote"].getContents();
+      const quill = new Quill(quillContainer, quillOptions);
+      quill.setContents(delta);
+      currentCheckList[index]["RichTextNote"] = quill;
+    }
+  }
   listItem.classList.add("veX_list_item");
   listItem.setAttribute('listIndex', index);
   return listItem;
@@ -399,9 +434,9 @@ function updateChecklist() {
       });
 
       const currentListState = Util.getChecklistStatus(currentCheckList[index]);
-      updateNoteIcon(listItem);
+      updateNoteIcon(listItem, currentCheckList, index);
       updateListItemState(listItem, currentListState, index);
-      attachChecklistItemListeners(listItem, index);
+      attachChecklistItemListeners(listItem, currentCheckList, index);
       fragment.appendChild(listItem);
     });
     parentNode.appendChild(fragment);
@@ -410,17 +445,12 @@ function updateChecklist() {
   }
 }
 
-function attachChecklistItemListeners(listItem, index) {
+function attachChecklistItemListeners(listItem, currentCheckList, index) {
   const noteNode = listItem.querySelector('.veX_checklist_note');
   const noteIconNode = listItem.querySelector(".veX_note");
-  listItem.addEventListener("click", (event) => onListItemClick(event, listItem));
-  noteIconNode.addEventListener("click", (event) => onListNoteClick(event, listItem));
+  listItem.addEventListener("click", (event) => onListItemClick(event, listItem, currentCheckList, index));
+  noteIconNode.addEventListener("click", (event) => onListNoteClick(event, listItem, currentCheckList, index));
   noteNode.addEventListener('click', (event) => event.stopPropagation());
-  noteNode.addEventListener('input', () => {
-    noteNode.style.height = 'auto';
-    noteNode.style.height = `${Math.min(noteNode.scrollHeight, 250)}px`;
-  });
-  noteNode.addEventListener('change', (event) => onListNoteChange(event, listItem));
 }
 
 function updateListItemState(listItem, state, index) {
@@ -437,16 +467,17 @@ function updateListItemState(listItem, state, index) {
   }
 }
 
-function updateNoteIcon(listItem) {
+function updateNoteIcon(listItem, currentCheckList, index) {
   try {
+
     let noteIconNode = listItem.querySelector(".veX_note_icon");
-    if (listItem.querySelector('.veX_checklist_note').value.trim() == "") {
+    if (currentCheckList[index].RichTextNote.getLength() <= 1) {
       noteIconNode.src = chrome.runtime.getURL("icons/notes_24dp.png");
-      noteIconNode.title = "Add details here."
+      noteIconNode.title = "Add notes here."
     }
     else {
       noteIconNode.src = chrome.runtime.getURL("icons/edit_note_24dp.png");
-      noteIconNode.title = "Edit details here"
+      noteIconNode.title = "Edit notes here"
     }
   }
   catch (err) {
@@ -616,13 +647,13 @@ function onCategoryChange(event) {
   updateMainContentView();
 }
 
-function onListItemClick(event, listItemNode) {
+function onListItemClick(event, listItemNode, currentCheckList, index) {
   try {
     if (!listItemNode || !event) {
       throw new Error('Invalid input parameters for List Item Click');
     }
 
-    if (handleNoteVisibility(listItemNode)) {
+    if (handleNoteVisibility(listItemNode, currentCheckList, index)) {
       event.stopPropagation();
       return;
     }
@@ -634,11 +665,11 @@ function onListItemClick(event, listItemNode) {
   }
 }
 
-function handleNoteVisibility(listItemNode) {
+function handleNoteVisibility(listItemNode, currentCheckList, index) {
   const noteElement = listItemNode.querySelector(".veX_checklist_note");
   if (!noteElement.classList.contains("veX_hide_checklist_note")) {
     noteElement.classList.add("veX_hide_checklist_note");
-    updateNoteIcon(listItemNode);
+    updateNoteIcon(listItemNode, currentCheckList, index);
     return true;
   }
   return false;
@@ -693,7 +724,7 @@ function applyNewState(listItemNode, index, newState) {
   }
 }
 
-function onListNoteClick(event, listItemNode) {
+function onListNoteClick(event, listItemNode, currentCheckList, index) {
   try {
     let index = listItemNode.getAttribute('listIndex')
     veXNodes.veXChecklistParentNode.querySelectorAll('.veX_list_item').forEach((listNode) => {
@@ -702,13 +733,13 @@ function onListNoteClick(event, listItemNode) {
       if (curIndex != index) {
         if (!checklistNoteNode.classList.contains("veX_hide_checklist_note")) {
           checklistNoteNode.classList.add("veX_hide_checklist_note");
-          updateNoteIcon(listNode);
+          updateNoteIcon(listNode, currentCheckList, index);
         }
       }
 
     });
     listItemNode.querySelector('.veX_checklist_note').classList.toggle("veX_hide_checklist_note");
-    updateNoteIcon(listItemNode);
+    updateNoteIcon(listItemNode, currentCheckList, index);
     if (!listItemNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
       listItemNode.querySelector('.veX_checklist_note').focus();
     }
@@ -718,17 +749,17 @@ function onListNoteClick(event, listItemNode) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Click", err.message), true);
   }
 }
-function onListNoteChange(event, listItemNode) {
-  try {
-    let listIndex = listItemNode.getAttribute('listIndex');
-    let noteValue = listItemNode.querySelector('.veX_checklist_note').value;
-    veXChecklistItems[veXCurrentCategory.name][listIndex].Note = DOMPurify.sanitize(noteValue);
-    if (event)
-      event.stopPropagation();
-  } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Change", err.message), true);
-  }
-}
+// function onListNoteChange(event, listItemNode) {
+//   try {
+//     let listIndex = listItemNode.getAttribute('listIndex');
+//     let noteValue = listItemNode.querySelector('.veX_checklist_note').value;
+//     veXChecklistItems[veXCurrentCategory.name][listIndex].Note = DOMPurify.sanitize(noteValue);
+//     if (event)
+//       event.stopPropagation();
+//   } catch (err) {
+//     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Change", err.message), true);
+//   }
+// }
 
 async function onTicketTitleChange(change) {
   try {

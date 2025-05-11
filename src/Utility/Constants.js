@@ -55,6 +55,10 @@ const EntityMetaData = {
         'colorHex': '#1365c0'
     }
 }
+const iconUrls = {
+    add: chrome.runtime.getURL("icons/add_24dp_000000.png"),
+    edit: chrome.runtime.getURL("icons/edit_24dp_000000.png")
+  };
 const ChecklistUI = `
 <header class="veX_header veX_banner">
     <div class="veX_logo_container">
@@ -84,10 +88,15 @@ const ChecklistUI = `
         </div>
     </div>
 </div>
-<div class="veX_banner veX_footer">
-    <div class="veX_footer_options">
-        <div class="veX_footer_icon_container veX_leave_comment_btn">
+<div class="veX_banner veX_footer ">
+    <div class="veX_segmented-button">
+        <div class="veX_segment veX_footer_icon_container veX_leave_comment_btn">
+        <img class="material-icons" alt="Leave a new comment" title="Leave a new comment" src="${iconUrls.add}"/>
              <span class="veX_leave_comment_btn_txt">Leave Comment</span> 
+        </div>
+         <div class=" veX_segment veX_footer_icon_container veX_edit_comment_btn">
+         <img class="material-icons" alt="Edit exisiting comment" title="Edit exisiting comment" src="${iconUrls.edit}"/>
+             <span class="veX_edit_comment_btn_txt">Edit Comment</span> 
         </div>
     </div>
 </div>
@@ -116,7 +125,9 @@ const ValueEdgeNodeSelectors = {
     NewCommentBox: "[data-aid='comments-pane-add-new-comment-placeholder-state']",
     InputCommentBox: ".mqm-writing-new-comment-div",
     AddCommentButton: "[ng-click='comments.onAddNewCommentClicked()']",
-    PhaseNode: "[data-aid='entity-life-cycle-widget-phase']"
+    PhaseNode: "[data-aid='entity-life-cycle-widget-phase']",
+    CollapseRightSidebar: ".collapsable-panel",
+    CommentsContainer:"comment-lines"
 
 }
 const ErrorMessages = {
@@ -219,26 +230,10 @@ const Notifications = {
 
     ],
     CommentsBoxNotFound: [
-        "Unable to locate the new comment box 🙁",
-        "🤔 Can’t find the comment box. Try again!",
-        "🤔 No comment box detected. Please check and retry!",
-        "❌ Oops! Can’t locate the comment box right now.",
-        "📝 Comment box not found. Is it already open?",
-        "⚠️ Can’t add checklist—no comment box found.",
-        "🔄 No comment input detected. Check if it's already open!",
-        "📝 Can’t post checklist comment box not detected.",
-        "🚀 Checklist failed to post: No comment box detected.",
-        "❌ Error: Unable to locate a comment input box.",
-        "💡No comment box available. Check if one is already open.",
-        "💡Comment box missing. Try refreshing or closing any open ones.",
+        "🤔 Can't add comment — finish or close the one already open."
     ],
     NoChecklistFoundInComments: [
-        "🔍 No checklist found in the comments. Try adding one!",
-        "📝 Hmm… Can’t find a checklist in the comments.",
-        "😅 No checklist here! Maybe try adding one?",
-        "⚠️ No checklist detected in comments. Try creating one!",
-        "⏳ Can’t edit—no checklist found in the comments.",
-        "🤔 No checklist available. Want to add a new one?",
+        "🤔 Hmm… No existing checklist found in the comments. Try adding new one!",
     ],
     ChecklistEditSuccess: [
         "📝 Checklist updated! Review the changes and save.",
@@ -255,47 +250,49 @@ const Notifications = {
         "Oops! Editing is locked, but hey, who doesn’t love a fresh new comment? 😃",
         "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
     ],
-    DoneMessages: {
-        10: [
-            "Let's start the work! 🚀",
-            "Chalo shuru karte hain! 👍",
-            "Babu Rao style mein—‘Chalu kar re baba!’ 😄"
-        ],
-        25: [
-            "Good start! Keep it up! 💪",
-            "Work has begun! Let's go! 🔥",
-            "Kaam toh bas start hua hai... asli mazaa toh ab aayega! 😉",
-            'Abhi toh party shuru hui hai! 🔥' 
-        ],
-        50: [
-            "Half work done! Great going! 👏",
-            "You're doing well! Keep going! 💯",
-            "Aadha kaam ho gaya, 'Bohot hard'! 🔥",
-            "Bas thoda sa push aur – ‘All is well!’ 😄",
-        ],
-        75: [
-            "Almost there! Just a bit left! 😊",
-            "Few tasks left! Keep it up! 🚀",
-            "Picture abhi baaki hai mere dost! 😄",
-             "Bas kuch hi kaam baaki hai, 'Jhakaas' progress! 😄"
-        ],
-        90: [
-            "Last few steps! You got this! 🙌",
-            "Almost done! Just a little more! 🚀",
-            "Final touch left! Finish it well! 😎",
-            "So close! One last push! ✨",
-            "Picture abhi baaki hai mere dost! 😄",
-            "Bas thoda aur! 🎉 'Abhi maza aayega na bhidu!' 😄"
-        ],
-        100: [
-            "DoD completed! Super work! 🥇",
-            "Bhai ne bola karne ka, toh kar diya! 😄",
-            "Yeh kaam dekh ke mummy bhi proud hogi!' 😄",
-            "Kaam khatam – ‘How’s the josh?’ HIGH, Sir! 🫡",
-            "Definition of Done met! 🥇 You're a task master! 🫡"
-        ],
-        "Common": "Good progress! Keep it going! 🚀"
-    }
+    "DoneMessages": {
+    "10": [
+        "Let's start the work! 🚀",
+        "Nice and easy — just getting into the groove! 🎯",
+        "Checklist started — good beginning! ✅"
+    ],
+    "25": [
+        "Good start! Keep it up! 💪",
+        "Work has begun! Let’s roll! 🔥",
+        "This is just the warm-up... the real fun begins now! 😉",
+        "The party’s just getting started! 🔥"
+    ],
+    "50": [
+        "Half the work’s done! Great going! 👏",
+        "You’re crushing it! Keep up the momentum! 🔥",
+        "Midway milestone reached 🚀",
+        "Just a bit more push – 'All is well, remember?' 😄"
+    ],
+    "75": [
+        "Just a few tasks left! You're on fire! 🚀",
+        "Getting close — let’s wrap it up strong! 💪",
+        "Great effort — you're in the final lap! 😄",
+    ],
+    "90": [
+        "Last few steps! You got this! 🙌",
+        "Almost done! Just a little more hustle! 🚀",
+        "Just a final touch! Wrap it up in style! 😎",
+        "So close! One final push! ✨",
+        "Almost there! 🎉 'Now it’s gonna be fun, pal!' 😄",
+        "Just a little more — you're nearly through! 🎉"
+    ],
+    "100": [
+        "DoD completed! Super work! 🥇",
+        "When you said you’d do it – you *actually* did! 😄",
+        "Mission complete – ‘How’s the josh?’ HIGH, Sir! 🫡",
+        "Definition of Done met! 🥇 You’re the boss of tasks! 🫡",
+        "Checklist completed — fantastic work! 🥇",
+        "Great job — everything's marked complete! ✅",
+        "Clean sweep — well done! 🧹"
+    ],
+    "Common": "Good progress! Keep it going! 🚀"
+}
+
 
 }
 
