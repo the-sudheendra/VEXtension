@@ -25,7 +25,7 @@
   You can create your own checklist to match your project needs, or load one from a link (remote URL).
 
 - 📝  **Rich Text Notes on Each Item**  
-  Write notes for each checklist item using a rich text editor — with bold, italics, and links. These notes will appear in the ticket comments.
+  Write notes for each checklist item using a rich text editor. These notes will appear in the ticket comments.
 
 - ✅ **Track Completion in Comments** 
   Add or update finished checklist items in the comments to help track progress and keep a clear record.
@@ -95,7 +95,7 @@
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
 
 
-### Third-Party Libraries
+### Third-Party Libraries Shoutout
 
 This project uses the following open-source libraries:
 
