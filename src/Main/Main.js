@@ -22,6 +22,10 @@ var MutationObservers;
 var Comments;
 // < veX Objects Declarations
 
+/**
+ * Loads necessary modules dynamically using chrome.runtime.getURL and dynamic import.
+ * Ensures modules are loaded only once.
+ */
 // > Loading Modules 
 async function loadModules() {
   let URL = chrome.runtime.getURL("src/Utility/Util.js");
@@ -41,11 +45,18 @@ async function loadModules() {
   if (!Comments)
     Comments = await import(URL);
 }
-
+/**
+ * Initializes the extension by loading modules and setting up the UI and observers.
+ */
 async function initialize() {
   await loadModules();
   veXSetup();
 }
+
+/**
+ * Sets up the initial state of the extension, including creating popup nodes,
+ * initializing UI nodes, and starting the ticket title mutation observer.
+ */
 
 
 function veXSetup() {
@@ -58,6 +69,9 @@ function veXSetup() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup", err.message), true);
   }
 }
+/**
+ * Creates and appends the main popup node to the document body.
+ */
 function setupPopUpNode() {
   veXPopUpNode.id = "veX-PopUp-Container";
   veXPopUpNode.classList.add("veX_pop_deactive");
@@ -65,11 +79,19 @@ function setupPopUpNode() {
   document.body.appendChild(veXPopUpNode);
 }
 
+/**
+ * Creates and appends the popup overlay node to the document body and
+ * adds an event listener to close the popup when the overlay is clicked.
+ */
+
 function setupPopUpOverlay() {
   veXPopUpOverlay.id = "veX-PopUp-Overlay";
   veXPopUpOverlay.addEventListener("click", closeveXPopUp);
   document.body.appendChild(veXPopUpOverlay);
 }
+/**
+ * Initializes references to key UI nodes within the popup for easier access.
+ */
 
 function initVEXNodes() {
   try {
@@ -89,6 +111,10 @@ function initVEXNodes() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Nodes Setup", err.message), true);
   }
 }
+
+/**
+ * Extracts and sets the current ticket information from the page title and other relevant elements.
+ */
 
 function getCurrentTicketInfo(title) {
   try {
@@ -125,6 +151,11 @@ function getCurrentTicketInfo(title) {
   }
 }
 
+/**
+ * Cleans up the ticket title by removing unnecessary suffixes.
+ * @param {string} title The raw ticket title.
+ */
+
 function getTicketTitle(title) {
   try {
     if (title.endsWith("- Core Software Delivery Platform")) {
@@ -136,6 +167,10 @@ function getTicketTitle(title) {
     return title;
   }
 }
+
+/**
+ * Resets the extension's state, including closing the popup, clearing data, and cleaning up observers.
+ */
 
 function veXReset() {
   try {
@@ -157,6 +192,10 @@ function veXReset() {
   }
 }
 
+/**
+ * Initializes the main view of the checklist popup, including header, footer, sidebar, and checklist content.
+ */
+
 async function initView() {
   try {
     await initHeaderView();
@@ -175,6 +214,10 @@ async function initView() {
   }
 }
 
+/**
+ * Initializes the header section of the checklist popup with the logo and ticket title.
+ */
+
 async function initHeaderView() {
   try {
     veXNodes.veXLogo.src = await chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png");
@@ -187,6 +230,10 @@ async function initHeaderView() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Header View initializing", err.message), true);
   }
 }
+
+/**
+ * Initializes the footer section of the checklist popup with comment functionality.
+ */
 async function initFooterView() {
   try {
     // veXPopUpNode.querySelector('.veX_add_comment_icon').src = await chrome.runtime.getURL("icons/add_comment_24.png");
@@ -198,6 +245,10 @@ async function initFooterView() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
   }
 }
+
+/**
+ * Creates a map of phases to categories for filtering the checklist.
+ */
 
 function initPhaseMap() {
   try {
@@ -226,10 +277,18 @@ function initPhaseMap() {
   }
 }
 
+/**
+ * Initializes the styling of the popup based on the ticket's color.
+ */
+
 function initStyle() {
   root.style.setProperty('--veX-ticktColor', veXCurrentTicketInfo.color);
   root.style.setProperty('--veX-fontColorAgainstTicketColor', "#FFFFFF");
 }
+
+/**
+ * Initializes the header section of the sidebar with the completion percentage and ticket phase.
+ */
 
 function initSidebarHeaderView() {
   try {
@@ -241,6 +300,10 @@ function initSidebarHeaderView() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "SideBar Header initializing", err.message), true);
   }
 }
+
+/**
+ * Initializes the phase dropdown in the sidebar with available phases from the phase map.
+ */
 
 function initPhaseDropdownView() {
   try {
@@ -267,6 +330,11 @@ function initPhaseDropdownView() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phase dropdown initializing", err.message), true);
   }
 }
+
+/**
+ * Initializes the category view in the sidebar with buttons for each category.
+ * @param {object} categories The categories object from the checklist data.
+ */
 
 function initCategoriesView(categories) {
   veXNodes.veXDODcategoriesNode.innerHTML = "";
@@ -295,6 +363,10 @@ function initCategoriesView(categories) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Categories View initializing", err.message), true);
   }
 }
+
+/**
+ * Initializes the internal checklist data structure from the fetched checklist information.
+ */
 
 function initChecklist() {
   veXTotalItems = 0;
@@ -328,6 +400,10 @@ function initChecklist() {
   }
 }
 
+/**
+ * Updates the main content view based on the currently selected category.
+ */
+
 function updateMainContentView() {
   try {
     if (Util.isEmptyObject(veXCurrentCategory)) {
@@ -345,6 +421,11 @@ function updateMainContentView() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
   }
 }
+
+/**
+ * Creates an individual checklist item node for display.
+ * @param {object} itemData - Object containing itemValue, index, and currentCheckList.
+ */
 
 function createChecklistItem({ itemValue, index, currentCheckList }) {
   const iconUrls = {
@@ -366,8 +447,8 @@ function createChecklistItem({ itemValue, index, currentCheckList }) {
         </div>
       </div>
     </div>
-    <textarea class="veX_checklist_note veX_hide_checklist_note" 
-      placeholder="Notes..✍️">${sanitizedNote}</textarea>
+    <div id="editor" class="veX_checklist_note veX_hide_checklist_note">
+    </div>
   `;
 
   listItem.innerHTML = listNodeUI;
@@ -376,7 +457,10 @@ function createChecklistItem({ itemValue, index, currentCheckList }) {
   return listItem;
 }
 
-
+/**
+ * Updates the checklist display in the main content area based on the current category and checklist data.
+ * Clears the current checklist display and renders new checklist items.
+ */
 
 function updateChecklist() {
   try {
@@ -410,6 +494,11 @@ function updateChecklist() {
   }
 }
 
+/**
+ * Attaches event listeners to a checklist item node for handling clicks on the item and the note icon.
+ * @param {HTMLElement} listItem The checklist item node.
+ */
+
 function attachChecklistItemListeners(listItem, index) {
   const noteNode = listItem.querySelector('.veX_checklist_note');
   const noteIconNode = listItem.querySelector(".veX_note");
@@ -422,6 +511,12 @@ function attachChecklistItemListeners(listItem, index) {
   });
   noteNode.addEventListener('change', (event) => onListNoteChange(event, listItem));
 }
+
+/**
+ * Updates the visual state of a checklist item based on its current status.
+ * @param {HTMLElement} listItem The checklist item node.
+ * @param {string} state The current state of the checklist item (e.g., 'Completed', 'NotCompleted').
+ */
 
 function updateListItemState(listItem, state, index) {
   const stateHandlers = {
@@ -436,6 +531,11 @@ function updateListItemState(listItem, state, index) {
     handler();
   }
 }
+
+/**
+ * Updates the icon displayed for the note section of a checklist item based on whether a note exists.
+ * @param {HTMLElement} listItem The checklist item node.
+ */
 
 function updateNoteIcon(listItem) {
   try {
@@ -454,6 +554,10 @@ function updateNoteIcon(listItem) {
   }
 }
 
+/**
+ * Fetches the current ticket phase from the ValueEdge UI.
+ */
+
 function getCurrentTicketPhase() {
   try {
     return document.querySelector(Constants.ValueEdgeNodeSelectors.PhaseNode).childNodes[3].innerText;
@@ -462,6 +566,10 @@ function getCurrentTicketPhase() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Fetching Current Ticket Phase", err.message), true);
   }
 }
+
+/**
+ * Calculates and updates the displayed completion percentage.
+ */
 
 function updateDonePercentage() {
   try {
@@ -473,6 +581,12 @@ function updateDonePercentage() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Done Percentage", err.message), true);
   }
 }
+
+/**
+ * Sets the state of a checklist item to 'Not Applicable' and updates its appearance.
+ * @param {HTMLElement} listItemNode The checklist item node.
+ * @param {number} listIndex The index of the item in the current checklist data.
+ */
 
 function setNotApplicableState(listItemNode, listIndex) {
   try {
@@ -487,6 +601,12 @@ function setNotApplicableState(listItemNode, listIndex) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Applicable State", err.message), true);
   }
 }
+
+/**
+ * Sets the state of a checklist item to 'Not Selected' and updates its appearance.
+ * @param {HTMLElement} listItemNode The checklist item node.
+ * @param {number} listIndex The index of the item in the current checklist data.
+ */
 function setNotSelected(listItemNode, listIndex) {
   try {
     listItemNode.classList.remove('veX_selected');
@@ -501,6 +621,12 @@ function setNotSelected(listItemNode, listIndex) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Selected State", err.message), true);
   }
 }
+
+/**
+ * Sets the state of a checklist item to 'Not Completed' and updates its appearance.
+ * @param {HTMLElement} listItemNode The checklist item node.
+ * @param {number} listIndex The index of the item in the current checklist data.
+ */
 function setNotCompleted(listItemNode, listIndex) {
   try {
     listItemNode.classList.remove('veX_completed');
@@ -514,6 +640,12 @@ function setNotCompleted(listItemNode, listIndex) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Completed State", err.message), true);
   }
 }
+
+/**
+ * Sets the state of a checklist item to 'Completed' and updates its appearance.
+ * @param {HTMLElement} listItemNode The checklist item node.
+ * @param {number} listIndex The index of the item in the current checklist data.
+ */
 
 function setCompletedState(listItemNode, listIndex) {
   try {
@@ -535,6 +667,9 @@ function setCompletedState(listItemNode, listIndex) {
 
 
 //->Event Handlers
+/**
+ * Closes the checklist popup and overlay.
+ */
 function closeveXPopUp() {
   try {
     if(!veXPopUpOverlay || !veXPopUpNode) return;
@@ -547,6 +682,10 @@ function closeveXPopUp() {
   }
 
 }
+
+/**
+ * Opens the checklist popup and overlay.
+ */
 
 function openVexPopup() {
   try {
@@ -592,6 +731,11 @@ async function refreshChecklistFromRemoteIfExists() {
   return true;
 }
 
+/**
+ * Handles the click event on a category button in the sidebar, updating the current category
+ * and the main checklist view.
+ * @param {Event} event The click event.
+ */
 
 function onCategoryChange(event) {
   let categoryName = event.target.getAttribute('categoryName');
@@ -603,6 +747,12 @@ function onCategoryChange(event) {
   updateMainContentView();
 }
 
+/**
+ * Handles the click event on a checklist item, toggling its state and updating the completion percentage.
+ * Also handles visibility of the note section.
+ * @param {Event} event The click event.
+ * @param {HTMLElement} listItemNode The checklist item node.
+ */
 function onListItemClick(event, listItemNode) {
   try {
         if (!listItemNode || !event) {
@@ -621,6 +771,11 @@ function onListItemClick(event, listItemNode) {
   }
 }
 
+/**
+ * Handles the visibility of the note section for a checklist item.
+ * @param {HTMLElement} listItemNode The checklist item node.
+ */
+
 function handleNoteVisibility(listItemNode) {
   const noteElement = listItemNode.querySelector(".veX_checklist_note");
   if (!noteElement.classList.contains("veX_hide_checklist_note")) {
@@ -630,6 +785,10 @@ function handleNoteVisibility(listItemNode) {
   }
   return false;
 }
+
+/**
+ * Updates the state of a checklist item based on a click.
+ */
 
 function updateChecklistItemState(listItemNode) {
   const index = listItemNode.getAttribute('listIndex');
@@ -648,6 +807,10 @@ function updateChecklistItemState(listItemNode) {
   updateDonePercentage();
 }
 
+/**
+ * Updates the total completed items count based on the state change of a checklist item.
+ */
+
 function updateCompletionCount(checklistItem) {
   const previousState = Util.getChecklistStatus(checklistItem);
   if (previousState === Constants.CheckListStatus.Completed || 
@@ -655,6 +818,13 @@ function updateCompletionCount(checklistItem) {
     veXTotalCompletedItems = Math.max(0, veXTotalCompletedItems - 1);
   }
 }
+
+/**
+ * Applies the new state to a checklist item, updating its appearance.
+ * @param {HTMLElement} listItemNode The checklist item node.
+ * @param {number} index The index of the item in the current checklist data.
+ * @param {string} newState The new state to apply.
+ */
 
 function applyNewState(listItemNode, index, newState) {
   const stateHandlers = {
@@ -679,6 +849,11 @@ function applyNewState(listItemNode, index, newState) {
     handler();
   }
 }
+
+/**
+ * Handles the click event on the note icon of a checklist item, toggling the visibility of the note editor.
+ * @param {Event} event The click event.
+ */
 
 function onListNoteClick(event, listItemNode) {
   try {
@@ -705,6 +880,11 @@ function onListNoteClick(event, listItemNode) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Click", err.message), true);
   }
 }
+
+/**
+ * Handles the change event on the note editor of a checklist item, updating the note content in the data.
+ * @param {Event} event The change event.
+ */
 function onListNoteChange(event, listItemNode) {
   try {
     let listIndex = listItemNode.getAttribute('listIndex');
@@ -716,6 +896,10 @@ function onListNoteChange(event, listItemNode) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Change", err.message), true);
   }
 }
+
+/**
+ * Handles changes to the ticket title, resetting the state and initializing the checklist based on the new ticket.
+ */
 
 async function onTicketTitleChange(change) {
   try {
@@ -752,6 +936,11 @@ async function onTicketTitleChange(change) {
 }
 
 
+/**
+ * Handles changes to the ticket phase, providing a reminder to update the checklist
+ * if the phase has advanced.
+ * @param {MutationRecord} mutation The mutation record from the observer.
+ */
 
 function onTicketPhaseChange(mutation) {
   try {
@@ -773,6 +962,10 @@ function onTicketPhaseChange(mutation) {
 
 }
 
+/**
+ * Handles the click event on the ticket phase, toggling the visibility of the phase dropdown.
+ */
+
 function OnTicketPhaseClick() {
   try {
     veXPopUpNode.querySelector(".veX_all_phases").classList.toggle("active");
@@ -783,11 +976,19 @@ function OnTicketPhaseClick() {
 
 }
 
+/**
+ * Handles the click event on the "Add to Comments" button, adding the current checklist
+ * to the ticket's comments.
+ */
+
 async function onAddToComments(event) {
   await Comments.addChecklistToComments(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
   if (event)
     event.stopPropagation();
 }
+
+/**
+ * Handles the click event on the "Edit Comment" button, editing the last checklist comment.
 async function onEditComment(event) {
   await Comments.editExistingComment(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
   if (event)
@@ -795,6 +996,11 @@ async function onEditComment(event) {
 }
 //End of Event Handlers
 
+/**
+ * Handles messages received from the service worker, such as opening the popup.
+ * @param {*} request The message received from the service worker.
+ * @param {*} sender The sender of the message.
+ */
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   try {
     switch (request) {
