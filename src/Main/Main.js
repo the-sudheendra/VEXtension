@@ -20,6 +20,7 @@ var DomPurify;
 var Constants;
 var MutationObservers;
 var Comments;
+var Quill;
 // < veX Objects Declarations
 
 /**
@@ -44,6 +45,9 @@ async function loadModules() {
   URL = chrome.runtime.getURL("src/Comments/Comment.js");
   if (!Comments)
     Comments = await import(URL);
+  URL = chrome.runtime.getURL("src/External/Quill-TextEditor/quill.js");
+  if (!Quill)
+    Quill = await import(URL);
 }
 /**
  * Initializes the extension by loading modules and setting up the UI and observers.
@@ -239,7 +243,7 @@ async function initFooterView() {
     // veXPopUpNode.querySelector('.veX_add_comment_icon').src = await chrome.runtime.getURL("icons/add_comment_24.png");
     veXPopUpNode.querySelector(".veX_leave_comment_btn").addEventListener("click", onAddToComments);
     // veXPopUpNode.querySelector(".veX_edit_comment_icon").src = await chrome.runtime.getURL("icons/rate_review_24.png");
-    // veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
+    veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
@@ -434,24 +438,55 @@ function createChecklistItem({ itemValue, index, currentCheckList }) {
   };
 
   const listItem = document.createElement('div');
-  const sanitizedNote = DOMPurify.sanitize(currentCheckList[index].Note);
   const listNodeUI = `
-    <div class="veX_done_check">
+      <div class="veX_done_check">
       <img class="veX_done_icon" alt="checkbox" title="Checklist" src="${iconUrls.checkbox}">
     </div>
     <div class="veX_list_content">
       <div class="veX_list_text">${itemValue}</div>
       <div class="veX_list_actions">
-        <div class="veX_note">
-          <img class="veX_note_icon veX_list_action_icon" alt="checkbox" title="Add details here." src="${iconUrls.notes}">
-        </div>
+          <div class="veX_note">
+            <img class="veX_note_icon veX_list_action_icon" alt="checkbox" title="Add notes here." src="${iconUrls.notes}">
+          </div>
       </div>
     </div>
-    <div id="editor" class="veX_checklist_note veX_hide_checklist_note">
+    <div class="veX_checklist_note veX_hide_checklist_note" >
+      <div id="veX_note_editor">
+      </div>
     </div>
   `;
 
   listItem.innerHTML = listNodeUI;
+  const quillContainer = listItem.querySelector('#veX_note_editor');
+  if (quillContainer) {
+    const quillOptions = {
+      modules: {
+        toolbar: [
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          ['bold', 'italic', 'underline'],
+          ['code-block'],
+          ['link', 'image'],
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+          [{ 'color': [] }, { 'background': [] }]
+        ],
+      },
+      placeholder: 'Notes..✍️',
+      theme: 'snow',
+    };
+
+    if(!currentCheckList[index].RichTextNote)
+    {
+      const quill = new Quill(quillContainer, quillOptions);
+      currentCheckList[index]["RichTextNote"] = quill;
+    }
+    else
+    {
+      const delta = currentCheckList[index]["RichTextNote"].getContents();
+      const quill = new Quill(quillContainer, quillOptions);
+      quill.setContents(delta);
+      currentCheckList[index]["RichTextNote"] = quill;
+    }
+  }
   listItem.classList.add("veX_list_item");
   listItem.setAttribute('listIndex', index);
   return listItem;
@@ -483,9 +518,9 @@ function updateChecklist() {
       });
 
       const currentListState = Util.getChecklistStatus(currentCheckList[index]);
-      updateNoteIcon(listItem);
+      updateNoteIcon(listItem, currentCheckList, index);
       updateListItemState(listItem, currentListState, index);
-      attachChecklistItemListeners(listItem, index);
+      attachChecklistItemListeners(listItem, currentCheckList, index);
       fragment.appendChild(listItem);
     });
     parentNode.appendChild(fragment);
@@ -494,29 +529,13 @@ function updateChecklist() {
   }
 }
 
-/**
- * Attaches event listeners to a checklist item node for handling clicks on the item and the note icon.
- * @param {HTMLElement} listItem The checklist item node.
- */
-
-function attachChecklistItemListeners(listItem, index) {
+function attachChecklistItemListeners(listItem, currentCheckList, index) {
   const noteNode = listItem.querySelector('.veX_checklist_note');
   const noteIconNode = listItem.querySelector(".veX_note");
-  listItem.addEventListener("click", (event) => onListItemClick(event, listItem));
-  noteIconNode.addEventListener("click", (event) => onListNoteClick(event, listItem));
+  listItem.addEventListener("click", (event) => onListItemClick(event, listItem, currentCheckList, index));
+  noteIconNode.addEventListener("click", (event) => onListNoteClick(event, listItem, currentCheckList, index));
   noteNode.addEventListener('click', (event) => event.stopPropagation());
-  noteNode.addEventListener('input', () => {
-    noteNode.style.height = 'auto';
-    noteNode.style.height = `${Math.min(noteNode.scrollHeight, 250)}px`;
-  });
-  noteNode.addEventListener('change', (event) => onListNoteChange(event, listItem));
 }
-
-/**
- * Updates the visual state of a checklist item based on its current status.
- * @param {HTMLElement} listItem The checklist item node.
- * @param {string} state The current state of the checklist item (e.g., 'Completed', 'NotCompleted').
- */
 
 function updateListItemState(listItem, state, index) {
   const stateHandlers = {
@@ -532,21 +551,17 @@ function updateListItemState(listItem, state, index) {
   }
 }
 
-/**
- * Updates the icon displayed for the note section of a checklist item based on whether a note exists.
- * @param {HTMLElement} listItem The checklist item node.
- */
-
-function updateNoteIcon(listItem) {
+function updateNoteIcon(listItem, currentCheckList, index) {
   try {
+
     let noteIconNode = listItem.querySelector(".veX_note_icon");
-    if (listItem.querySelector('.veX_checklist_note').value.trim() == "") {
+    if (currentCheckList[index].RichTextNote.getLength() <= 1) {
       noteIconNode.src = chrome.runtime.getURL("icons/notes_24dp.png");
-      noteIconNode.title = "Add details here."
+      noteIconNode.title = "Add notes here."
     }
     else {
       noteIconNode.src = chrome.runtime.getURL("icons/edit_note_24dp.png");
-      noteIconNode.title = "Edit details here"
+      noteIconNode.title = "Edit notes here"
     }
   }
   catch (err) {
@@ -672,7 +687,7 @@ function setCompletedState(listItemNode, listIndex) {
  */
 function closeveXPopUp() {
   try {
-    if(!veXPopUpOverlay || !veXPopUpNode) return;
+    if (!veXPopUpOverlay || !veXPopUpNode) return;
     veXPopUpOverlay.style.visibility = "hidden";
     veXPopUpNode.classList.remove("veX_pop_active");
     veXPopUpNode.classList.add("veX_pop_deactive");
@@ -691,9 +706,22 @@ function openVexPopup() {
   try {
     veXPopUpOverlay.style.visibility = "visible";
     veXPopUpNode.classList.add("veX_pop_active");
+    centerThePopup(veXPopUpNode);
     veXPopUpNode.classList.remove("veX_pop_deactive");
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Popup", err.message), true);
+  }
+}
+
+function centerThePopup(veXPopUpNode) {
+  try {
+    if (veXPopUpNode) {
+      veXPopUpNode.style.left = "50%";
+      veXPopUpNode.style.top = "50%";
+      veXPopUpNode.style.transform = "translate(-50%, -50%) !important";
+    }
+  } catch {
+
   }
 }
 /**
@@ -718,7 +746,7 @@ async function refreshChecklistFromRemoteIfExists() {
     }
     // Validate and update the checklist
     const veXChecklistInfo = await response.json();
-    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url?.veX_dod_url,veX_loadOnStart?.veX_loadOnStart) === true) {
+    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url?.veX_dod_url, veX_loadOnStart?.veX_loadOnStart) === true) {
     } else {
       return false;
     }
@@ -747,40 +775,29 @@ function onCategoryChange(event) {
   updateMainContentView();
 }
 
-/**
- * Handles the click event on a checklist item, toggling its state and updating the completion percentage.
- * Also handles visibility of the note section.
- * @param {Event} event The click event.
- * @param {HTMLElement} listItemNode The checklist item node.
- */
-function onListItemClick(event, listItemNode) {
+function onListItemClick(event, listItemNode, currentCheckList, index) {
   try {
-        if (!listItemNode || !event) {
-          throw new Error('Invalid input parameters for List Item Click');
-        }
+    if (!listItemNode || !event) {
+      throw new Error('Invalid input parameters for List Item Click');
+    }
 
-        if (handleNoteVisibility(listItemNode)) {
-          event.stopPropagation();
-          return;
-        }
-        updateChecklistItemState(listItemNode);
+    if (handleNoteVisibility(listItemNode, currentCheckList, index)) {
+      event.stopPropagation();
+      return;
+    }
+    updateChecklistItemState(listItemNode);
 
-        event.stopPropagation();
+    event.stopPropagation();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "ListItem Click", err.message), true);
   }
 }
 
-/**
- * Handles the visibility of the note section for a checklist item.
- * @param {HTMLElement} listItemNode The checklist item node.
- */
-
-function handleNoteVisibility(listItemNode) {
+function handleNoteVisibility(listItemNode, currentCheckList, index) {
   const noteElement = listItemNode.querySelector(".veX_checklist_note");
   if (!noteElement.classList.contains("veX_hide_checklist_note")) {
     noteElement.classList.add("veX_hide_checklist_note");
-    updateNoteIcon(listItemNode);
+    updateNoteIcon(listItemNode, currentCheckList, index);
     return true;
   }
   return false;
@@ -793,13 +810,13 @@ function handleNoteVisibility(listItemNode) {
 function updateChecklistItemState(listItemNode) {
   const index = listItemNode.getAttribute('listIndex');
   const currentCheckList = veXChecklistItems[veXCurrentCategory.name];
-  
+
   if (!currentCheckList?.[index]) {
     throw new Error('Invalid checklist item index');
   }
   updateCompletionCount(currentCheckList[index]);
 
-  currentCheckList[index].CursorState.position = 
+  currentCheckList[index].CursorState.position =
     (currentCheckList[index].CursorState.position + 1) % Object.keys(Constants.CheckListStatus).length;
 
   const newState = Util.getChecklistStatus(currentCheckList[index]);
@@ -813,8 +830,8 @@ function updateChecklistItemState(listItemNode) {
 
 function updateCompletionCount(checklistItem) {
   const previousState = Util.getChecklistStatus(checklistItem);
-  if (previousState === Constants.CheckListStatus.Completed || 
-      previousState === Constants.CheckListStatus.NotApplicable) {
+  if (previousState === Constants.CheckListStatus.Completed ||
+    previousState === Constants.CheckListStatus.NotApplicable) {
     veXTotalCompletedItems = Math.max(0, veXTotalCompletedItems - 1);
   }
 }
@@ -850,12 +867,7 @@ function applyNewState(listItemNode, index, newState) {
   }
 }
 
-/**
- * Handles the click event on the note icon of a checklist item, toggling the visibility of the note editor.
- * @param {Event} event The click event.
- */
-
-function onListNoteClick(event, listItemNode) {
+function onListNoteClick(event, listItemNode, currentCheckList, index) {
   try {
     let index = listItemNode.getAttribute('listIndex')
     veXNodes.veXChecklistParentNode.querySelectorAll('.veX_list_item').forEach((listNode) => {
@@ -864,13 +876,13 @@ function onListNoteClick(event, listItemNode) {
       if (curIndex != index) {
         if (!checklistNoteNode.classList.contains("veX_hide_checklist_note")) {
           checklistNoteNode.classList.add("veX_hide_checklist_note");
-          updateNoteIcon(listNode);
+          updateNoteIcon(listNode, currentCheckList, index);
         }
       }
 
     });
     listItemNode.querySelector('.veX_checklist_note').classList.toggle("veX_hide_checklist_note");
-    updateNoteIcon(listItemNode);
+    updateNoteIcon(listItemNode, currentCheckList, index);
     if (!listItemNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
       listItemNode.querySelector('.veX_checklist_note').focus();
     }
@@ -880,22 +892,17 @@ function onListNoteClick(event, listItemNode) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Click", err.message), true);
   }
 }
-
-/**
- * Handles the change event on the note editor of a checklist item, updating the note content in the data.
- * @param {Event} event The change event.
- */
-function onListNoteChange(event, listItemNode) {
-  try {
-    let listIndex = listItemNode.getAttribute('listIndex');
-    let noteValue = listItemNode.querySelector('.veX_checklist_note').value;
-    veXChecklistItems[veXCurrentCategory.name][listIndex].Note = DOMPurify.sanitize(noteValue);
-    if (event)
-      event.stopPropagation();
-  } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Change", err.message), true);
-  }
-}
+// function onListNoteChange(event, listItemNode) {
+//   try {
+//     let listIndex = listItemNode.getAttribute('listIndex');
+//     let noteValue = listItemNode.querySelector('.veX_checklist_note').value;
+//     veXChecklistItems[veXCurrentCategory.name][listIndex].Note = DOMPurify.sanitize(noteValue);
+//     if (event)
+//       event.stopPropagation();
+//   } catch (err) {
+//     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Change", err.message), true);
+//   }
+// }
 
 /**
  * Handles changes to the ticket title, resetting the state and initializing the checklist based on the new ticket.
@@ -912,8 +919,7 @@ async function onTicketTitleChange(change) {
     // If we are using a remote URL to maintain the checklist,
     // then refresh the checklist locally first
     let veX_loadOnStart = await chrome.storage.sync.get("veX_loadOnStart")
-    if(veX_loadOnStart?.veX_loadOnStart===true)
-    {
+    if (veX_loadOnStart?.veX_loadOnStart === true) {
       const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
       if (!remoteRefreshSuccess) {
         return;
@@ -927,7 +933,7 @@ async function onTicketTitleChange(change) {
     if (!Util.isEmptyObject(veXCurrentTicketChecklist)) {
       initChecklist();
       veXIsViewInitialised = initView();
-     // MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
+      // MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
     }
   }
   catch (err) {
@@ -982,7 +988,7 @@ function OnTicketPhaseClick() {
  */
 
 async function onAddToComments(event) {
-  await Comments.addChecklistToComments(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
+  await Comments.addChecklistToComments(veXChecklistItems, Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
   if (event)
     event.stopPropagation();
 }
@@ -990,7 +996,7 @@ async function onAddToComments(event) {
 /**
  * Handles the click event on the "Edit Comment" button, editing the last checklist comment.
 async function onEditComment(event) {
-  await Comments.editExistingComment(veXChecklistItems,Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
+  await Comments.editExistingComment(veXChecklistItems, Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems));
   if (event)
     event.stopPropagation();
 }
