@@ -857,6 +857,9 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
           Util.notify(Util.getRandomMessage(Constants.ErrorMessages.SomethingWentWrong), Constants.NotificationType.Error, true);
 
         break;
+        case "sendToAviator":
+        alert("Received message to send to Aviator");
+        break;
     }
   }
   catch (err) {

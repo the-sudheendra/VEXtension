@@ -2,7 +2,14 @@ async function onInstalled() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'veXDoneCheckListMenu',
-      title: 'VE Checklist',
+      title: '✅ Checklist',
+      documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
+      contexts: ['page']
+    }
+    );
+    chrome.contextMenus.create({
+      id: 'sendToAviatorMenu',
+      title: '✨ Aviator Prompts',
       documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
       contexts: ['page']
     }
@@ -20,6 +27,11 @@ function onContextMenuClick(info, tab) {
       chrome.tabs.sendMessage(tabs[0].id, "openVexPopup").catch((err) => {
         console.error(err, "It seems the extension was refreshed. Please refresh the current ValueEdge tab and try again.");
       })
+    });
+  } else if (info.menuItemId === "sendToAviatorMenu") {
+    console.log("Send to Aviator menu item clicked");
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, "sendToAviator");
     });
   }
 }

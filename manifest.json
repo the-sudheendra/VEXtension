@@ -1,5 +1,5 @@
 {
-  "name": "VE Checklist",
+  "name": "VE Assist",
   "description": "Checklist Tool for OpenText ValueEdge",
   "version": "2.3.7",
   "manifest_version": 3,
@@ -7,13 +7,13 @@
   "content_scripts": [
     {
       "matches": ["https://*.saas.microfocus.com/*"],
-      "js": ["./src/Main/Main.js","src/External/Quill-TextEditor/quill.js"],
+      "js": ["./src/Main/Main.js","src/External/Quill-TextEditor/quill.js","src/Utility/aviator_integration.js"],
       "css": ["./src/Main/Main.css", "./src/Notification/Notification.css","./src/External/Quill-TextEditor/quill.snow.css"]
     }
   ],
   "action": {
     "default_popup": "./src/Popup/Popup.html",
-    "default_title": "VE Checklist"
+    "default_title": "VE Assist"
   },
   "background": {
     "service_worker": "./src/Utility/Background.js",
@@ -53,7 +53,8 @@
         "icons/disabled.png",
         "icons/sync_24.png",
         "icons/add_24dp_000000.png",
-        "icons/edit_24dp_000000.png"
+        "icons/edit_24dp_000000.png",
+        "src/Utility/aviator_integration.js"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
