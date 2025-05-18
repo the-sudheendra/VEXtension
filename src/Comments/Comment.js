@@ -94,7 +94,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
     if (commentSubmitButton) {
       commentSubmitButton.removeAttribute("disabled");
       await Util.delay(500);
-      closeveXPopUp();
+      closeChecklistPopup();
       commentSubmitButton.click();
       Util.notify(`${donePercentage}% done. ${Util.getDoneMessage(donePercentage)}`, Constants.NotificationType.Success, true);
       await doCelebration(donePercentage);
@@ -157,7 +157,7 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
     }
     commentSubmitButton.removeAttribute("disabled");
     await Util.delay(500);
-    closeveXPopUp();
+    closeChecklistPopup();
     commentSubmitButton.click();
     Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistEditSuccess), Constants.NotificationType.Success, true);
     await doCelebration(donePercentage);

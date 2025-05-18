@@ -57,8 +57,10 @@ const EntityMetaData = {
 }
 const iconUrls = {
     add: chrome.runtime.getURL("icons/add_24dp_000000.png"),
-    edit: chrome.runtime.getURL("icons/edit_24dp_000000.png")
-  };
+    edit: chrome.runtime.getURL("icons/edit_24dp_000000.png"),
+    send: chrome.runtime.getURL("icons/send_24.png"),
+    expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png")
+};
 const ChecklistUI = `
 <header class="veX_header veX_banner">
     <div class="veX_logo_container">
@@ -102,6 +104,16 @@ const ChecklistUI = `
 </div>
 `;
 
+const PromptsUI = `
+    <h2 class="veX_prompts_header">
+      Aviator Prompts
+      <span class="material-icons close-btn" style="cursor:pointer;">close</span>
+    </h2>
+    <div id="veX_prompts_list_container">
+      <h3>No prompts available. Please upload prompt.json.</h3>
+    </div>
+`;
+
 const VEChecklistNodeSelectors = {
     root: ":root",
     UITitle: '.veX_ui_title',
@@ -127,7 +139,7 @@ const ValueEdgeNodeSelectors = {
     AddCommentButton: "[ng-click='comments.onAddNewCommentClicked()']",
     PhaseNode: "[data-aid='entity-life-cycle-widget-phase']",
     CollapseRightSidebar: ".collapsable-panel",
-    CommentsContainer:"comment-lines"
+    CommentsContainer: "comment-lines"
 
 }
 const ErrorMessages = {
@@ -251,47 +263,47 @@ const Notifications = {
         "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
     ],
     "DoneMessages": {
-    "10": [
-        "Let's start the work! 🚀",
-        "Nice and easy — just getting into the groove! 🎯",
-        "Checklist started — good beginning! ✅"
-    ],
-    "25": [
-        "Good start! Keep it up! 💪",
-        "Work has begun! Let’s roll! 🔥",
-        "This is just the warm-up... the real fun begins now! 😉",
-        "The party’s just getting started! 🔥"
-    ],
-    "50": [
-        "Half the work’s done! Great going! 👏",
-        "You’re crushing it! Keep up the momentum! 🔥",
-        "Midway milestone reached 🚀",
-        "Just a bit more push – 'All is well, remember?' 😄"
-    ],
-    "75": [
-        "Just a few tasks left! You're on fire! 🚀",
-        "Getting close — let’s wrap it up strong! 💪",
-        "Great effort — you're in the final lap! 😄",
-    ],
-    "90": [
-        "Last few steps! You got this! 🙌",
-        "Almost done! Just a little more hustle! 🚀",
-        "Just a final touch! Wrap it up in style! 😎",
-        "So close! One final push! ✨",
-        "Almost there! 🎉 'Now it’s gonna be fun, pal!' 😄",
-        "Just a little more — you're nearly through! 🎉"
-    ],
-    "100": [
-        "DoD completed! Super work! 🥇",
-        "When you said you’d do it – you *actually* did! 😄",
-        "Mission complete – ‘How’s the josh?’ HIGH, Sir! 🫡",
-        "Definition of Done met! 🥇 You’re the boss of tasks! 🫡",
-        "Checklist completed — fantastic work! 🥇",
-        "Great job — everything's marked complete! ✅",
-        "Clean sweep — well done! 🧹"
-    ],
-    "Common": "Good progress! Keep it going! 🚀"
-}
+        "10": [
+            "Let's start the work! 🚀",
+            "Nice and easy — just getting into the groove! 🎯",
+            "Checklist started — good beginning! ✅"
+        ],
+        "25": [
+            "Good start! Keep it up! 💪",
+            "Work has begun! Let’s roll! 🔥",
+            "This is just the warm-up... the real fun begins now! 😉",
+            "The party’s just getting started! 🔥"
+        ],
+        "50": [
+            "Half the work’s done! Great going! 👏",
+            "You’re crushing it! Keep up the momentum! 🔥",
+            "Midway milestone reached 🚀",
+            "Just a bit more push – 'All is well, remember?' 😄"
+        ],
+        "75": [
+            "Just a few tasks left! You're on fire! 🚀",
+            "Getting close — let’s wrap it up strong! 💪",
+            "Great effort — you're in the final lap! 😄",
+        ],
+        "90": [
+            "Last few steps! You got this! 🙌",
+            "Almost done! Just a little more hustle! 🚀",
+            "Just a final touch! Wrap it up in style! 😎",
+            "So close! One final push! ✨",
+            "Almost there! 🎉 'Now it’s gonna be fun, pal!' 😄",
+            "Just a little more — you're nearly through! 🎉"
+        ],
+        "100": [
+            "DoD completed! Super work! 🥇",
+            "When you said you’d do it – you *actually* did! 😄",
+            "Mission complete – ‘How’s the josh?’ HIGH, Sir! 🫡",
+            "Definition of Done met! 🥇 You’re the boss of tasks! 🫡",
+            "Checklist completed — fantastic work! 🥇",
+            "Great job — everything's marked complete! ✅",
+            "Clean sweep — well done! 🧹"
+        ],
+        "Common": "Good progress! Keep it going! 🚀"
+    }
 
 
 }
@@ -333,4 +345,16 @@ const NotificationType = {
     Success: 4
 }
 
-export { EntityMetaData, ChecklistUI, ValueEdgeNodeSelectors, VEChecklistNodeSelectors, ErrorMessages, Notifications, VEPhaseOrder, CheckListStatus, NotificationType };
+export {
+    EntityMetaData,
+    ChecklistUI,
+    ValueEdgeNodeSelectors,
+    VEChecklistNodeSelectors,
+    ErrorMessages,
+    Notifications,
+    VEPhaseOrder,
+    CheckListStatus,
+    NotificationType,
+    PromptsUI,
+    iconUrls
+};

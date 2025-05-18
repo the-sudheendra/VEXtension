@@ -1,22 +1,22 @@
 {
   "name": "VE Assist",
   "description": "Checklist Tool for OpenText ValueEdge",
-  "version": "2.3.7",
+  "version": "3.0.0",
   "manifest_version": 3,
   "permissions": ["contextMenus", "storage"],
   "content_scripts": [
     {
       "matches": ["https://*.saas.microfocus.com/*"],
-      "js": ["./src/Main/Main.js","src/External/Quill-TextEditor/quill.js","src/Utility/aviator_integration.js"],
-      "css": ["./src/Main/Main.css", "./src/Notification/Notification.css","./src/External/Quill-TextEditor/quill.snow.css"]
+      "js": ["src/Main/Main.js","src/External/Quill/quill.js"],
+      "css": ["src/Main/Main.css", "src/Notification/Notification.css","src/External/Quill/quill.snow.css","src/AviatorIntegrations/PromptModal.css"]
     }
   ],
   "action": {
-    "default_popup": "./src/Popup/Popup.html",
+    "default_popup": "/src/Popup/Popup.html",
     "default_title": "VE Assist"
   },
   "background": {
-    "service_worker": "./src/Utility/Background.js",
+    "service_worker": "/src/Utility/Background.js",
     "type": "module"
   },
   "web_accessible_resources": [
@@ -35,7 +35,7 @@
         "src/Utility/MutationObservers.js",
         "src/Comments/Comment.js",
         "src/External/purify.min.js",
-        "src/External/Quill-TextEditor/quill.js",
+        "src/External/Quill/quill.js",
         "src/Notification/Notification.js",
         "icons/check_circle_24.png",
         "icons/error_24.png",
@@ -54,7 +54,10 @@
         "icons/sync_24.png",
         "icons/add_24dp_000000.png",
         "icons/edit_24dp_000000.png",
-        "src/Utility/aviator_integration.js"
+        "icons/send_24.png",
+        "icons/keyboard_arrow_down_24.png",
+        "src/AviatorIntegrations/PromptModal.js",
+        "src/Utility/SchemaValidators.js"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
@@ -66,7 +69,7 @@
     "128": "icons/fact_check_128.png"
   },
   "options_ui": {
-    "page": "./src/Options/Options.html",
+    "page": "/src/Options/Options.html",
     "open_in_tab": true
   }
 }

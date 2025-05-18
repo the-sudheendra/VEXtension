@@ -21,12 +21,6 @@ function notify(message, type = Constants.NotificationType.Info, display = false
 }
 
 
-/**
- * An util method to show an error message.
- * @param {*} error the exception object
- * @param {*} info the message string to show/log
- * @param {*} display whether to display the message or not
- */
 function onError(error, info = "Something went wrong", display = false) {
   console.error(`Error From VE-Checklist: ${error?.message}`);
   console.dir(error);
@@ -67,104 +61,41 @@ function getRandomMessage(notification) {
   return notification[Math.floor(Math.random() * notification.length)];
 }
 
-/**
- * This function returns a string that says whether
- * we have either stored the JSON locally or we
- * are depending on a remote URL where we fetch
- * the JSON from.
- * @returns {string} either "local" or "url"
- */
+
 async function getChecklistMode() {
-	const veX_dod_url = await chrome.storage.sync.get("veX_dod_url");
-	if (veX_dod_url?.veX_dod_url && veX_dod_url.veX_dod_url != "") {
-		return "url";
-	} else {
-		return "local";
-	}
+  const veXChecklistUrl = await chrome.storage.sync.get("veXChecklistUrl");
+  if (veXChecklistUrl?.veXChecklistUrl && veXChecklistUrl.veXChecklistUrl != "") {
+    return "url";
+  } else {
+    return "local";
+  }
 }
 
-function validateChecklist(veXChecklistInfo) {
-    try {
-        if (isEmptyObject(veXChecklistInfo)) {
-            notify("The checklist JSON file appears to be empty. Please upload a valid file to continue 👀", "warning", true);
-            return false;
-        }
-        let entitiesArray = Object.keys(veXChecklistInfo);
-        for (let i = 0; i < entitiesArray.length; i++) {
-            let ticketEntityName = entitiesArray[i];
-            let entityChecklist = veXChecklistInfo[ticketEntityName];
-            if (isEmptyObject(entityChecklist)) {
-                notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, "warning", true);
-                return false;
-            }
-            if (!entityChecklist.hasOwnProperty("categories")) {
-                notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
-                return false;
-            }
-            if (isEmptyObject(entityChecklist["categories"])) {
-                notify(`No categories are specified in the '${ticketEntityName}'. Please add atleast one, as it is a mandatory field.`, "warning", true);
-                return false;
-            }
-            if (validateChecklistCategories(entityChecklist["categories"], ticketEntityName) === false)
-                return false;
-        }
-        return true;
-    } catch (err) {
-        onError(err, undefined, true);
-        return false;
-    }
-}
 
-function validateChecklistCategories(ChecklistCategories, ticketEntityName) {
-    try {
-        let categories = Object.keys(ChecklistCategories);
-        for (let i = 0; i < categories.length; i++) {
-            let categoryName = categories[i];
-            if (!ChecklistCategories[categoryName].hasOwnProperty("checklist")) {
-                notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
-                return false;
-            }
-            if (isEmptyArray(ChecklistCategories[categoryName].checklist)) {
-                notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
-                return false;
-            }
-            if (ChecklistCategories[categoryName].checklist.every(list => list.length >= 1) === false) {
-                notify(`One of the checklist item is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add it, as it is required."`, "warning", true);
-                return false;
-            }
-        }
-        return true;
-    } catch (err) {
-        onError(err, undefined, true);
-        return false;
-    }
-}
-
-async function saveChecklist(veXChecklistInfo, veX_dod_url,loadOnStart) {
+async function saveChecklist(veXChecklistInfo, veXChecklistUrl, loadOnStart) {
   try {
-      await chrome.storage.sync.clear();
-      let entites = Object.keys(veXChecklistInfo);
-      for (let i = 0; i < entites.length; i++) {
-          let ticketEntityName = entites[i];
-          let keyValue = {};
-          if (isEmptyObject(veXChecklistInfo[ticketEntityName]))
-              return false;
-          keyValue[ticketEntityName] = veXChecklistInfo[ticketEntityName];
-          await chrome.storage.sync.set(keyValue);
-      }
-      // re-save the URL as well if it was passed
-      if(veX_dod_url) {
-        await chrome.storage.sync.set({"veX_dod_url": veX_dod_url});
-      }
-      if(loadOnStart===true || loadOnStart===false)
-      {
-        await chrome.storage.sync.set({ "veX_loadOnStart": loadOnStart });
-      }
-      return true;
+    await chrome.storage.sync.clear();
+    let entites = Object.keys(veXChecklistInfo);
+    for (let i = 0; i < entites.length; i++) {
+      let ticketEntityName = entites[i];
+      let keyValue = {};
+      if (isEmptyObject(veXChecklistInfo[ticketEntityName]))
+        return false;
+      keyValue[ticketEntityName] = veXChecklistInfo[ticketEntityName];
+      await chrome.storage.sync.set(keyValue);
+    }
+    // re-save the URL as well if it was passed
+    if (veXChecklistUrl) {
+      await chrome.storage.sync.set({ "veXChecklistUrl": veXChecklistUrl });
+    }
+    if (loadOnStart === true || loadOnStart === false) {
+      await chrome.storage.sync.set({ "veXLoadOnStart": loadOnStart });
+    }
+    return true;
   }
   catch (err) {
-      onError(err, undefined, true);
-      return false;
+    onError(err, undefined, true);
+    return false;
   }
 }
 function cleanupMutationObserver(observer) {
@@ -207,11 +138,11 @@ function makeElementDraggable(element) {
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
-    let targetElement=document.getElementById("veX-PopUp-Container");
+    let targetElement = document.getElementById("veX_checklist_popup_container");
     // set the element's new position:
     targetElement.style.top = (targetElement.offsetTop - pos2) + "px";
     targetElement.style.left = (targetElement.offsetLeft - pos1) + "px";
-    
+
   }
 
   function closeDragElement(e) {
@@ -221,8 +152,7 @@ function makeElementDraggable(element) {
 }
 
 function getDoneMessage(percentage) {
-  try
-  {
+  try {
     if (percentage < 0 || percentage > 100) {
       return "";
     }
@@ -239,11 +169,10 @@ function getDoneMessage(percentage) {
     } else if (percentage == 100) {
       return getRandomMessage(Constants.Notifications.DoneMessages[100]);
     }
-  }catch
-  {
-   return "Good progress! Keep it going! 🚀";
+  } catch {
+    return "Good progress! Keep it going! 🚀";
   }
- 
+
 }
 function createCelebration() {
   // Create a container for the celebration elements
@@ -282,12 +211,12 @@ function createCelebration() {
   for (let i = 0; i < 100; i++) {
     createConfetti();
   }
-  
-    // Add keyframes for confetti animation if not already present
-    if (!document.getElementById('confetti-keyframes')) {
-        const style = document.createElement('style');
-        style.id = 'confetti-keyframes';
-        style.innerHTML = `
+
+  // Add keyframes for confetti animation if not already present
+  if (!document.getElementById('confetti-keyframes')) {
+    const style = document.createElement('style');
+    style.id = 'confetti-keyframes';
+    style.innerHTML = `
           @keyframes confetti-fall {
             0% {
               transform: translateY(0) rotate(0deg);
@@ -299,16 +228,69 @@ function createCelebration() {
             }
           }
         `;
-        document.head.appendChild(style);
-    }
+    document.head.appendChild(style);
+  }
 
-  // Remove the celebration after a few seconds (e.g., 5 seconds)
   setTimeout(() => {
     celebrationContainer.remove();
   }, 5000);
 }
 
+function isChecklistPopupOpen() {
+  let container = document.querySelector("#veX_checklist_popup_container");
+  if (container) {
+    return container.classList.contains("veX_checklist_popup_active");
+  }
+  return false;
+}
+function isPromptsPopupOpen() {
+  let container = document.querySelector("#veX_prompts_popup_container");
+  if (container) {
+    return container.classList.contains("veX_checklist_popup_active");
+  }
+  return false;
+}
+function showLoading() {
+  let loader = document.getElementById("veX_loader");
+  if (loader)
+      loader.style.display = "block";
+}
+function hideLoading() {
+  let loader = document.getElementById("veX_loader");
+  if (loader)
+      loader.style.display = "none";
+}
+
+function setNativeValue(element, value) {
+  const lastValue = element.value;
+  const prototype = Object.getPrototypeOf(element);
+  const descriptor = Object.getOwnPropertyDescriptor(prototype, 'value');
+
+  descriptor.set.call(element, value);
+
+  const event = new Event('input', { bubbles: true });
+  element.dispatchEvent(event);
+}
 
 export {
-  onError, notify, isEmptyArray, isEmptyObject, delay, formatMessage, getChecklistStatus, getRandomMessage, getChecklistMode, validateChecklist, saveChecklist, cleanupMutationObserver, calculateCompletionPercentage,makeElementDraggable,getDoneMessage,createCelebration
+  onError,
+  notify,
+  isEmptyArray,
+  isEmptyObject,
+  delay,
+  formatMessage,
+  getChecklistStatus,
+  getRandomMessage,
+  getChecklistMode,
+  saveChecklist,
+  cleanupMutationObserver,
+  calculateCompletionPercentage,
+  makeElementDraggable,
+  getDoneMessage,
+  createCelebration,
+  isChecklistPopupOpen,
+  isPromptsPopupOpen,
+  showLoading,
+  hideLoading,
+  setNativeValue
 }
