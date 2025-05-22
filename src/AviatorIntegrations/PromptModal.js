@@ -1,6 +1,8 @@
 var veXPromptsPopupNode = document.createElement("div");
 var veXPromptsPopupOverlay = document.createElement("div");
 
+
+
 async function loadModules() {
   let URL = chrome.runtime.getURL("src/Utility/Util.js");
   if (!Util)
@@ -13,26 +15,9 @@ async function loadModules() {
 
 const prompts = [
   {
-    "name": "Clarify Requirements",
-    "description": "Identify vague or unclear parts of the ticket and suggest clarifying questions.",
-    "template": "Review the following description: '{description}'. Identify any ambiguous or unclear requirements and suggest clarifying questions the team should ask.",
-    "variables": [
-      { "name": "description", "selector": "#ticket-description" }
-    ]
-  },
-  {
     "name": "Generate Subtasks",
     "description": "Generate a checklist of subtasks needed to complete the ticket.",
     "template": "Given the ticket titled '{title}' with description '{description}', generate a list of technical or process-related subtasks.",
-    "variables": [
-      { "name": "title", "selector": "#ticket-title" },
-      { "name": "description", "selector": "#ticket-description" }
-    ]
-  },
-  {
-    "name": "Draft User-Facing Release Note",
-    "description": "Create a short, clear release note for end users based on the ticket.",
-    "template": "Write a user-facing release note for the following feature or fix:\nTitle: {title}\nDescription: {description}",
     "variables": [
       { "name": "title", "selector": "#ticket-title" },
       { "name": "description", "selector": "#ticket-description" }
@@ -100,13 +85,57 @@ const prompts = [
     ]
   },
   {
-    "name": "Analyze Defect Root Cause",
-    "description": "Make sense of the defect description and suggest possible root causes.",
-    "template": "Validate my explanation of the defect root cause {{rootCause}}",
+    "name": "Summarize Ticket for Standup",
+    "description": "Generate a quick summary of the ticket suitable for a daily standup update.",
+    "template": "Provide a concise summary of the ticket for a daily standup:\nTitle: {{title}}\nDescription: {{description}}",
     "variables": [
-      { "name": "rootCause", "selector": "#ticket-root-cause" },
+      { "name": "title", "selector": "#ticket-title" },
+      { "name": "description", "selector": "#ticket-description" }
     ]
-  }
+  },
+  {
+    "name": "Generate Acceptance Criteria",
+    "description": "Suggest detailed and testable acceptance criteria based on the ticket description.",
+    "template": "Based on the following ticket description, suggest detailed and testable acceptance criteria:\n'{{description}}'",
+    "variables": [
+      { "name": "description", "selector": "#ticket-description" }
+    ]
+  },
+    {
+    "name": "Suggest Documentation Update",
+    "description": "Propose documentation that might need updates based on the change described.",
+    "template": "Based on the following ticket, suggest if any documentation (e.g. user guides, API references) needs updating:\n'{{description}}'",
+    "variables": [
+      { "name": "description", "selector": "#ticket-description" }
+    ]
+  },
+    {
+    "name": "Check for Definition of Ready",
+    "description": "Verify if the ticket meets Definition of Ready (DoR) and suggest improvements if not.",
+    "template": "Evaluate whether this ticket is ready for development based on common Definition of Ready criteria. Suggest improvements if any are missing.\n'{{description}}'",
+    "variables": [
+      { "name": "description", "selector": "#ticket-description" }
+    ]
+  },
+    {
+    "name": "Evaluate Story Size",
+    "description": "Assess if the story is too large and could be split.",
+    "template": "Based on the following ticket, assess whether the story might be too large or complex and suggest if it could be split:\nTitle: {{title}}\nDescription: {{description}}",
+    "variables": [
+      { "name": "title", "selector": "#ticket-title" },
+      { "name": "description", "selector": "#ticket-description" }
+    ]
+  },
+  {
+  "name": "Check Root Cause Summary",
+  "description": "Verify if the root cause summary is logical, coherent, and relevant to the issue. Suggest improvements if it is unclear or incomplete.",
+  "template": "Carefully review the following root cause summary and determine:\n1. Does it logically explain the underlying cause of the issue?\n2. Is it specific, clear, and technically sound?\n3. Does it align with the issue title and description?\n\nIf the summary is vague, confusing, or misaligned, suggest modifications to improve clarity, accuracy, and completeness.\n\nTitle: '{{title}}'\n\nDescription: '{{description}}'\n\nRoot Cause Summary: '{{root_cause}}'",
+  "variables": [
+    { "name": "title", "selector": "#ticket-title" },
+    { "name": "description", "selector": "#ticket-description" },
+    { "name": "root_cause", "selector": "#root-cause-summary" }
+  ]
+}
 ]
 ;
 
@@ -185,6 +214,17 @@ function closePromptsPopup() {
   }
 }
 
+function getInstructionsToAvoidHallucinations(unresolved) {
+  return `
+Instructions:
+- Extract each variable (${unresolved.join(', ')}) exactly as provided in my input
+- Do not infer, guess, or add information not explicitly stated
+- If any variable is missing, unclear, or incomplete, simply respond with:
+  "Please provide the following: ${unresolved.join(', ')}"
+- Only proceed with validation when all required information is provided`
+}
+
+
 const promptListHtml = prompts.map((prompt, index) => `
     <div class="prompt-row" data-index="${index}">
       <div class="prompt-name">${prompt.name}</div>
@@ -232,75 +272,65 @@ function getPromptListHTML(prompts) {
 
 function getPromptRowHTML(prompt, index) {
   return `
-            <div class="prompt-row" data-index="${index}">
-                <div class="prompt-name">${prompt.name}</div>
-                <div class="icons">
-<span class="send-btn" title="Send to AI" data-index="${index}">
+    <div class="prompt-row" data-index="${index}">
+      <div class="prompt-name">${prompt.name}</div>
+      <div class="icons">
+          <span class="send-btn" title="Send to AI" data-index="${index}">
           <img src="${Constants.iconUrls.send}" alt="Send Icon" />
-        </span>
-        <span class="expand-btn" title="Expand" data-index="${index}">
+          </span>
+          <span class="expand-btn" title="Expand" data-index="${index}">
           <img src="${Constants.iconUrls.expand}" alt="Expand Icon" />
-        </span>
-                </div>
-            </div>
-        `;
+          </span>
+      </div>
+    </div>
+    `;
 }
 
 function getPromptExpandHTML(prompt, index) {
   return `
-            <div class="expand-section" id="expand-${index}" style="display: none;">
-                <p><strong>Description:</strong> ${prompt.description}</p>
-                <p><strong>Template:</strong></p>
-                <pre>${prompt.template}</pre>
-                <p><strong>Variables:</strong></p>
-                <ul>
-                    ${prompt.variables
-      .map(
-        (v) =>
-          `<li>${v.name} → <code>${v.selector}</code>${v.attribute ? ` (attr: ${v.attribute})` : ""
-          }</li>`
+<div class="expand-section" id="expand-${index}" style="display: none;">
+   <p><strong>Description:</strong> ${prompt.description}</p>
+   <p><strong>Template:</strong></p>
+   <pre>${prompt.template}</pre>
+   <p><strong>Variables:</strong></p>
+   <ul class="veX-variable-list">
+      ${prompt.variables.map(
+      (v) =>
+      `
+      <li>${v.name}</li>
+      <li><textarea class="veX-variable-input" placeholder="Enter ${v.name} here..."></textarea></li>
+      `
       )
       .join("")}
-                </ul>
-            </div>
-        `;
+   </ul>
+</div>
+`;
+}
+function onExpandBtnClick(btn, index) {
+  const section = document.getElementById(`expand-${index}`);
+  section.style.display = section.style.display === "none" ? "block" : "none";
+  btn.innerText = section.style.display === "none" ? "expand_more" : "expand_less";
+}
+
+function onSendBtnClick(btn, index) {
+  const prompt = prompts[index];
+  const filledPrompt = fillPromptTemplate(prompt.template, prompt.variables);
+  Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
+  document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-send-button']").click();
 }
 
 function attachPromptListEvents(container, prompts) {
   container.querySelectorAll(".expand-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const index = btn.getAttribute("data-index");
-      const section = document.getElementById(`expand-${index}`);
-      section.style.display = section.style.display === "none" ? "block" : "none";
-      btn.innerText = section.style.display === "none" ? "expand_more" : "expand_less";
+      onExpandBtnClick(btn, btn.getAttribute("data-index"));
     });
   });
 
   container.querySelectorAll(".send-btn").forEach( (btn) => {
     btn.addEventListener("click", async() => {
-      const index = btn.getAttribute("data-index");
-      const prompt = prompts[index];
-
-      const filledPrompt = fillPromptTemplate(prompt.template, prompt.variables);
-
-      Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
-      document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-send-button']").click();
-        await Util.delay(500);
-      document.querySelector("[data-aid = 'chat-with-entity-panel-bottom-section-on-submit-btn']").click()
+      onSendBtnClick(btn, btn.getAttribute("data-index"));
     });
   });
-}
-function handleMessagesFromServiceWorker(request, sender, sendResponse) {
-  try {
-    switch (request) {
-      case "openPromptsPopup":
-        openPromptsPopup();
-        break;
-    }
-  }
-  catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Handle Messages From Service Worker", err.message), true);
-  }
 }
 
 function fillPromptTemplate(template, variables) {
@@ -311,17 +341,14 @@ function fillPromptTemplate(template, variables) {
     let value = null;
 
     if (element) {
-      // Use .value for inputs/textareas, fallback to textContent
       if ('value' in element) {
         value = element.value;
       } else {
         value = element.textContent;
       }
 
-      // Clean whitespace
       value = (value || '').trim().replace(/\s+/g, ' ');
 
-      // Replace all {name} with the cleaned value
       const placeholder = new RegExp(`{\\s*${name}\\s*}`, 'g');
       template = template.replace(placeholder, value);
     } else {
@@ -333,18 +360,25 @@ function fillPromptTemplate(template, variables) {
   // Append AI instruction if any variables were unresolved
   if (unresolved.length > 0) {
     const message = `\n\n
-Instructions:
-- Extract each variable (${unresolved.join(', ')}) exactly as provided in my input
-- Do not infer, guess, or add information not explicitly stated
-- If any variable is missing, unclear, or incomplete, simply respond with:
-  "Please provide the following: ${unresolved.join(', ')}"
-- Only proceed with validation when all required information is provided
+    ${getInstructionsToAvoidHallucinations(unresolved)}
 `;
     template += message;
-
   }
 
   return template;
+}
+
+function handleMessagesFromServiceWorker(request, sender, sendResponse) {
+  try {
+    switch (request) {
+      case "openPromptsPopup":
+        openPromptsPopup();
+        break;
+    }
+  }
+  catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Handle Messages From Service Worker", err.message), true);
+  }
 }
 
 chrome.runtime.onMessage.addListener(handleMessagesFromServiceWorker);
