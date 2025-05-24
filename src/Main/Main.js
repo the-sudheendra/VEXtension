@@ -191,9 +191,6 @@ async function initView() {
 
 async function initHeaderView() {
   try {
-    veXNodes.veXLogo.src = await chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png");
-    //veXNodes.veXSyncIcon.src = await chrome.runtime.getURL("icons/sync_24.png");
-    //veXNodes.veXSyncIconContainer.addEventListener('click', Comments.onSyncChecklistComments)
     veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
     Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'));
   }

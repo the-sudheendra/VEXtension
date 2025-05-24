@@ -83,6 +83,7 @@ textarea.veX-variable-input{
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   resize: vertical;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  resize: none;
 }
 
 textarea.veX-variable-input:focus {

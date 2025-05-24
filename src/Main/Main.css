@@ -624,3 +624,21 @@
 {
 color: var(--veX-common-fontColor);
 }
+
+
+.veX_header_actions
+{
+  display: block; 
+  margin-top: 10px;
+  padding: 8px 15px; 
+  background-color: var(--veX-successColor); 
+  color: white; 
+  border: none; 
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}

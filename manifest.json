@@ -57,7 +57,9 @@
         "icons/send_24.png",
         "icons/keyboard_arrow_down_24.png",
         "src/AviatorIntegrations/PromptModal.js",
-        "src/Utility/SchemaValidators.js"
+        "src/Utility/SchemaValidators.js",
+        "icons/done_all_24dp_FFFFFF.png",
+        "icons/close_24dp_000000.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }

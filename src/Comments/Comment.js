@@ -44,7 +44,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
       return;
     }
     // Open comment sidebar
-    if(openCommentSideBar()==false)
+    if(Util.openRightSidebar()==false)
     {
       Util.notify("Comment box icon not found in the sidebar. Please try again.", Constants.NotificationType.Error, true);
       return;
@@ -54,9 +54,9 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
     // Click on add new comment box
     let addNewCommentBox = document.querySelector(Constants.ValueEdgeNodeSelectors.NewCommentBox)
     if (!addNewCommentBox) {
-      closeCommentSideBar();
+      Util.closeRightSidebar();
       await Util.delay(500);
-      openCommentSideBar();
+      Util.openRightSidebar();
       await Util.delay(500);
       addNewCommentBox = document.querySelector(Constants.ValueEdgeNodeSelectors.NewCommentBox)
       if(!addNewCommentBox)
@@ -117,7 +117,7 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
       return;
     }
-    if(openCommentSideBar()==false)
+    if(Util.openRightSidebar()==false)
     {
       Util.notify("Comment box icon not found in the sidebar. Please try again.", Constants.NotificationType.Error, true);
       return;
@@ -389,7 +389,7 @@ function onSyncChecklistComments() {
 async function isVexChecklistCommentAvailable() {
     if(!isCommentBarOpen())
     {
-      openCommentSideBar();
+      Util.openRightSidebar();
       await Util.delay(500);
     }
     let commentData = document.querySelector(".veX_checklist_comment_wrapper");
@@ -405,26 +405,6 @@ function isCommentBarOpen()
   return false;
 }
 
-function openCommentSideBar()
-{
-  let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
-
-  if (!rightSidebarCommentButton) {
-    return false;
-  }
-  rightSidebarCommentButton.click();
-  return true;
-}
-
-function closeCommentSideBar()
-{
-  let rightSidebarCollapseBtn = document.querySelector(Constants.ValueEdgeNodeSelectors.CollapseRightSidebar)
-  if (!rightSidebarCollapseBtn) {
-    return false;
-  }
-  rightSidebarCollapseBtn.click();
-  return true;
-}
 
 export {
   getChecklistCommentData, addChecklistToComments, onSyncChecklistComments, editExistingComment

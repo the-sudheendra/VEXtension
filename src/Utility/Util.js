@@ -19,7 +19,18 @@ function notify(message, type = Constants.NotificationType.Info, display = false
   }
   console.info(message);
 }
-
+function waitForElementToBeVisible(element) {
+  return new Promise((resolve, reject) => {
+    const checkVisibility = () => {
+      if (element && element.offsetParent !== null) {
+        resolve(true);
+        return;
+      }
+      setTimeout(checkVisibility, 100);
+    };
+    checkVisibility();
+  });
+}
 
 function onError(error, info = "Something went wrong", display = false) {
   console.error(`Error From VE-Checklist: ${error?.message}`);
@@ -272,6 +283,28 @@ function setNativeValue(element, value) {
   element.dispatchEvent(event);
 }
 
+function openRightSidebar()
+{
+  let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
+
+  if (!rightSidebarCommentButton) {
+    return false;
+  }
+  rightSidebarCommentButton.click();
+  return true;
+}
+
+function closeRightSidebar()
+{
+  let rightSidebarCollapseBtn = document.querySelector(Constants.ValueEdgeNodeSelectors.CollapseRightSidebar)
+  if (!rightSidebarCollapseBtn) {
+    return false;
+  }
+  rightSidebarCollapseBtn.click();
+  return true;
+}
+
+
 export {
   onError,
   notify,
@@ -292,5 +325,7 @@ export {
   isPromptsPopupOpen,
   showLoading,
   hideLoading,
-  setNativeValue
+  setNativeValue,
+  openRightSidebar,
+  closeRightSidebar
 }

@@ -55,21 +55,29 @@ const EntityMetaData = {
         'colorHex': '#1365c0'
     }
 }
-const iconUrls = {
+const checklistIconsUrl = {
     add: chrome.runtime.getURL("icons/add_24dp_000000.png"),
     edit: chrome.runtime.getURL("icons/edit_24dp_000000.png"),
     send: chrome.runtime.getURL("icons/send_24.png"),
-    expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png")
+    expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
+    markAllCompleted: chrome.runtime.getURL("icons/done_all_24dp_FFFFFF.png"),
+    logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png")
 };
+const promptIconsUrl = {
+    send: chrome.runtime.getURL("icons/send_24.png"),
+    expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
+    close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
+}
 const ChecklistUI = `
 <header class="veX_header veX_banner">
     <div class="veX_logo_container">
-        <img class="veX_logo" title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
+        <img class="veX_logo" src="${checklistIconsUrl.logo}" title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
     </div>
     <p class="veX_header_title"></p>
-   <!-- <div class="veX_sync_icon_container">
-        <img class="veX_sync_icon" title="Sync checklist data from existing comment" alt="Sync checklist">
-    </div> -->
+        <div class="veX_header_actions">
+            <img class="veX_mark_all_completed_icon" title="Mark all as completed" alt="Mark all as completed" src="${checklistIconsUrl.markAllCompleted}">
+            <!--<span class="veX_mark_all_completed_txt">Mark all as completed</span>-->
+        </div>
 </header>
 <div class="veX_done_status"></div>
 <div class="veX_content_wrapper">
@@ -86,6 +94,9 @@ const ChecklistUI = `
     </div>
     <div class="veX_main_content">
         <div class="veX_ui_title">No Item</div>
+         <div class="veX_header_actions">
+            <button id="mark-all-completed">Mark all as completed</button> 
+        </div>
         <div class="veX_ui_list_container">
         </div>
     </div>
@@ -93,11 +104,11 @@ const ChecklistUI = `
 <div class="veX_banner veX_footer ">
     <div class="veX_segmented-button">
         <div class="veX_segment veX_footer_icon_container veX_leave_comment_btn">
-        <img class="material-icons" alt="Leave a new comment" title="Leave a new comment" src="${iconUrls.add}"/>
+        <img class="material-icons" alt="Leave a new comment" title="Leave a new comment" src="${checklistIconsUrl.add}"/>
              <span class="veX_leave_comment_btn_txt">Leave Comment</span> 
         </div>
          <div class=" veX_segment veX_footer_icon_container veX_edit_comment_btn">
-         <img class="material-icons" alt="Edit exisiting comment" title="Edit exisiting comment" src="${iconUrls.edit}"/>
+         <img class="material-icons" alt="Edit exisiting comment" title="Edit exisiting comment" src="${checklistIconsUrl.edit}"/>
              <span class="veX_edit_comment_btn_txt">Edit Comment</span> 
         </div>
     </div>
@@ -105,10 +116,11 @@ const ChecklistUI = `
 `;
 
 const PromptsUI = `
-    <h2 class="veX_prompts_header">
-      Aviator Prompts
-      <span class="material-icons close-btn" style="cursor:pointer;">close</span>
-    </h2>
+    <div class="veX_prompts_header">
+      <h2>Aviator Prompts</h2>
+      <img class="veX_close_icon" title="Close" alt="Close" src="${promptIconsUrl.close}">
+    </div>
+    
     <div id="veX_prompts_list_container">
       <h3>No prompts available. Please upload prompt.json.</h3>
     </div>
@@ -133,15 +145,141 @@ const VEChecklistNodeSelectors = {
 const ValueEdgeNodeSelectors = {
     CurrentTicketType: '[ng-if="header.shouldShowEntityLabel"]',
     CurrentTicketId: ".entity-form-document-view-header-entity-id-container",
-    RightSidebarCommentButton: "[data-aid='panel-item-commentsPanel']",
+    RightSidebarCommentButton: ".collapsable-panel",
     NewCommentBox: "[data-aid='comments-pane-add-new-comment-placeholder-state']",
     InputCommentBox: ".mqm-writing-new-comment-div",
     AddCommentButton: "[ng-click='comments.onAddNewCommentClicked()']",
     PhaseNode: "[data-aid='entity-life-cycle-widget-phase']",
     CollapseRightSidebar: ".collapsable-panel",
-    CommentsContainer: "comment-lines"
-
+    CommentsContainer: "comment-lines",
+    AviatorButton:"[data-aid='panel-item-label-aviatorPanel']"
 }
+
+const veXDefaultPrompts = [
+    {
+      "name": "Generate Subtasks",
+      "description": "Generate a checklist of subtasks needed to complete the ticket.",
+      "template": "Given the ticket titled '{title}' with description '{description}', generate a list of technical or process-related subtasks.",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Generate QA Scenarios",
+      "description": "Generate test scenarios and expected outcomes based on the description and acceptance criteria.",
+      "template": "Generate QA test scenarios for the following ticket:\nDescription: {description}\nAcceptance Criteria: {acceptanceCriteria}",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" },
+        { "name": "acceptanceCriteria", "selector": ".acceptance-criteria" }
+      ]
+    },
+    {
+      "name": "Analyze Bug Root Cause",
+      "description": "Review defect description and suggest possible root causes.",
+      "template": "Review the following defect:\nTitle: {title}\nDescription: {description}\nSuggest potential root causes based on the description and steps to reproduce.",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Estimate Task Duration",
+      "description": "Estimate the time or complexity based on the work described.",
+      "template": "Estimate the level of effort and time needed for this task:\n'{description}'",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Customer Update Message",
+      "description": "Generate a short status update to send to a customer about the issue.",
+      "template": "Draft a customer-facing update for the issue titled '{title}' with description '{description}'. Be clear and non-technical.",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Summarize Change Impact",
+      "description": "Analyze the change described and explain what parts of the product could be affected.",
+      "template": "Based on the following change description, summarize potential areas of impact:\n'{description}'",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Write Pull Request Description",
+      "description": "Generate a professional pull request message based on the ticket.",
+      "template": "Write a pull request message for:\nTicket: {ticketId} - {title}\nDetails: {description}",
+      "variables": [
+        { "name": "ticketId", "selector": "#ticket-id", "attribute": "data-ticket-id" },
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Suggest Automation",
+      "description": "Analyze the workflow described and suggest what steps could be automated.",
+      "template": "Based on this workflow description, identify parts that could be automated:\n'{description}'",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Summarize Ticket for Standup",
+      "description": "Generate a quick summary of the ticket suitable for a daily standup update.",
+      "template": "Provide a concise summary of the ticket for a daily standup:\nTitle: {{title}}\nDescription: {{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Generate Acceptance Criteria",
+      "description": "Suggest detailed and testable acceptance criteria based on the ticket description.",
+      "template": "Based on the following ticket description, suggest detailed and testable acceptance criteria:\n'{{description}}'",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+      {
+      "name": "Suggest Documentation Update",
+      "description": "Propose documentation that might need updates based on the change described.",
+      "template": "Based on the following ticket, suggest if any documentation (e.g. user guides, API references) needs updating:\n'{{description}}'",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+      {
+      "name": "Check for Definition of Ready",
+      "description": "Verify if the ticket meets Definition of Ready (DoR) and suggest improvements if not.",
+      "template": "Evaluate whether this ticket is ready for development based on common Definition of Ready criteria. Suggest improvements if any are missing.\n'{{description}}'",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+      {
+      "name": "Evaluate Story Size",
+      "description": "Assess if the story is too large and could be split.",
+      "template": "Based on the following ticket, assess whether the story might be too large or complex and suggest if it could be split:\nTitle: {{title}}\nDescription: {{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+    "name": "Check Root Cause Summary",
+    "description": "Verify if the root cause summary is logical, coherent, and relevant to the issue. Suggest improvements if it is unclear or incomplete.",
+    "template": "Carefully review the following root cause summary and determine:\n1. Does it logically explain the underlying cause of the issue?\n2. Is it specific, clear, and technically sound?\n3. Does it align with the issue title and description?\n\nIf the summary is vague, confusing, or misaligned, suggest modifications to improve clarity, accuracy, and completeness.\n\nTitle: '{{title}}'\n\nDescription: '{{description}}'\n\nRoot Cause Summary: '{{root_cause}}'",
+    "variables": [
+      { "name": "title", "selector": "#ticket-title" },
+      { "name": "description", "selector": "#ticket-description" },
+      { "name": "root_cause", "selector": "#root-cause-summary" }
+    ]
+  }
+  ]
+  ;
 const ErrorMessages = {
     UnHandledException: ["Oh no 🫣! An error in '$0', info: '$1'. Check console logs for more info 👀",
         "Oops! Something went wrong in '$0'. Error: '$1'. See console logs for details.",
@@ -356,5 +494,7 @@ export {
     CheckListStatus,
     NotificationType,
     PromptsUI,
-    iconUrls
+    checklistIconsUrl,
+    promptIconsUrl,
+    veXDefaultPrompts
 };
