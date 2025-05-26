@@ -19,8 +19,7 @@
   --vex-notApplicableColor: #808080; //*fdec83*/
 }
 
- .veX_truncate {
-    display: inline-block;     
+ .veX_truncate { 
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

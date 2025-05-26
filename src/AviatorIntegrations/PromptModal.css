@@ -22,9 +22,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 8px;
+  padding: 5px 10px;
   border-bottom: 1px solid #ddd;
-  cursor: pointer;
 }
 
 .prompt-name {
@@ -83,16 +82,15 @@ textarea.veX-variable-input{
 }
 textarea.veX-variable-input:hover
 {
+  border: 2px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   border-radius: var(--veX-common-borderRadius);
 }
 textarea.veX-variable-input:focus,
 textarea.veX-variable-input:active {
   outline: none;
-  border: 2px solid;
-  border-image: linear-gradient(to right, #6a8eff, #c06cf5, #f26b6b);
-  border-image-slice: 1;
-  animation: borderMove 3s linear infinite;
-  border-radius: var(--veX-common-borderRadius);
+  border: 2px solid var(--veX-ticktColor);
+  border-radius: var(--veX-common-borderRadius) !important;
 }
 /* Gradient header text */
 .gradient-text {
@@ -157,7 +155,7 @@ textarea.veX-variable-input:active {
 }
 
 .veX_prompts_tone_selector:focus {
-  border-color: #6a8eff;
+  border-color: var(--veX-ticktColor);
 }
 
 /* Close icon */
@@ -192,7 +190,17 @@ textarea.veX-variable-input:active {
   align-items: center;
   gap: 0.25rem;
 }
-
+.veX_send_btn
+{
+  padding: 10px;
+  cursor: pointer;
+}
+.expand-btn
+{
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+}
 .veX_prompts_tone_selector {
   position: relative;
   width: 220px;
@@ -235,6 +243,7 @@ textarea.veX-variable-input:active {
   padding: 10px;
   cursor: pointer;
   transition: background 0.2s ease;
+  display: block;
 }
 
 .veX_prompts_tone_selector .veX_dropdown_option:hover {

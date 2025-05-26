@@ -1,6 +1,6 @@
 var veXPromptsPopupNode = document.createElement("div");
 var veXPromptsPopupOverlay = document.createElement("div");
-var currentPromptTone = null;
+var currentPromptTone = "";
 
 
 async function loadModules() {
@@ -26,15 +26,26 @@ async function initialize() {
 
 function initializePromptTonesDropdown() {
   const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
+  const selected = dropdown.querySelector('.veX_dropdown_selected');
+  selected.setAttribute('data-value', "");
+  selected.textContent = "Select Tone";
   const options = dropdown.querySelector('.veX_dropdown_options');
-  Object.keys(promptTones).forEach(tone => {
-    let option = document.createElement('div');
-    option.classList.add('veX_dropdown_option');
-    option.classList.add('veX_truncate');
-    option.setAttribute('data-value', promptTones[tone]);
-    option.setAttribute('title', tone);
-    option.textContent = tone;
-    options.appendChild(option);
+  let toneOptions = Object.keys(promptTones);
+  let option = document.createElement('div');
+  option.classList.add('veX_dropdown_option');
+  option.classList.add('veX_truncate');
+  option.setAttribute('data-value', "");
+  option.setAttribute('title', "None");
+  option.textContent = "None";
+  options.appendChild(option);
+  toneOptions.forEach(tone => {
+      let option = document.createElement('div');
+      option.classList.add('veX_dropdown_option');
+      option.classList.add('veX_truncate');
+      option.setAttribute('data-value', promptTones[tone]);
+      option.setAttribute('title', tone);
+      option.textContent = tone;
+      options.appendChild(option);
   });
 }
 
@@ -66,7 +77,11 @@ function attachToneSelectorEvents() {
       e.stopPropagation();
       selected.innerText = `${option.textContent.trim()}`;
       let target=e.target;
-      currentPromptTone = target.getAttribute('data-value') || option.textContent.trim();
+      if(target.getAttribute('data-value') === ""){
+        currentPromptTone = "";
+      }else{
+        currentPromptTone = target.getAttribute('data-value') || option.textContent.trim();
+      }
       options.classList.remove('veX_show');
     });
   });
@@ -153,7 +168,11 @@ function closePromptsPopup() {
 }
 
 function draftInstructions(unresolved = [], currentPromptTone = '') {
-  let instructions = 'Instructions:\n';
+  let instructions = '';
+
+  if(unresolved.length > 0 || currentPromptTone){
+    instructions = 'Instructions:\n';
+  }
 
   if (unresolved.length > 0) {
     instructions += `- If any of the following required variables are missing: ${unresolved.join(', ')}, prompt the user to provide them.\n`;
@@ -162,7 +181,7 @@ function draftInstructions(unresolved = [], currentPromptTone = '') {
   }
 
   if (currentPromptTone) {
-    instructions += `- Maintain **${currentPromptTone}** tone throughout your response.\n`;
+    instructions += `- Maintain **${promptTones[currentPromptTone] || currentPromptTone}** tone throughout your response.\n`;
   }
 
   return instructions.trim();
@@ -173,7 +192,7 @@ const promptListHtml = prompts.map((prompt, index) => `
     <div class="prompt-row" data-index="${index}">
       <div class="prompt-name">${prompt.name}</div>
       <div class="icons">
-        <span class="send-btn" title="Send to AI" data-index="${index}">
+        <span class="veX_send_btn" title="Send to AI" data-index="${index}">
           <img src="${Constants.checklistIconsUrl.send}" alt="Send Icon" />
         </span>
         <span class="expand-btn" title="Expand" data-index="${index}">
@@ -217,20 +236,21 @@ function getPromptListHTML(prompts) {
 function getPromptRowHTML(prompt, index) {
   return `
     <div class="prompt-row" data-index="${index}">
-      <div class="prompt-name">${prompt.name}</div>
+      <div class="prompt-name">${prompt.name}
+          <span class="expand-btn" title="Expand" data-index="${index}">
+            <img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />
+          </span>
+      </div>
       <div class="icons">
-          <span class="send-btn" title="Send to AI" data-index="${index}">
+          <span class="veX_send_btn" title="Send to AI" data-index="${index}">
           <img src="${Constants.checklistIconsUrl.send}" alt="Send Icon" />
           </span>
-          <span class="expand-btn" title="Expand" data-index="${index}">
-          <img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />
-          </span>
+          
       </div>
     </div>
     `;
 }
-function onVariableChange(event, index, name) {
-  const textarea = event.target;
+function onVariableChange(textarea, index, name) {
   promptVariableData[index][name] = textarea.value;
 }
 function getPromptExpandHTML(prompt, index) {
@@ -245,7 +265,7 @@ function getPromptExpandHTML(prompt, index) {
     (v) =>
       `
       <li>${v.name}</li>
-      <li><textarea class="veX-variable-input veX_selectable" placeholder="Enter ${v.name} here..." data-index="${index}" data-name="${v.name}" onchange="onVariableChange(event,${index})">${promptVariableData[index] || ""}</textarea></li>
+      <li><textarea class="veX-variable-input veX_selectable" placeholder="Enter ${v.name} here..." data-index="${index}" data-name="${v.name}">${promptVariableData[index] || ""}</textarea></li>
       `
   )
       .join("")}
@@ -265,8 +285,9 @@ async function onSendBtnClick(index) {
   const prompt = prompts[index];
   const filledPrompt = draftPromptTemplate(prompt.template,index, prompt.variables, promptVariableData);
   Util.openRightSidebar();
+  await Util.delay(500);
   document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton).click();
-  Util.delay(1000);
+  await Util.delay(500);
   Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
   //document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-send-button']").click();
 }
@@ -282,7 +303,7 @@ function attachPromptListEvents(container, prompts) {
       onVariableChange(element, element.getAttribute("data-index"), element.getAttribute("data-name"));
     });
   });
-  container.querySelectorAll(".send-btn").forEach((btn) => {
+  container.querySelectorAll(".veX_send_btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       onSendBtnClick(btn.getAttribute("data-index"));
     });
@@ -295,16 +316,17 @@ function draftPromptTemplate(template, index, variables, promptVariableData) {
   variables.forEach(({ name, selector }) => {
     const element = document.querySelector(selector);
     let value = null;
-
+    const placeholder = new RegExp(`{\\s*${name}\\s*}`, 'g');
     if (promptVariableData[index] && promptVariableData[index][name] && promptVariableData[index][name].trim() !== '') {
       value = promptVariableData[index][name];
+      template = template.replace(placeholder, value);
     } else if (element) {
       if ('value' in element) {
         value = element.value;
       } else {
         value = element.textContent;
       }
-      const placeholder = new RegExp(`{\\s*${name}\\s*}`, 'g');
+      value = removeExtraSpaces(value);
       template = template.replace(placeholder, value);
     } else {
       value = `${name}`;
@@ -324,7 +346,10 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   try {
     switch (request) {
       case "openPromptsPopup":
-        openPromptsPopup();
+        if (!Util.isEmptyObject(veXCurrentTicketInfo))
+            openPromptsPopup();
+        else if (Util.isEmptyObject(veXCurrentTicketInfo))
+          Util.notify(Util.getRandomMessage(Constants.Notifications.OpenTicketToSeeChecklist), Constants.NotificationType.Info, true)
         break;
     }
   }

@@ -125,9 +125,6 @@ const PromptsUI = `
             <div class="veX_prompts_tone_selector">
                 <div class="veX_dropdown_selected">Conversational</div>
                     <div class="veX_dropdown_options">
-                        <div class="veX_dropdown_option" data-value="Conversational">Conversational</div>
-                        <div class="veX_dropdown_option" data-value="Technical">Technical</div>
-                        <div class="veX_dropdown_option" data-value="Concise">Concise</div>
                     </div>
                 </div>
             </div>
@@ -357,7 +354,7 @@ const veXDefaultPrompts = [
     {
         "name": "Suggest Code Review Improvements",
         "description": "Analyzes a code review ticket and suggests potential areas for improvement based on common patterns or best practices.",
-        "template": "As an AI assistant, analyze the context of this code review Jira ticket. Based on the 'Description' (which may contain code snippets or links) and 'Comments', suggest potential areas for code improvement, common pitfalls, or adherence to best practices (e.g., performance, security, readability, maintainability). Focus on actionable feedback.\n\nCode Review Ticket Title: {{issue.title}}\nCode Review Description: {{issue.description}}\nCode Review Comments: {{issue.comments.all}}",
+        "template": "As an AI assistant, analyze the context of this code review  ticket. Based on the 'Description' (which may contain code snippets or links) and 'Comments', suggest potential areas for code improvement, common pitfalls, or adherence to best practices (e.g., performance, security, readability, maintainability). Focus on actionable feedback.\n\nCode Review Ticket Title: {{ title}}\nCode Review Description: {{ description}}\nCode Review Comments: {{ comments.all}}",
         "variables": [
           { "name": "title", "selector": "#issue-title" },
           { "name": "description", "selector": "#issue-description" },
@@ -367,7 +364,7 @@ const veXDefaultPrompts = [
       {
         "name": "Generate Test Case Scenarios",
         "description": "Generates a set of functional test case scenarios based on a user story or bug description.",
-        "template": "As an AI assistant, generate a list of functional test case scenarios for the following Jira issue. Focus on positive, negative, and edge cases. Include preconditions, steps, and expected results. Use the 'Description' and 'Acceptance Criteria' fields for context.\n\nIssue Title: {{issue.title}}\nIssue Description: {{issue.description}}\nAcceptance Criteria: {{issue.acceptanceCriteria}}",
+        "template": "As an AI assistant, generate a list of functional test case scenarios for the following Jira issue. Focus on positive, negative, and edge cases. Include preconditions, steps, and expected results. Use the 'Description' and 'Acceptance Criteria' fields for context.\n\nIssue Title: {{ title}}\nIssue Description: {{ description}}\nAcceptance Criteria: {{ acceptanceCriteria}}",
         "variables": [
           { "name": "title", "selector": "#issue-title" },
           { "name": "description", "selector": "#issue-description" },
@@ -377,19 +374,19 @@ const veXDefaultPrompts = [
       {
         "name": "Estimate Story Points from Description",
         "description": "Provides a preliminary story point estimate for a user story based on its description and acceptance criteria.",
-        "template": "As an AI assistant, provide a preliminary story point estimate (e.g., 1, 2, 3, 5, 8, 13) for the following Jira User Story. Justify your estimate based on perceived complexity, effort, and uncertainty. Consider the 'Description' and 'Acceptance Criteria'.\n\nUser Story Title: {{issue.title}}\nUser Story Description: {{issue.description}}\nAcceptance Criteria: {{issue.acceptanceCriteria}}",
+        "template": "As an AI assistant, provide a preliminary story point estimate (e.g., 1, 2, 3, 5, 8, 13) for the following Jira User Story. Justify your estimate based on perceived complexity, effort, and uncertainty. Consider the 'Description' and 'Acceptance Criteria'.\n\nUser Story Title: {{ title}}\nUser Story Description: {{ description}}\nAcceptance Criteria: {{ acceptanceCriteria}}",
         "variables": [
-          { "name": "issue.title", "selector": "#issue-title" },
-          { "name": "issue.description", "selector": "#issue-description" },
-          { "name": "issue.acceptanceCriteria", "selector": "#issue-acceptance-criteria" }
+          { "name": " title", "selector": "#issue-title" },
+          { "name": " description", "selector": "#issue-description" },
+          { "name": " acceptanceCriteria", "selector": "#issue-acceptance-criteria" }
         ],
       },
       {
         "name": "Summarize Technical Discussion Thread",
         "description": "Condenses a long Jira comment thread or linked discussion into a concise summary of key decisions, action items, and outstanding questions.",
-        "template": "As an AI assistant, summarize the following technical discussion thread (Jira comments or linked external discussion) into key decisions made, action items assigned, and any remaining open questions or unresolved points. Focus on technical implications.\n\nDiscussion Thread: {{issue.comments.all}}",
+        "template": "As an AI assistant, summarize the following technical discussion thread (Jira comments or linked external discussion) into key decisions made, action items assigned, and any remaining open questions or unresolved points. Focus on technical implications.\n\nDiscussion Thread: {{ comments.all}}",
         "variables": [
-          { "name": "issue.comments.all", "selector": "#issue-comments" }
+          { "name": "comments.all", "selector": "#issue-comments" }
         ]
       }   
 
