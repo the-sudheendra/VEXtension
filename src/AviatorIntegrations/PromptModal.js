@@ -1,6 +1,6 @@
 var veXPromptsPopupNode = document.createElement("div");
 var veXPromptsPopupOverlay = document.createElement("div");
-
+var currentPromptTone = null;
 
 
 async function loadModules() {
@@ -14,6 +14,7 @@ async function loadModules() {
 }
 
 const prompts = Constants.veXDefaultPrompts;
+const promptTones = Constants.veXDefaultPromptsTone;
 
 let promptVariableData = [];
 
@@ -21,6 +22,20 @@ async function initialize() {
   await loadModules();
   veXPromptViewSetup();
   initializePromptVariableData();
+}
+
+function initializePromptTonesDropdown() {
+  const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
+  const options = dropdown.querySelector('.veX_dropdown_options');
+  Object.keys(promptTones).forEach(tone => {
+    let option = document.createElement('div');
+    option.classList.add('veX_dropdown_option');
+    option.classList.add('veX_truncate');
+    option.setAttribute('data-value', promptTones[tone]);
+    option.setAttribute('title', tone);
+    option.textContent = tone;
+    options.appendChild(option);
+  });
 }
 
 function veXPromptViewSetup() {
@@ -37,7 +52,28 @@ function setupPromptsPopupNode() {
   veXPromptsPopupNode.classList.add("veX_prompts_popup_disable");
   veXPromptsPopupNode.innerHTML = Constants.PromptsUI;
   document.body.appendChild(veXPromptsPopupNode);
+  initializePromptTonesDropdown();
+  attachToneSelectorEvents();
   Util.makeElementDraggable(veXPromptsPopupNode.querySelector('.veX_prompts_header'));
+}
+function attachToneSelectorEvents() {
+  const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
+  const selected = dropdown.querySelector('.veX_dropdown_selected');
+  const options = dropdown.querySelector('.veX_dropdown_options');
+  const allOptions = dropdown.querySelectorAll('.veX_dropdown_option');
+  allOptions.forEach(option => {
+    option.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selected.innerText = `${option.textContent.trim()}`;
+      let target=e.target;
+      currentPromptTone = target.getAttribute('data-value') || option.textContent.trim();
+      options.classList.remove('veX_show');
+    });
+  });
+
+  dropdown.addEventListener('click', (e) => {
+      options.classList.toggle('veX_show');
+  });
 }
 function setupPromptsPopupOverlay() {
   veXPromptsPopupOverlay.id = "veX_prompt_popup_overlay";
@@ -46,7 +82,7 @@ function setupPromptsPopupOverlay() {
 }
 function initializePromptList() {
   try {
-    const promptList = veXPromptsPopupNode;
+    const promptList = veXPromptsPopupNode.querySelector("#veX_prompts_list_container");
     renderPromptList(promptList, prompts);
   }
   catch (err) {
@@ -56,10 +92,10 @@ function initializePromptList() {
 
 function initializePromptVariableData() {
   prompts.forEach((promptData, index) => {
-    variables = promptData["variables"];
+    let variables = promptData["variables"];
     promptVariableData[index] = {};
     variables.forEach((variableData) => {
-      promptVariableData[index][variableData["name"]] = extractValueFromElement(variableData["selector"]);
+      promptVariableData[index][variableData["name"]] = extractValueFromElement(variableData["selector"]) || "";
     });
   });
 }
@@ -116,14 +152,20 @@ function closePromptsPopup() {
   }
 }
 
-function getInstructionsToAvoidHallucinations(unresolved) {
-  return `
-Instructions:
-- Extract each variable (${unresolved.join(', ')}) exactly as provided in my input
-- Do not infer, guess, or add information not explicitly stated
-- If any variable is missing, unclear, or incomplete, simply respond with:
-  "Please provide the following: ${unresolved.join(', ')}"
-- Only proceed with validation when all required information is provided`
+function draftInstructions(unresolved = [], currentPromptTone = '') {
+  let instructions = 'Instructions:\n';
+
+  if (unresolved.length > 0) {
+    instructions += `- If any of the following required variables are missing: ${unresolved.join(', ')}, prompt the user to provide them.\n`;
+    instructions += `- Do **not** infer, assume, or fabricate any information not explicitly provided by the user.\n`;
+    instructions += `- Proceed only after all required context and variables are available.\n`;
+  }
+
+  if (currentPromptTone) {
+    instructions += `- Maintain **${currentPromptTone}** tone throughout your response.\n`;
+  }
+
+  return instructions.trim();
 }
 
 
@@ -139,12 +181,12 @@ const promptListHtml = prompts.map((prompt, index) => `
         </span>
       </div>
     </div>
-    <div class="expand-section" id="expand-${index}" style="display: none;">
+    <div class="expand-section gradient-border-left veX_selectable" id="expand-${index}" style="display: none;">
       <p><strong>Description:</strong> ${prompt.description}</p>
       <p><strong>Template:</strong></p>
-      <pre>${prompt.template}</pre>
+      <pre class="veX_selectable">${prompt.template}</pre>
       <p><strong>Variables:</strong></p>
-      <ul>
+      <ul class="veX_selectable">
         ${prompt.variables.map(v =>
   `<li>${v.name} → <code>${v.selector}</code>${v.attribute ? ` (attr: ${v.attribute})` : ''}</li>`
 ).join("")}
@@ -187,13 +229,13 @@ function getPromptRowHTML(prompt, index) {
     </div>
     `;
 }
-function onVariableChange(textarea) {
-  const index = textarea.getAttribute("data-index");
-  promptVariableData[index] = textarea.value;
+function onVariableChange(event, index, name) {
+  const textarea = event.target;
+  promptVariableData[index][name] = textarea.value;
 }
 function getPromptExpandHTML(prompt, index) {
   return `
-<div class="expand-section" id="expand-${index}" style="display: none;">
+<div class="expand-section gradient-border-left veX_selectable" id="expand-${index}" style="display: none;">
    <p><strong>Description:</strong> ${prompt.description}</p>
    <p><strong>Template:</strong></p>
    <pre>${prompt.template}</pre>
@@ -203,7 +245,7 @@ function getPromptExpandHTML(prompt, index) {
     (v) =>
       `
       <li>${v.name}</li>
-      <li><textarea class="veX-variable-input" placeholder="Enter ${v.name} here..." data-index="${index}" onchange="onVariableChange(this)">${promptVariableData[index]}</textarea></li>
+      <li><textarea class="veX-variable-input veX_selectable" placeholder="Enter ${v.name} here..." data-index="${index}" data-name="${v.name}" onchange="onVariableChange(event,${index})">${promptVariableData[index] || ""}</textarea></li>
       `
   )
       .join("")}
@@ -219,9 +261,9 @@ function onExpandBtnClick(btn, index) {
   btn.innerHTML = section.style.display === "none" ? `<img src="${Constants.promptIconsUrl.expand}" alt="Expand Icon" />` : `<img src="${Constants.promptIconsUrl.close}" alt="Close Icon" />`;
 }
 
-async function onSendBtnClick(btn, index) {
+async function onSendBtnClick(index) {
   const prompt = prompts[index];
-  const filledPrompt = fillPromptTemplate(prompt.template, prompt.variables, promptVariableData);
+  const filledPrompt = draftPromptTemplate(prompt.template,index, prompt.variables, promptVariableData);
   Util.openRightSidebar();
   document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton).click();
   Util.delay(1000);
@@ -235,30 +277,33 @@ function attachPromptListEvents(container, prompts) {
       onExpandBtnClick(btn, btn.getAttribute("data-index"));
     });
   });
-
+  container.querySelectorAll(".veX-variable-input").forEach((element) => {
+    element.addEventListener("input", () => {
+      onVariableChange(element, element.getAttribute("data-index"), element.getAttribute("data-name"));
+    });
+  });
   container.querySelectorAll(".send-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      onSendBtnClick(btn, btn.getAttribute("data-index"));
+      onSendBtnClick(btn.getAttribute("data-index"));
     });
   });
 }
 
-function fillPromptTemplate(template, variables, promptVariableData) {
+function draftPromptTemplate(template, index, variables, promptVariableData) {
   const unresolved = [];
 
   variables.forEach(({ name, selector }) => {
     const element = document.querySelector(selector);
     let value = null;
 
-    if (promptVariableData[index]) {
-      value = promptVariableData[index];
+    if (promptVariableData[index] && promptVariableData[index][name] && promptVariableData[index][name].trim() !== '') {
+      value = promptVariableData[index][name];
     } else if (element) {
       if ('value' in element) {
         value = element.value;
       } else {
         value = element.textContent;
       }
-
       const placeholder = new RegExp(`{\\s*${name}\\s*}`, 'g');
       template = template.replace(placeholder, value);
     } else {
@@ -267,13 +312,8 @@ function fillPromptTemplate(template, variables, promptVariableData) {
     }
   });
 
-
-  if (unresolved.length > 0) {
-    const message = `\n\n
-    ${getInstructionsToAvoidHallucinations(unresolved)}
-`;
-    template += message;
-  }
+    const instructions = `\n${draftInstructions(unresolved, currentPromptTone)}`;
+    template += instructions;
 
   return template;
 }

@@ -66,7 +66,8 @@ const checklistIconsUrl = {
 const promptIconsUrl = {
     send: chrome.runtime.getURL("icons/send_24.png"),
     expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
-    close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
+    close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png"),
+    wrong: chrome.runtime.getURL("icons/close_24dp_000000.png")
 }
 const ChecklistUI = `
 <header class="veX_header veX_banner">
@@ -75,7 +76,7 @@ const ChecklistUI = `
     </div>
     <p class="veX_header_title"></p>
         <div class="veX_header_actions">
-            <img class="veX_mark_all_completed_icon" title="Mark all as completed" alt="Mark all as completed" src="${checklistIconsUrl.markAllCompleted}">
+            <!--<img class="veX_mark_all_completed_icon" title="Mark all as completed" alt="Mark all as completed" src="${checklistIconsUrl.markAllCompleted}">-->
             <!--<span class="veX_mark_all_completed_txt">Mark all as completed</span>-->
         </div>
 </header>
@@ -94,9 +95,9 @@ const ChecklistUI = `
     </div>
     <div class="veX_main_content">
         <div class="veX_ui_title">No Item</div>
-         <div class="veX_header_actions">
+         <!-- <div class="veX_header_actions">
             <button id="mark-all-completed">Mark all as completed</button> 
-        </div>
+        </div> -->
         <div class="veX_ui_list_container">
         </div>
     </div>
@@ -117,8 +118,20 @@ const ChecklistUI = `
 
 const PromptsUI = `
     <div class="veX_prompts_header">
-      <h2>Aviator Prompts</h2>
-      <img class="veX_close_icon" title="Close" alt="Close" src="${promptIconsUrl.close}">
+        <h2 class="gradient-text">Aviator Prompts ✨</h2>
+        <div class="veX_prompts_header_actions">
+            <div class="veX_prompts_tone_selector_container">
+            <label>Prompt Tone:</label>
+            <div class="veX_prompts_tone_selector">
+                <div class="veX_dropdown_selected">Conversational</div>
+                    <div class="veX_dropdown_options">
+                        <div class="veX_dropdown_option" data-value="Conversational">Conversational</div>
+                        <div class="veX_dropdown_option" data-value="Technical">Technical</div>
+                        <div class="veX_dropdown_option" data-value="Concise">Concise</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     
     <div id="veX_prompts_list_container">
@@ -157,129 +170,252 @@ const ValueEdgeNodeSelectors = {
 
 const veXDefaultPrompts = [
     {
-      "name": "Generate Subtasks",
-      "description": "Generate a checklist of subtasks needed to complete the ticket.",
-      "template": "Given the ticket titled '{title}' with description '{description}', generate a list of technical or process-related subtasks.",
-      "variables": [
-        { "name": "title", "selector": "#ticket-title" },
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-    {
-      "name": "Generate QA Scenarios",
-      "description": "Generate test scenarios and expected outcomes based on the description and acceptance criteria.",
-      "template": "Generate QA test scenarios for the following ticket:\nDescription: {description}\nAcceptance Criteria: {acceptanceCriteria}",
-      "variables": [
-        { "name": "description", "selector": "#ticket-description" },
-        { "name": "acceptanceCriteria", "selector": ".acceptance-criteria" }
-      ]
-    },
-    {
-      "name": "Analyze Bug Root Cause",
-      "description": "Review defect description and suggest possible root causes.",
-      "template": "Review the following defect:\nTitle: {title}\nDescription: {description}\nSuggest potential root causes based on the description and steps to reproduce.",
-      "variables": [
-        { "name": "title", "selector": "#ticket-title" },
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-    {
-      "name": "Estimate Task Duration",
-      "description": "Estimate the time or complexity based on the work described.",
-      "template": "Estimate the level of effort and time needed for this task:\n'{description}'",
-      "variables": [
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-    {
-      "name": "Customer Update Message",
-      "description": "Generate a short status update to send to a customer about the issue.",
-      "template": "Draft a customer-facing update for the issue titled '{title}' with description '{description}'. Be clear and non-technical.",
-      "variables": [
-        { "name": "title", "selector": "#ticket-title" },
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-    {
-      "name": "Summarize Change Impact",
-      "description": "Analyze the change described and explain what parts of the product could be affected.",
-      "template": "Based on the following change description, summarize potential areas of impact:\n'{description}'",
-      "variables": [
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-    {
-      "name": "Write Pull Request Description",
-      "description": "Generate a professional pull request message based on the ticket.",
-      "template": "Write a pull request message for:\nTicket: {ticketId} - {title}\nDetails: {description}",
-      "variables": [
-        { "name": "ticketId", "selector": "#ticket-id", "attribute": "data-ticket-id" },
-        { "name": "title", "selector": "#ticket-title" },
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-    {
-      "name": "Suggest Automation",
-      "description": "Analyze the workflow described and suggest what steps could be automated.",
-      "template": "Based on this workflow description, identify parts that could be automated:\n'{description}'",
-      "variables": [
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-    {
       "name": "Summarize Ticket for Standup",
-      "description": "Generate a quick summary of the ticket suitable for a daily standup update.",
-      "template": "Provide a concise summary of the ticket for a daily standup:\nTitle: {{title}}\nDescription: {{description}}",
+      "description": "Generate a concise summary of the ticket suitable for a daily standup update.",
+      "template": "Create a 2-3 sentence summary of this ticket that I can share during standup. Include current status, any blockers, and what I'm working on next:\nTitle: {{title}}\nDescription: {{description}}\nStatus: {{status}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" },
+        { "name": "status", "selector": "#ticket-status" }
+      ]
+    },
+    {
+      "name": "Identify Dependencies",
+      "description": "Analyze the ticket and identify potential dependencies or blockers.",
+      "template": "Analyze this ticket and identify:\n1. Technical dependencies that must be completed first\n2. Team dependencies requiring coordination\n3. External dependencies outside our control\n4. Suggested actions to resolve each dependency\n\nTicket details:\n{{title}}\n{{description}}",
       "variables": [
         { "name": "title", "selector": "#ticket-title" },
         { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Draft Sprint Goal",
+      "description": "Propose a measurable sprint goal based on selected tickets.",
+      "template": "Based on these tickets, suggest a SMART sprint goal (Specific, Measurable, Achievable, Relevant, Time-bound) that aligns with our product vision. Include how we'll measure success by the end of the sprint.\n\nTickets:\n{{tickets}}",
+      "variables": [
+        { "name": "tickets", "selector": ".sprint-ticket-summary" }
+      ]
+    },
+    {
+      "name": "Generate Retrospective Topics",
+      "description": "Create discussion points for retrospective based on sprint challenges.",
+      "template": "Based on these completed tickets and their challenges, suggest 3-5 retrospective topics focusing on:\n1. What went well (celebrate successes)\n2. What could be improved (process issues)\n3. Action items (specific, actionable improvements)\n\nTickets from the sprint:\n{{sprintTickets}}",
+      "variables": [
+        { "name": "sprintTickets", "selector": ".sprint-completed-tickets" }
       ]
     },
     {
       "name": "Generate Acceptance Criteria",
-      "description": "Suggest detailed and testable acceptance criteria based on the ticket description.",
-      "template": "Based on the following ticket description, suggest detailed and testable acceptance criteria:\n'{{description}}'",
-      "variables": [
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-      {
-      "name": "Suggest Documentation Update",
-      "description": "Propose documentation that might need updates based on the change described.",
-      "template": "Based on the following ticket, suggest if any documentation (e.g. user guides, API references) needs updating:\n'{{description}}'",
-      "variables": [
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-      {
-      "name": "Check for Definition of Ready",
-      "description": "Verify if the ticket meets Definition of Ready (DoR) and suggest improvements if not.",
-      "template": "Evaluate whether this ticket is ready for development based on common Definition of Ready criteria. Suggest improvements if any are missing.\n'{{description}}'",
-      "variables": [
-        { "name": "description", "selector": "#ticket-description" }
-      ]
-    },
-      {
-      "name": "Evaluate Story Size",
-      "description": "Assess if the story is too large and could be split.",
-      "template": "Based on the following ticket, assess whether the story might be too large or complex and suggest if it could be split:\nTitle: {{title}}\nDescription: {{description}}",
+      "description": "Create comprehensive, testable acceptance criteria following the Given-When-Then format.",
+      "template": "Based on this ticket description, generate detailed acceptance criteria in Given-When-Then format. Include edge cases, error states, and clear success definitions. Focus on the user perspective and business value:\n\nTicket: {{title}}\n{{description}}",
       "variables": [
         { "name": "title", "selector": "#ticket-title" },
         { "name": "description", "selector": "#ticket-description" }
       ]
     },
     {
-    "name": "Check Root Cause Summary",
-    "description": "Verify if the root cause summary is logical, coherent, and relevant to the issue. Suggest improvements if it is unclear or incomplete.",
-    "template": "Carefully review the following root cause summary and determine:\n1. Does it logically explain the underlying cause of the issue?\n2. Is it specific, clear, and technically sound?\n3. Does it align with the issue title and description?\n\nIf the summary is vague, confusing, or misaligned, suggest modifications to improve clarity, accuracy, and completeness.\n\nTitle: '{{title}}'\n\nDescription: '{{description}}'\n\nRoot Cause Summary: '{{root_cause}}'",
-    "variables": [
-      { "name": "title", "selector": "#ticket-title" },
-      { "name": "description", "selector": "#ticket-description" },
-      { "name": "root_cause", "selector": "#root-cause-summary" }
-    ]
-  }
-  ]
-  ;
+      "name": "Conduct Risk Assessment",
+      "description": "Identify implementation risks and suggest mitigation strategies.",
+      "template": "Conduct a thorough risk assessment for this ticket, analyzing:\n1. Technical risks (performance, security, scalability)\n2. Business risks (user adoption, stakeholder concerns)\n3. Team risks (skill gaps, capacity issues)\n4. Timeline risks (dependencies, scope uncertainties)\n5. Suggested mitigation strategies for each risk identified\n\nTicket details:\n{{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Identify Documentation Needs",
+      "description": "Determine documentation requirements based on the changes described.",
+      "template": "Based on this ticket, identify all documentation that needs updating or creation:\n1. User documentation (guides, tutorials, FAQs)\n2. Technical documentation (APIs, architecture diagrams)\n3. Internal team documentation (processes, decision records)\n4. Testing documentation (test plans, QA scenarios)\n\nFor each item, explain why it needs updating and what specific content should be addressed.\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Create Developer Handoff Notes",
+      "description": "Provide comprehensive context for developers starting implementation.",
+      "template": "Generate detailed handoff notes for developers including:\n1. Business context and user value\n2. Technical approach considerations\n3. Known constraints or limitations\n4. Suggested implementation steps\n5. Testing considerations\n6. Security/performance requirements\n7. Points needing clarification\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Definition of Ready Checklist",
+      "description": "Verify if the ticket meets all criteria to be ready for development.",
+      "template": "Evaluate if this ticket meets our Definition of Ready by checking:\n1. Clear business value defined?\n2. Acceptance criteria complete and testable?\n3. Dependencies identified and resolved/planned?\n4. UI/UX designs available if needed?\n5. Technical approach agreed upon?\n6. Scope clearly defined and reasonably sized?\n7. Testing requirements specified?\n\nFor any missing items, provide specific improvement suggestions.\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Story Size Assessment",
+      "description": "Evaluate if a story should be broken down into smaller pieces.",
+      "template": "Analyze this user story for size and complexity. If it appears too large for a single sprint, suggest how to split it into smaller, independently valuable stories while preserving functionality. Consider technical complexity, uncertainty, and dependencies.\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Definition of Done Verification",
+      "description": "Check if the ticket meets all Definition of Done criteria before closing.",
+      "template": "Verify if this ticket meets our Definition of Done by checking:\n1. All acceptance criteria demonstrably met?\n2. Code reviewed and approved?\n3. Tests written and passing?\n4. Documentation updated?\n5. Performance impact considered?\n6. Security requirements addressed?\n7. Accessibility standards met?\n8. Product Owner reviewed and approved?\n\nHighlight any missing items that need addressing before closing.\n\nTicket: {{title}}\n{{description}}\n{{comments}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" },
+        { "name": "comments", "selector": "#ticket-comments" }
+      ]
+    },
+    {
+      "name": "Write Technical Implementation Plan",
+      "description": "Generate a technical approach for implementing the ticket.",
+      "template": "Based on this ticket, create a technical implementation plan including:\n1. System components affected\n2. Data model changes needed\n3. API endpoints to modify/create\n4. Suggested architecture approach\n5. Testing strategy (unit, integration, E2E)\n6. Deployment considerations\n7. Monitoring/observability needs\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Convert Requirements to User Story",
+      "description": "Transform detailed requirements into a well-structured user story.",
+      "template": "Convert these requirements into a properly formatted user story following the pattern 'As a [type of user], I want [goal] so that [benefit]'. Include acceptance criteria, background context, and any technical notes. Make sure the story is focused on user value:\n\nRequirements: {{description}}",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Test Case Generator",
+      "description": "Create comprehensive test cases based on ticket requirements.",
+      "template": "Generate detailed test cases for this ticket including:\n1. Happy path scenarios\n2. Edge cases and boundary conditions\n3. Error/exception handling scenarios\n4. Performance considerations\n5. Security testing scenarios\n\nFor each case, include preconditions, steps to execute, and expected results.\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Estimate Story Points",
+      "description": "Suggest story point estimation based on complexity analysis.",
+      "template": "Analyze this user story and suggest an appropriate story point estimate (using Fibonacci: 1, 2, 3, 5, 8, 13). Consider:\n1. Technical complexity\n2. Uncertainty and risk\n3. Amount of work required\n4. Dependencies and coordination needed\n\nProvide reasoning for your estimate to help team discussion.\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Sprint Planning Preparation",
+      "description": "Prepare key points to discuss during sprint planning for this ticket.",
+      "template": "Help me prepare for discussing this ticket in sprint planning by highlighting:\n1. Key implementation considerations\n2. Questions that need answering before work begins\n3. Dependencies that might affect scheduling\n4. Resource or skill requirements\n5. Suggested approach for breaking down the work\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Clarify Ambiguous Requirements",
+      "description": "Identify vague or ambiguous aspects of the ticket that need clarification.",
+      "template": "Review this ticket and identify any ambiguous or unclear requirements. For each ambiguity found, craft a specific clarifying question to ask the Product Owner or stakeholders. Also suggest potential interpretations of each ambiguity.\n\nTicket: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Bug Report Enhancement",
+      "description": "Improve a bug report with structured information for faster resolution.",
+      "template": "Enhance this bug report by structuring it with:\n1. Clear description of expected vs. actual behavior\n2. Step-by-step reproduction steps\n3. Environment details needed\n4. Potential impact assessment\n5. Suggested areas of the codebase to investigate\n6. Screenshots or logs needed (with placeholders)\n\nOriginal bug: {{description}}",
+      "variables": [
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Write Release Notes",
+      "description": "Generate user-friendly release notes from completed tickets.",
+      "template": "Create user-friendly release notes based on these completed tickets. Organize by feature categories, highlight key user benefits, explain any changes to existing functionality, and note any required user actions.\n\nCompleted tickets:\n{{completedTickets}}",
+      "variables": [
+        { "name": "completedTickets", "selector": ".release-tickets" }
+      ]
+    },
+    {
+      "name": "Create Implementation Subtasks",
+      "description": "Break down a user story into specific implementation subtasks.",
+      "template": "Break down this user story into 5-8 specific implementation subtasks. For each subtask, provide:\n1. Clear, actionable title\n2. Brief description of work required\n3. Logical sequence/dependencies between subtasks\n4. Estimated effort (Small/Medium/Large)\n\nParent story: {{title}}\n{{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
+      ]
+    },
+    {
+      "name": "Analyze Team Velocity",
+      "description": "Provide insights on team velocity and capacity planning based on historical data.",
+      "template": "Analyze our team's velocity data and provide insights on:\n1. Velocity trend analysis (improving, stable, declining?)\n2. Factors potentially affecting our velocity\n3. Suggested capacity for next sprint\n4. Recommendations for improving predictability\n\nRecent sprints velocity data:\n{{velocityData}}",
+      "variables": [
+        { "name": "velocityData", "selector": ".velocity-data" }
+      ]
+    },
+    {
+        "name": "Suggest Code Review Improvements",
+        "description": "Analyzes a code review ticket and suggests potential areas for improvement based on common patterns or best practices.",
+        "template": "As an AI assistant, analyze the context of this code review Jira ticket. Based on the 'Description' (which may contain code snippets or links) and 'Comments', suggest potential areas for code improvement, common pitfalls, or adherence to best practices (e.g., performance, security, readability, maintainability). Focus on actionable feedback.\n\nCode Review Ticket Title: {{issue.title}}\nCode Review Description: {{issue.description}}\nCode Review Comments: {{issue.comments.all}}",
+        "variables": [
+          { "name": "title", "selector": "#issue-title" },
+          { "name": "description", "selector": "#issue-description" },
+          { "name": "comments", "selector": "#issue-comments" }
+        ],
+      },
+      {
+        "name": "Generate Test Case Scenarios",
+        "description": "Generates a set of functional test case scenarios based on a user story or bug description.",
+        "template": "As an AI assistant, generate a list of functional test case scenarios for the following Jira issue. Focus on positive, negative, and edge cases. Include preconditions, steps, and expected results. Use the 'Description' and 'Acceptance Criteria' fields for context.\n\nIssue Title: {{issue.title}}\nIssue Description: {{issue.description}}\nAcceptance Criteria: {{issue.acceptanceCriteria}}",
+        "variables": [
+          { "name": "title", "selector": "#issue-title" },
+          { "name": "description", "selector": "#issue-description" },
+          { "name": "acceptanceCriteria", "selector": "#issue-acceptance-criteria" }
+        ],
+      },
+      {
+        "name": "Estimate Story Points from Description",
+        "description": "Provides a preliminary story point estimate for a user story based on its description and acceptance criteria.",
+        "template": "As an AI assistant, provide a preliminary story point estimate (e.g., 1, 2, 3, 5, 8, 13) for the following Jira User Story. Justify your estimate based on perceived complexity, effort, and uncertainty. Consider the 'Description' and 'Acceptance Criteria'.\n\nUser Story Title: {{issue.title}}\nUser Story Description: {{issue.description}}\nAcceptance Criteria: {{issue.acceptanceCriteria}}",
+        "variables": [
+          { "name": "issue.title", "selector": "#issue-title" },
+          { "name": "issue.description", "selector": "#issue-description" },
+          { "name": "issue.acceptanceCriteria", "selector": "#issue-acceptance-criteria" }
+        ],
+      },
+      {
+        "name": "Summarize Technical Discussion Thread",
+        "description": "Condenses a long Jira comment thread or linked discussion into a concise summary of key decisions, action items, and outstanding questions.",
+        "template": "As an AI assistant, summarize the following technical discussion thread (Jira comments or linked external discussion) into key decisions made, action items assigned, and any remaining open questions or unresolved points. Focus on technical implications.\n\nDiscussion Thread: {{issue.comments.all}}",
+        "variables": [
+          { "name": "issue.comments.all", "selector": "#issue-comments" }
+        ]
+      }   
+
+  ];
+  const veXDefaultPromptsTone = {
+    "Concise": "Provide a concise summary of the key points discussed in the technical discussion thread.",
+    "Technical": "Respond with a detailed explanation suitable for a technical audience, using engineering terms and logic.",
+    "Non-Technical": "Explain the content in simple terms suitable for non-technical stakeholders like customers or product managers.",    
+    "Action-Oriented": "Summarize the content with a focus on next steps or action items the user should take.",
+    "Formal": "Use a professional and formal tone suitable for documentation or external communication.",
+    "Casual": "Use a friendly and informal tone as if you're explaining it to a teammate in a Slack message.",
+    "Critical Thinking": "Analyze the content deeply and highlight assumptions, risks, or missing pieces that require clarification.",
+    "Support-Focused": "Craft the response as if you're a support agent explaining the issue to a customer.",
+    "Summarized with Bullet Points": "Return the answer in a clean, bulleted format for easy readability.",
+    "Release Note Style": "Format the content as a release note entry for inclusion in changelogs or customer updates.",
+    "Direct": "Be straightforward and to the point, avoiding fluff or overly detailed explanations.",
+    "Pragmatic": "Focus on realistic, practical solutions that can be implemented with minimal effort.",
+    "Respectful": "Use a polite, diplomatic tone especially when identifying potential issues or improvement areas.",
+    "Corporate": "Maintain a polished, conservative tone appropriate for senior stakeholders or official communication.",
+    "Humble": "Acknowledge that there may be alternative interpretations or room for improvement in the suggestion.",
+    "Silly": "Add a light, humorous tone to the response while preserving the core information.",
+    "Chill": "Use a relaxed, informal style as if casually explaining something to a colleague.",
+    "Outside the Box": "Offer creative, unconventional ideas that go beyond standard approaches."
+  };
+
+
 const ErrorMessages = {
     UnHandledException: ["Oh no 🫣! An error in '$0', info: '$1'. Check console logs for more info 👀",
         "Oops! Something went wrong in '$0'. Error: '$1'. See console logs for details.",
@@ -496,5 +632,6 @@ export {
     PromptsUI,
     checklistIconsUrl,
     promptIconsUrl,
-    veXDefaultPrompts
+    veXDefaultPrompts,
+    veXDefaultPromptsTone
 };

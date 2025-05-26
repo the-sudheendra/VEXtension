@@ -19,24 +19,42 @@
   --vex-notApplicableColor: #808080; //*fdec83*/
 }
 
-#veX_checklist_popup_container ::-webkit-scrollbar {
-  width: 5px;
-}
-
-
-#veX_checklist_popup_container ::-webkit-scrollbar-track {
+ .veX_truncate {
+    display: inline-block;     
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  span.veX_truncate,
+  div.veX_truncate,
+  p.veX_truncate,
+  td.veX_truncate,
+  th.veX_truncate,
+  button {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  
+#veX_checklist_popup_container ::-webkit-scrollbar-track,#veX_prompts_popup_container ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   background-color: #F5F5F5;
+  border-radius: var(--veX-common-borderRadius);
+  overflow: hidden;
 
 }
 
-#veX_checklist_popup_container ::-webkit-scrollbar {
-  width: 5px;
+#veX_checklist_popup_container ::-webkit-scrollbar,#veX_prompts_popup_container ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
   background-color: var(--veX-common-backgroundColor);
   border-radius: var(--veX-common-borderRadius);
 }
 
-#veX_checklist_popup_container ::-webkit-scrollbar-thumb {
+#veX_checklist_popup_container ::-webkit-scrollbar-thumb,#veX_prompts_popup_container ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #8f8e8e;
 }
@@ -641,4 +659,8 @@ color: var(--veX-common-fontColor);
   align-items: center;
   justify-content: center;
   gap: 10px;
+}
+.veX_selectable {
+  user-select: text;
+  -webkit-user-select: text;
 }

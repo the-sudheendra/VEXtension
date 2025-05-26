@@ -59,7 +59,8 @@
         "src/AviatorIntegrations/PromptModal.js",
         "src/Utility/SchemaValidators.js",
         "icons/done_all_24dp_FFFFFF.png",
-        "icons/close_24dp_000000.png"
+        "icons/close_24dp_000000.png",
+        "icons/keyboard_arrow_up_24dp.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
