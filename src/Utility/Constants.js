@@ -423,13 +423,9 @@ const veXDefaultPromptsTone = {
 
 
 const ErrorMessages = {
-    UnHandledException: ["Oh no 🫣! An error in '$0', info: '$1'. Check console logs for more info 👀",
-        "Oops! Something went wrong in '$0'. Error: '$1'. See console logs for details.",
-        "🤔 Uh-oh! Error detected in '$0'. More info: '$1'. Check the console!",
-        "😬 Something’s off in '$0'! Error: '$1'. Peek at the console logs for clues.",
-        "🫣 Whoops! Something’s not right in '$0'. Error: '$1'. Console logs might help!",
-        "🔍 Error spotted in '$0'! Details: '$1'. Check the console for more info.🐞",
-
+    UnHandledException: [
+        "Oops! Something went wrong in '$0'. Error: '$1'. See console logs for details."
+       
     ],
     SomethingWentWrong: [
         "⚠️ Oops! Something went wrong. Please report the bug.",
