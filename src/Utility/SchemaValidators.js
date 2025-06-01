@@ -1,14 +1,27 @@
+var Util;
+var Constants;
+
+async function loadModules() {
+  let URL = chrome.runtime.getURL("src/Utility/Util.js");
+  if (!Util)
+      Util = await import(URL);
+  URL = chrome.runtime.getURL("src/Utility/Constants.js");
+  if (!Constants)
+      Constants = await import(URL);
+}
+
+await loadModules();
 //Start Checklist Validation
 
 function validateChecklist(veXChecklistInfo) {
     try {
       if (!veXChecklistInfo) {
-        notify("The checklist data is missing. Please provide a valid JSON file.", "error", true);
+        Util.notify("The checklist data is missing. Please provide a valid JSON file.", "error", true);
         return false;
       }
   
       if (Object.keys(veXChecklistInfo).length === 0) {
-        notify("The checklist JSON file appears to be empty. Please upload a valid file to continue.", "warning", true);
+        Util.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue.", "warning", true);
         return false;
       }
   
@@ -17,27 +30,27 @@ function validateChecklist(veXChecklistInfo) {
         const entityChecklist = veXChecklistInfo[ticketEntityName];
   
         if (!entityChecklist) {
-          notify(`The '${ticketEntityName}' entity is null or undefined. Please provide valid data.`, "error", true);
+          Util.notify(`The '${ticketEntityName}' entity is null or undefined. Please provide valid data.`, "error", true);
           return false;
         }
   
         if (Object.keys(entityChecklist).length === 0) {
-          notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, "warning", true);
+          Util.notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, "warning", true);
           return false;
         }
   
         if (!entityChecklist.hasOwnProperty("categories")) {
-          notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
+          Util.notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
           return false;
         }
   
         if (!entityChecklist.categories) {
-          notify(`The 'categories' in '${ticketEntityName}' is null or undefined. Please provide valid category data.`, "error", true);
+          Util.notify(`The 'categories' in '${ticketEntityName}' is null or undefined. Please provide valid category data.`, "error", true);
           return false;
         }
   
         if (Object.keys(entityChecklist.categories).length === 0) {
-          notify(`No categories are specified in the '${ticketEntityName}'. Please add at least one, as it is a mandatory field.`, "warning", true);
+          Util.notify(`No categories are specified in the '${ticketEntityName}'. Please add at least one, as it is a mandatory field.`, "warning", true);
           return false;
         }
   
@@ -48,7 +61,7 @@ function validateChecklist(veXChecklistInfo) {
   
       return true;
     } catch (err) {
-      onError(err, "Error validating checklist schema", true);
+      Util.onError(err, "Error validating checklist schema", true);
       return false;
     }
   }
@@ -58,7 +71,7 @@ function validateChecklist(veXChecklistInfo) {
     try {
   
       if (!checklistCategories) {
-        notify(`The categories in '${ticketEntityName}' are invalid. Please provide valid data.`, "error", true);
+        Util.notify(`The categories in '${ticketEntityName}' are invalid. Please provide valid data.`, "error", true);
         return false;
       }
   
@@ -68,27 +81,27 @@ function validateChecklist(veXChecklistInfo) {
         const category = checklistCategories[categoryName];
   
         if (!category) {
-          notify(`The '${categoryName}' category in '${ticketEntityName}' is null or undefined. Please provide valid data.`, "error", true);
+          Util.notify(`The '${categoryName}' category in '${ticketEntityName}' is null or undefined. Please provide valid data.`, "error", true);
           return false;
         }
   
         if (!category.hasOwnProperty("checklist")) {
-          notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
+          Util.notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
           return false;
         }
   
         if (!category.checklist) {
-          notify(`The 'checklist' in '${categoryName}' category of '${ticketEntityName}' is null or undefined. Please provide valid data.`, "error", true);
+          Util.notify(`The 'checklist' in '${categoryName}' category of '${ticketEntityName}' is null or undefined. Please provide valid data.`, "error", true);
           return false;
         }
   
         if (!Array.isArray(category.checklist)) {
-          notify(`The 'checklist' in '${categoryName}' category of '${ticketEntityName}' must be an array.`, "error", true);
+          Util.notify(`The 'checklist' in '${categoryName}' category of '${ticketEntityName}' must be an array.`, "error", true);
           return false;
         }
   
         if (category.checklist.length === 0) {
-          notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add at least one item, as it is required.`, "warning", true);
+          Util.notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add at least one item, as it is required.`, "warning", true);
           return false;
         }
   
@@ -96,24 +109,24 @@ function validateChecklist(veXChecklistInfo) {
           const item = category.checklist[i];
   
           if (item === null || item === undefined) {
-            notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' is null or undefined. Please provide valid data.`, "error", true);
+            Util.notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' is null or undefined. Please provide valid data.`, "error", true);
             return false;
           }
   
           if (typeof item !== 'string') {
-            notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' must be a string.`, "error", true);
+            Util.notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' must be a string.`, "error", true);
             return false;
           }
   
           if (item.trim().length === 0) {
-            notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' is empty. All items must contain text.`, "warning", true);
+            Util.notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' is empty. All items must contain text.`, "warning", true);
             return false;
           }
         }
       }
       return true;
     } catch (err) {
-      onError(err, `Error validating categories for ${ticketEntityName}`, true);
+      Util.onError(err, `Error validating categories for ${ticketEntityName}`, true);
       return false;
     }
   }
@@ -132,7 +145,7 @@ function validatePromptTemplates(PromptTemplates) {
             return false;
         }
     }
-    return validateTemplateNames(PromptTemplates);
+    return true;
 }
 
 
@@ -194,11 +207,11 @@ function validateTemplate(template, index) {
             return false;
         }
 
-        const placeholder = `{{${variable.name}}}`;
+        /* const placeholder = `{{${variable.name}}}`;
         if (!template.template.includes(placeholder)) {
             Util.notify(`${templatePosition}: Prompt template does not use the defined variable '${variable.name}'`, Constants.NotificationType.Error, true);
             return false;
-        }
+        } */
     }
 
     return true;

@@ -162,13 +162,16 @@ function onPromptFileUpload(event) {
                 Util.showLoading();
                 if(Validators.validatePromptTemplates(JSON.parse(reader.result)) === true){
                     const promptData = JSON.parse(reader.result);
-                    await chrome.storage.sync.set({ "veX_prompts": promptData });
+                    await chrome.storage.local.set({ "veX_prompts": promptData });
                     Util.notify("Prompts saved successfully! 🙌🏻", Constants.NotificationType.Success, true);
-                    fileInput.value = ''; // Clear the file input
+                    fileInput.value = '';
+                }
+                else{
+                    fileInput.value = '';
                 }
             } catch (err) {
                 Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Uploading Prompts", err.message), true);
-                fileInput.value = ''; // Clear the file input
+                fileInput.value = ''; 
             } finally {
                 Util.hideLoading();
             }
