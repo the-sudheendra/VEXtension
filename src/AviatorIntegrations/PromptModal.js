@@ -1,6 +1,9 @@
 var veXPromptsPopupNode = document.createElement("div");
 var veXPromptsPopupOverlay = document.createElement("div");
 var currentPromptTone = "";
+const prompts = Constants.veXDefaultPrompts;
+const promptTones = Constants.veXDefaultPromptsTone;
+let promptVariableData = [];
 
 
 async function loadModules() {
@@ -13,20 +16,21 @@ async function loadModules() {
   veXSelectors = Constants.VEChecklistNodeSelectors;
 }
 
-const prompts = Constants.veXDefaultPrompts;
-const promptTones = Constants.veXDefaultPromptsTone;
-
-let promptVariableData = [];
-
 async function initialize() {
-  await loadModules();
-  veXPromptViewSetup();
-  initializePromptVariableData();
+  try {
+    await loadModules();
+    veXPromptViewSetup();
+    initializePromptVariableData();
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Initialize Prompt Modal", err.message), true);
+  }
 }
 
-function initializePromptTonesDropdown() {
-  const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
-  const selected = dropdown.querySelector('.veX_dropdown_selected');
+
+function initializeTonesDropdown() {
+  try {
+    const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
+    const selected = dropdown.querySelector('.veX_dropdown_selected');
   selected.setAttribute('data-value', "");
   selected.textContent = "Select Tone";
   const options = dropdown.querySelector('.veX_dropdown_options');
@@ -46,7 +50,10 @@ function initializePromptTonesDropdown() {
       option.setAttribute('title', tone);
       option.textContent = tone;
       options.appendChild(option);
-  });
+    });
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Initialize Prompt Tones Dropdown", err.message), true);
+  }
 }
 
 function veXPromptViewSetup() {
@@ -58,21 +65,28 @@ function veXPromptViewSetup() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup Prompt View", err.message), true);
   }
 }
+
 function setupPromptsPopupNode() {
-  veXPromptsPopupNode.id = "veX_prompts_popup_container";
-  veXPromptsPopupNode.classList.add("veX_prompts_popup_disable");
-  veXPromptsPopupNode.innerHTML = Constants.PromptsUI;
-  document.body.appendChild(veXPromptsPopupNode);
-  initializePromptTonesDropdown();
-  attachToneSelectorEvents();
-  Util.makeElementDraggable(veXPromptsPopupNode.querySelector('.veX_prompts_header'));
+  try {
+    veXPromptsPopupNode.id = "veX_prompts_popup_container";
+    veXPromptsPopupNode.classList.add("veX_prompts_popup_disable");
+    veXPromptsPopupNode.innerHTML = Constants.PromptsUI;
+    document.body.appendChild(veXPromptsPopupNode);
+    initializeTonesDropdown();
+    attachToneSelectorEvents();
+    Util.makeElementDraggable(veXPromptsPopupNode.querySelector('.veX_prompts_header'));
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup Prompt View", err.message), true);
+  }
 }
+
 function attachToneSelectorEvents() {
-  const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
-  const selected = dropdown.querySelector('.veX_dropdown_selected');
-  const options = dropdown.querySelector('.veX_dropdown_options');
-  const allOptions = dropdown.querySelectorAll('.veX_dropdown_option');
-  allOptions.forEach(option => {
+  try {
+    const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
+    const selected = dropdown.querySelector('.veX_dropdown_selected');
+    const options = dropdown.querySelector('.veX_dropdown_options');
+    const allOptions = dropdown.querySelectorAll('.veX_dropdown_option');
+    allOptions.forEach(option => {
     option.addEventListener('click', (e) => {
       e.stopPropagation();
       selected.innerText = `${option.textContent.trim()}`;
@@ -89,32 +103,44 @@ function attachToneSelectorEvents() {
   dropdown.addEventListener('click', (e) => {
       options.classList.toggle('veX_show');
   });
+  dropdown.addEventListener('blur', (e) => {
+    options.classList.remove('veX_show');
+  });
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Attaching Prompt Tone Selector Events", err.message), true);
+  }
 }
 function setupPromptsPopupOverlay() {
-  veXPromptsPopupOverlay.id = "veX_prompt_popup_overlay";
-  veXPromptsPopupOverlay.addEventListener("click", closePromptsPopup);
-  document.body.appendChild(veXPromptsPopupOverlay);
+  try {
+    veXPromptsPopupOverlay.id = "veX_prompt_popup_overlay";
+    veXPromptsPopupOverlay.addEventListener("click", closePromptsPopup);
+    document.body.appendChild(veXPromptsPopupOverlay);
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup Prompt Popup Overlay", err.message), true);
+  }
 }
 function initializePromptList() {
   try {
     const promptList = veXPromptsPopupNode.querySelector("#veX_prompts_list_container");
     renderPromptList(promptList, prompts);
-  }
-  catch (err) {
+  } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Initialize Prompt List", err.message), true);
   }
 }
 
 function initializePromptVariableData() {
-  prompts.forEach((promptData, index) => {
-    let variables = promptData["variables"];
-    promptVariableData[index] = {};
-    variables.forEach((variableData) => {
-      promptVariableData[index][variableData["name"]] = extractValueFromElement(variableData["selector"]) || "";
+  try {
+    prompts.forEach((promptData, index) => {
+      let variables = promptData["variables"];  
+      promptVariableData[index] = {};
+      variables.forEach((variableData) => {
+        promptVariableData[index][variableData["name"]] = extractValueFromElement(variableData["selector"]) || "";
+      });
     });
-  });
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Initialize Prompt Variable Data", err.message), true);
+  }
 }
-
 
 function extractValueFromElement(selector) {
   const element = document.querySelector(selector);
@@ -131,12 +157,16 @@ function extractValueFromElement(selector) {
 }
 
 function renderPromptList(container, prompts) {
-  if (!prompts.length) {
-    container.innerHTML = "<h3>No prompts available. Please upload prompt.json.</h3>";
-    return;
+  try {
+    if (!prompts.length) {
+      container.innerHTML = "<h3>No prompts available. Please upload prompt.json.</h3>";
+      return;
+    }
+    container.innerHTML = getPromptListHTML(prompts);
+    attachPromptListEvents(container, prompts);
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Render Prompt List", err.message), true);
   }
-  container.innerHTML = getPromptListHTML(prompts);
-  attachPromptListEvents(container, prompts);
 }
 
 
@@ -162,156 +192,181 @@ function closePromptsPopup() {
     veXPromptsPopupNode.classList.remove("veX_checklist_popup_active");
     veXPromptsPopupNode.classList.add("veX_checklist_popup_disable");
   }
-  catch (err) {
+    catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Checklist Popup", err.message), true);
   }
 }
 
 function draftInstructions(unresolved = [], currentPromptTone = '') {
+  try {
+      const HallucinationPreventionInstructions = 
+  `\n- If the user's query references or  requires the context of a specific content (e.g., ${unresolved.join(', ')}) that are NOT present in their message or in the ticket context
+  - ask the user to provide the missing input.
+  - Do **not** infer, assume, or fabricate any information not explicitly provided by the user.
+  - Only proceed when sufficient context has been provided.`;
+  
+  const ToneInstructions = `
+  \n- Maintain **${promptTones[currentPromptTone] || currentPromptTone}** tone throughout your response.
+  `;
+
   let instructions = '';
 
   if(unresolved.length > 0 || currentPromptTone){
-    instructions = 'Instructions:\n';
+    instructions = '\n\n*Instructions:*\n';
   }
 
   if (unresolved.length > 0) {
-    instructions += `- If any of the following required variables are missing: ${unresolved.join(', ')}, prompt the user to provide them.\n`;
-    instructions += `- Do **not** infer, assume, or fabricate any information not explicitly provided by the user.\n`;
-    instructions += `- Proceed only after all required context and variables are available.\n`;
+    instructions += HallucinationPreventionInstructions;
   }
 
   if (currentPromptTone) {
-    instructions += `- Maintain **${promptTones[currentPromptTone] || currentPromptTone}** tone throughout your response.\n`;
+    instructions += ToneInstructions;
   }
-
-  return instructions.trim();
+    return instructions.trim();
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Draft Instructions", err.message), true);
+  }
 }
 
-
-const promptListHtml = prompts.map((prompt, index) => `
-    <div class="prompt-row" data-index="${index}">
-      <div class="prompt-name">${prompt.name}</div>
-      <div class="icons">
-        <span class="veX_send_btn" title="Send to AI" data-index="${index}">
-          <img src="${Constants.checklistIconsUrl.send}" alt="Send Icon" />
-        </span>
-        <span class="expand-btn" title="Expand" data-index="${index}">
-          <img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />
-        </span>
-      </div>
-    </div>
-    <div class="expand-section gradient-border-left veX_selectable" id="expand-${index}" style="display: none;">
-      <p><strong>Description:</strong> ${prompt.description}</p>
-      <p><strong>Template:</strong></p>
-      <pre class="veX_selectable">${prompt.template}</pre>
-      <p><strong>Variables:</strong></p>
-      <ul class="veX_selectable">
-        ${prompt.variables.map(v =>
-  `<li>${v.name} → <code>${v.selector}</code>${v.attribute ? ` (attr: ${v.attribute})` : ''}</li>`
-).join("")}
-      </ul>
-    </div>
-  `).join("");
-
-const PromptUI = `
-    <div id="my-extension-ui">
-      <h2>
-        Aviator Prompts
-        <span class="material-icons" style="cursor:pointer;" onclick="document.getElementById('my-extension-ui').remove()">close</span>
-      </h2>
-      ${prompts.length ? promptListHtml : '<h3>No prompts available. Please upload prompt.json.</h3>'}
-    </div>
-  `;
-
-
 function getPromptListHTML(prompts) {
-  let html = ``;
-  prompts.forEach((prompt, index) => {
-    html += getPromptRowHTML(prompt, index);
-    html += getPromptExpandHTML(prompt, index);
-  });
-  return html;
+  try {
+    let html = ``;
+    prompts.forEach((prompt, index) => {
+      html += getPromptRowHTML(prompt, index);
+      html += getPromptExpandHTML(prompt, index);
+    });
+    return html;
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Get Prompt List HTML", err.message), true);
+  }
 }
 
 function getPromptRowHTML(prompt, index) {
-  return `
-    <div class="prompt-row" data-index="${index}">
-      <div class="prompt-name">${prompt.name}
-          <span class="expand-btn" title="Expand" data-index="${index}">
-            <img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />
-          </span>
-      </div>
-      <div class="icons">
-          <span class="veX_send_btn" title="Send to AI" data-index="${index}">
-          <img src="${Constants.checklistIconsUrl.send}" alt="Send Icon" />
-          </span>
-          
-      </div>
-    </div>
+  try {
+    return `
+        <div class="veX_prompt_rows" data-index="${index}">
+          <div class="veX_prompt_name">${prompt.name}
+              <span class="veX_expand_btn" title="Expand" data-index="${index}">
+              <img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />
+              </span>
+          </div>
+          <div class="veX_icons">
+              <span class="veX_send_btn" title="Send to AI" data-index="${index}">
+              <img src="${Constants.checklistIconsUrl.send}" alt="Send Icon" />
+              </span>
+          </div>
+        </div>
     `;
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Get Prompt Row HTML", err.message), true);
+  }
 }
 function onVariableChange(textarea, index, name) {
   promptVariableData[index][name] = textarea.value;
 }
 function getPromptExpandHTML(prompt, index) {
-  return `
-<div class="expand-section gradient-border-left veX_selectable" id="expand-${index}" style="display: none;">
-   <p><strong>Description:</strong> ${prompt.description}</p>
-   <p><strong>Template:</strong></p>
-   <pre>${prompt.template}</pre>
-   <p><strong>Variables:</strong></p>
-   <ul class="veX-variable-list">
-      ${prompt.variables.map(
-    (v) =>
-      `
-      <li>${v.name}</li>
-      <li><textarea class="veX-variable-input veX_selectable" placeholder="Enter ${v.name} here..." data-index="${index}" data-name="${v.name}">${promptVariableData[index] || ""}</textarea></li>
-      `
-  )
-      .join("")}
-   </ul>
-</div>
+  try {
+    return `
+          <div class="veX_prompt_expand_section veX_selectable" id="expand-${index}" style="display: none;">
+            <p><strong>Description:</strong> ${prompt.description}</p>
+            <p><strong>Template:</strong></p>
+            <div class="veX_prompt_template_container">
+                <span class="veX_prompt_edit_template_btn" title="Edit Template" data-index="${index}">
+                  <img src="${Constants.checklistIconsUrl.edit}" alt="Edit Icon" />
+                </span>
+                <pre class="veX_prompt_template_content" data-index="${index}">${prompt.template}</pre>
+            </div>
+            <p><strong>Variables:</strong></p>
+            <ul class="veX_prompt_variable_list">
+                ${prompt.variables.map(
+                (v) =>
+                `
+                <li>${v.name}</li>
+                <li><textarea class="veX_variable_input veX_selectable" placeholder="Enter ${v.name} here..." data-index="${index}" data-name="${v.name}">${promptVariableData[index] || ""}</textarea></li>
+                `
+                )
+                .join("")}
+            </ul>
+          </div>
 `;
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Get Prompt Expand HTML", err.message), true);
+  }
+}
+function attachTemplateEditEvents(container) {
+  try {
+    container.querySelectorAll('.veX_prompt_edit_template_btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const index = btn.getAttribute('data-index');
+      const preElement = container.querySelector(`.veX_prompt_template_content[data-index="${index}"]`);
+      if (preElement.contentEditable !== 'true') {
+        preElement.contentEditable = 'true';
+        preElement.focus();
+        btn.querySelector('img').src = Constants.checklistIconsUrl.check;
+      } else {
+        preElement.contentEditable = 'false';
+        prompts[index].template = preElement.textContent;
+        btn.querySelector('img').src = Constants.checklistIconsUrl.edit;
+
+      }
+    });
+  });
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Attach Template Edit Events", err.message), true);
+  }
 }
 
-
 function onExpandBtnClick(btn, index) {
-  const section = document.getElementById(`expand-${index}`);
-  section.style.display = section.style.display === "none" ? "block" : "none";
-  btn.innerHTML = section.style.display === "none" ? `<img src="${Constants.promptIconsUrl.expand}" alt="Expand Icon" />` : `<img src="${Constants.promptIconsUrl.close}" alt="Close Icon" />`;
+  try {
+    const section = document.getElementById(`expand-${index}`);
+    section.style.display = section.style.display === "none" ? "block" : "none";
+    btn.innerHTML = section.style.display === "none" ? `<img src="${Constants.promptIconsUrl.expand}" alt="Expand Icon" />` : `<img src="${Constants.promptIconsUrl.close}" alt="Close Icon" />`;
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "On Expand Btn Click", err.message), true);
+  }
 }
 
 async function onSendBtnClick(index) {
-  const prompt = prompts[index];
-  const filledPrompt = draftPromptTemplate(prompt.template,index, prompt.variables, promptVariableData);
-  Util.openRightSidebar();
-  await Util.delay(500);
-  document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton).click();
-  await Util.delay(500);
-  Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
-  //document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-send-button']").click();
+  try {
+    const prompt = prompts[index];
+    const filledPrompt = draftPromptTemplate(prompt.template,index, prompt.variables, promptVariableData);
+    Util.openRightSidebar();
+    await Util.delay(500);
+    document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton).click();
+    await Util.delay(500);
+    Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
+    //document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-send-button']").click();
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "On Send Btn Click", err.message), true);
+  }
 }
 
 function attachPromptListEvents(container, prompts) {
-  container.querySelectorAll(".expand-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      onExpandBtnClick(btn, btn.getAttribute("data-index"));
+  try {
+    container.querySelectorAll(".veX_expand_btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        onExpandBtnClick(btn, btn.getAttribute("data-index"));
+      });
     });
-  });
-  container.querySelectorAll(".veX-variable-input").forEach((element) => {
-    element.addEventListener("input", () => {
-      onVariableChange(element, element.getAttribute("data-index"), element.getAttribute("data-name"));
+    container.querySelectorAll(".veX_variable_input").forEach((element) => {
+      element.addEventListener("input", () => {
+        onVariableChange(element, element.getAttribute("data-index"), element.getAttribute("data-name"));
+      });
     });
-  });
-  container.querySelectorAll(".veX_send_btn").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      onSendBtnClick(btn.getAttribute("data-index"));
+    container.querySelectorAll(".veX_send_btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        onSendBtnClick(btn.getAttribute("data-index"));
+      });
     });
-  });
+    attachTemplateEditEvents(container);
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Attach Prompt List Events", err.message), true);
+  }
 }
 
 function draftPromptTemplate(template, index, variables, promptVariableData) {
-  const unresolved = [];
+  try {
+    const unresolved = [];
 
   variables.forEach(({ name, selector }) => {
     const element = document.querySelector(selector);
@@ -336,8 +391,10 @@ function draftPromptTemplate(template, index, variables, promptVariableData) {
 
     const instructions = `\n${draftInstructions(unresolved, currentPromptTone)}`;
     template += instructions;
-
-  return template;
+      return template;
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Draft Prompt Template", err.message), true);
+  }
 }
 function removeExtraSpaces(text) {
   return text.trim().replace(/\s+/g, ' ');

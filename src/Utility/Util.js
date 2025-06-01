@@ -283,8 +283,28 @@ function setNativeValue(element, value) {
   element.dispatchEvent(event);
 }
 
+function isCommentPanelOpen()
+{
+  if(document.querySelector("comments-wrapper"))
+  {
+    return true;
+  }
+  return false;
+}
+function isAviatorPanelOpen()
+{
+  if(document.querySelector(".aviator-tab-title"))
+  {
+    return true;
+  }
+  return false;
+}
 function openRightSidebar()
 {
+  if(document.querySelector("[data-aid='panel-content']") || isCommentPanelOpen() )
+  {
+    return true;
+  }
   let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
 
   if (!rightSidebarCommentButton) {
@@ -327,5 +347,7 @@ export {
   hideLoading,
   setNativeValue,
   openRightSidebar,
-  closeRightSidebar
+  closeRightSidebar,
+  isCommentPanelOpen,
+  isAviatorPanelOpen
 }

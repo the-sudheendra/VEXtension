@@ -61,7 +61,8 @@ const checklistIconsUrl = {
     send: chrome.runtime.getURL("icons/send_24.png"),
     expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
     markAllCompleted: chrome.runtime.getURL("icons/done_all_24dp_FFFFFF.png"),
-    logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png")
+    logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
+    check: chrome.runtime.getURL("icons/check_24dp.png")
 };
 const promptIconsUrl = {
     send: chrome.runtime.getURL("icons/send_24.png"),
@@ -105,11 +106,11 @@ const ChecklistUI = `
 <div class="veX_banner veX_footer ">
     <div class="veX_segmented-button">
         <div class="veX_segment veX_footer_icon_container veX_leave_comment_btn">
-        <img class="material-icons" alt="Leave a new comment" title="Leave a new comment" src="${checklistIconsUrl.add}"/>
+        <img class="veX_material_icons" alt="Leave a new comment" title="Leave a new comment" src="${checklistIconsUrl.add}"/>
              <span class="veX_leave_comment_btn_txt">Leave Comment</span> 
         </div>
          <div class=" veX_segment veX_footer_icon_container veX_edit_comment_btn">
-         <img class="material-icons" alt="Edit exisiting comment" title="Edit exisiting comment" src="${checklistIconsUrl.edit}"/>
+         <img class="veX_material_icons" alt="Edit exisiting comment" title="Edit exisiting comment" src="${checklistIconsUrl.edit}"/>
              <span class="veX_edit_comment_btn_txt">Edit Comment</span> 
         </div>
     </div>
@@ -118,7 +119,7 @@ const ChecklistUI = `
 
 const PromptsUI = `
     <div class="veX_prompts_header">
-        <h2 class="gradient-text">Aviator Prompts ✨</h2>
+        <h2 class="veX_gradient_text">Aviator Prompts ✨</h2>
         <div class="veX_prompts_header_actions">
             <div class="veX_prompts_tone_selector_container">
             <label>Prompt Tone:</label>
@@ -169,11 +170,19 @@ const veXDefaultPrompts = [
     {
       "name": "Summarize Ticket for Standup",
       "description": "Generate a concise summary of the ticket suitable for a daily standup update.",
-      "template": "Create a 2-3 sentence summary of this ticket that I can share during standup. Include current status, any blockers, and what I'm working on next:\nTitle: {{title}}\nDescription: {{description}}\nStatus: {{status}}",
-      "variables": [
+      "template": "Create a 2-3 sentence summary of this ticket that I can share during standup. Include current status, any blockers, and what I'm working on next:\nTitle: {{title}}\nDescription: {{description}}\nStatus: {{status}}",      "variables": [
         { "name": "title", "selector": "#ticket-title" },
         { "name": "description", "selector": "#ticket-description" },
         { "name": "status", "selector": "#ticket-status" }
+      ]
+    },
+    {
+      "name": "Generate Tasks for current ticket",
+      "description": "Break down the current ticket into actionable tasks, each with a title, description, and estimated time.",
+      "template": "Based on the following ticket, generate a list of development tasks. For each task, include:\n1. Task Title\n2. Task Description (1-2 sentences)\n3. Time Estimation (in hours)\n\nTicket Title: {{title}}\nTicket Description: {{description}}",
+      "variables": [
+        { "name": "title", "selector": "#ticket-title" },
+        { "name": "description", "selector": "#ticket-description" }
       ]
     },
     {
@@ -391,7 +400,7 @@ const veXDefaultPrompts = [
       }   
 
   ];
-  const veXDefaultPromptsTone = {
+const veXDefaultPromptsTone = {
     "Concise": "Provide a concise summary of the key points discussed in the technical discussion thread.",
     "Technical": "Respond with a detailed explanation suitable for a technical audience, using engineering terms and logic.",
     "Non-Technical": "Explain the content in simple terms suitable for non-technical stakeholders like customers or product managers.",    
@@ -489,7 +498,6 @@ const Notifications = {
         "🤔 Looks like you haven't opened a ticket yet. Open a ticket to see the checklist 🙂",
         "🔔 Oops! Open a ticket to view the checklist. 😊",
         "No ticket, no checklist! 😄  Open a ticket to access it.",
-        "🤔 Where’s the ticket? Open one to see the checklist!",
         "✨ Almost there! Open a ticket to see the checklist.",
     ],
     UnableToFindChecklist: [
@@ -565,20 +573,20 @@ const Notifications = {
             "Just a little more — you're nearly through! 🎉"
         ],
         "100": [
-            "DoD completed! Super work! 🥇",
             "When you said you’d do it – you *actually* did! 😄",
             "Mission complete – ‘How’s the josh?’ HIGH, Sir! 🫡",
             "Definition of Done met! 🥇 You’re the boss of tasks! 🫡",
             "Checklist completed — fantastic work! 🥇",
             "Great job — everything's marked complete! ✅",
-            "Clean sweep — well done! 🧹"
+            "All tasks done. This ticket is cleaner than your weekend plans. 😉",
+            "Every box is ticked. The ticket is at peace. So are we. 🥳",
+            "The only thing left is to brag about it in the stand-up tomorrow. 🤣"
         ],
         "Common": "Good progress! Keep it going! 🚀"
     }
 
 
 }
-
 
 
 const VEPhaseOrder = {
