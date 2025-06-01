@@ -232,8 +232,14 @@ function getPromptListHTML(prompts) {
   try {
     let html = ``;
     prompts.forEach((prompt, index) => {
-      html += getPromptRowHTML(prompt, index);
-      html += getPromptExpandHTML(prompt, index);
+      const promptContainer = document.createElement('div');
+      const dummyDiv = document.createElement('div');
+      dummyDiv.appendChild(promptContainer);
+      promptContainer.classList.add('veX_prompt_container');
+      promptContainer.id = `veX_prompt_container_${index}`;
+      promptContainer.innerHTML = getPromptRowHTML(prompt, index);
+      promptContainer.innerHTML += getPromptExpandHTML(prompt, index);
+      html += dummyDiv.innerHTML;
     });
     return html;
   } catch (err) {
@@ -318,9 +324,23 @@ function attachTemplateEditEvents(container) {
 
 function onExpandBtnClick(btn, index) {
   try {
-    const section = document.getElementById(`expand-${index}`);
-    section.style.display = section.style.display === "none" ? "block" : "none";
-    btn.innerHTML = section.style.display === "none" ? `<img src="${Constants.promptIconsUrl.expand}" alt="Expand Icon" />` : `<img src="${Constants.promptIconsUrl.close}" alt="Close Icon" />`;
+    const promptContainers = document.querySelectorAll('.veX_prompt_container');
+    promptContainers.forEach(container => {
+      const expandBtn = container.querySelector('.veX_expand_btn');
+      const expandSection = container.querySelector('.veX_prompt_expand_section');
+      if (expandSection.id === `expand-${index}` && expandSection.style.display === "none") {
+        expandSection.style.display = "block";
+        expandBtn.innerHTML = `<img src="${Constants.checklistIconsUrl.close}" alt="Close Icon" />`;
+      }
+      else if (expandSection.id === `expand-${index}` && expandSection.style.display !== "none") {
+        expandSection.style.display = "none";
+        expandBtn.innerHTML = `<img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />`;
+      }
+      else if (expandSection.id !== `expand-${index}` && expandSection.style.display !== "none") {
+        expandSection.style.display = "none";
+        expandBtn.innerHTML = `<img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />`;
+      }
+    });
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "On Expand Btn Click", err.message), true);
   }

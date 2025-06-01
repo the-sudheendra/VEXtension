@@ -62,7 +62,8 @@ const checklistIconsUrl = {
     expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
     markAllCompleted: chrome.runtime.getURL("icons/done_all_24dp_FFFFFF.png"),
     logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
-    check: chrome.runtime.getURL("icons/check_24dp.png")
+    check: chrome.runtime.getURL("icons/check_24dp.png"),
+    close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
 };
 const promptIconsUrl = {
     send: chrome.runtime.getURL("icons/send_24.png"),
