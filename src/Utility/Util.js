@@ -74,8 +74,8 @@ function getRandomMessage(notification) {
 
 
 async function getChecklistMode() {
-  const veXChecklistUrl = await chrome.storage.sync.get("veXChecklistUrl");
-  if (veXChecklistUrl?.veXChecklistUrl && veXChecklistUrl.veXChecklistUrl != "") {
+  const veXChecklistRemoteUrl = await chrome.storage.local.get("veXChecklistRemoteUrl");
+  if (veXChecklistRemoteUrl?.veXChecklistRemoteUrl && veXChecklistRemoteUrl.veXChecklistRemoteUrl != "") {
     return "url";
   } else {
     return "local";
@@ -83,29 +83,42 @@ async function getChecklistMode() {
 }
 
 
-async function saveChecklist(veXChecklistInfo, veXChecklistUrl, loadOnStart) {
+async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOnStart) {
   try {
-    await chrome.storage.sync.clear();
+    let keyValue = {};
     let entites = Object.keys(veXChecklistInfo);
     for (let i = 0; i < entites.length; i++) {
       let ticketEntityName = entites[i];
-      let keyValue = {};
+      
       if (isEmptyObject(veXChecklistInfo[ticketEntityName]))
         return false;
       keyValue[ticketEntityName] = veXChecklistInfo[ticketEntityName];
-      await chrome.storage.sync.set(keyValue);
     }
-    // re-save the URL as well if it was passed
-    if (veXChecklistUrl) {
-      await chrome.storage.sync.set({ "veXChecklistUrl": veXChecklistUrl });
-    }
-    if (loadOnStart === true || loadOnStart === false) {
-      await chrome.storage.sync.set({ "veXLoadOnStart": loadOnStart });
-    }
+    let checklistData=chrome.storage.local.get("veXChecklistData") || {};
+    checklistData["checklist"] = keyValue;
+    if(veXChecklistRemoteUrl)
+    checklistData["veXChecklistRemoteUrl"] = veXChecklistRemoteUrl;
+    if(veXLoadOnStart)
+    checklistData["veXLoadOnStart"] = veXLoadOnStart;
+    await chrome.storage.local.set({veXChecklistData : checklistData});
     return true;
   }
   catch (err) {
-    onError(err, undefined, true);
+    onError(err, err.message, true);
+    return false;
+  }
+}
+
+function savePromtsData(prompts, veXPromptsRemoteUrl, loadOnStart) {
+  try {
+    let promptsData=chrome.storage.local.get("veXPromptsData") || {};
+    promptsData["prompts"] = prompts;
+    if(veXPromptsRemoteUrl) promptsData["veXPromptsRemoteUrl"] = veXPromptsRemoteUrl;
+    chrome.storage.local.set({veXPromptsData : promptsData});
+    return true;
+  }
+  catch (err) {
+    onError(err, err.message, true);
     return false;
   }
 }
@@ -116,6 +129,38 @@ function cleanupMutationObserver(observer) {
     return undefined;
   }
   return observer;
+}
+
+async function getLocalListData(listType) {
+  if(listType == "checklist")
+  {
+    return chrome.storage.local.get("veXChecklistData") || {};
+  }
+  else if(listType == "prompts")
+  {
+    return chrome.storage.local.get("veXPromptsData") || [];
+  }
+  return {};
+}
+async function getRemoteListData(remoteUrl, listType) {
+  if (!remoteUrl || remoteUrl === "") {
+    onError("Invalid remote url",)
+    return;
+  }
+  try {
+    const response = await fetch(remoteUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    if (data && data[listType]) {
+      return data[listType];
+    }
+    return {};
+  } catch (error) {
+    onError(error, `Failed to fetch remote ${listType} data from ${remoteUrl}`, true);
+    return {};
+  }
 }
 
 function calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems) {
@@ -308,6 +353,7 @@ function openRightSidebar()
   let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
 
   if (!rightSidebarCommentButton) {
+    notify("🤷‍♂️ Unable to open right sidebar ", Constants.NotificationType.Warning, true);
     return false;
   }
   rightSidebarCommentButton.click();
@@ -318,13 +364,19 @@ function closeRightSidebar()
 {
   let rightSidebarCollapseBtn = document.querySelector(Constants.ValueEdgeNodeSelectors.CollapseRightSidebar)
   if (!rightSidebarCollapseBtn) {
+    notify("🤷‍♂️ Unable to close right sidebar ", Constants.NotificationType.Warning, true);
     return false;
   }
   rightSidebarCollapseBtn.click();
   return true;
 }
 
-
+function makeCursorLoading() {
+  document.body.style.cursor = "wait";
+}
+function makeCursorDefault() {
+  document.body.style.cursor = "default";
+}
 export {
   onError,
   notify,
@@ -335,7 +387,7 @@ export {
   getChecklistStatus,
   getRandomMessage,
   getChecklistMode,
-  saveChecklist,
+  saveChecklistData,
   cleanupMutationObserver,
   calculateCompletionPercentage,
   makeElementDraggable,
@@ -349,5 +401,10 @@ export {
   openRightSidebar,
   closeRightSidebar,
   isCommentPanelOpen,
-  isAviatorPanelOpen
+  isAviatorPanelOpen,
+  savePromtsData,
+  getLocalListData,
+  getRemoteListData,
+  makeCursorLoading,
+  makeCursorDefault,
 }

@@ -23,6 +23,7 @@ var Comments;
 var Quill;
 var PromptModal;
 var Validators;
+var DefaultList;
 // < veX Objects Declarations
 
 // > Loading Modules 
@@ -64,6 +65,7 @@ function veXSetup() {
   try {
     setupChecklistPopupNode();
     setupChecklistPopupOverlay();
+    addLoadingElement();
     initVEXNodes();
     MutationObservers.initTicketTitleMutationObserver(onTicketTitleChange);
     PromptModal.initialize();
@@ -78,7 +80,13 @@ function setupChecklistPopupNode() {
   veXPopUpNode.innerHTML = Constants.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
 }
-
+function  addLoadingElement()
+{
+  let veX_loader=document.createElement('span');
+  veX_loader.id="veX_loader";
+  veX_loader.style.display="none";
+  document.body.appendChild(veX_loader);
+}
 function setupChecklistPopupOverlay() {
   veXPopUpOverlay.id = "veX_checklist_popup_overlay";
   veXPopUpOverlay.addEventListener("click", closeChecklistPopup);
@@ -632,16 +640,16 @@ async function refreshChecklistFromRemoteIfExists() {
   try {
     // Get the remote URL from sync storage
     // and fetch the checklist from the remote URL
-    const veXChecklistUrl = await chrome.storage.sync.get("veXChecklistUrl");
-    const veXLoadOnStart = await chrome.storage.sync.get("veXLoadOnStart");
-    const response = await fetch(veXChecklistUrl?.veXChecklistUrl);
+    const veXChecklistRemoteUrl = await chrome.storage.local.get("veXChecklistRemoteUrl");
+    const veXLoadOnStart = await chrome.storage.local.get("veXLoadOnStart");
+    const response = await fetch(veXChecklistRemoteUrl?.veXChecklistRemoteUrl);
     if (!response.ok) {
       Util.notify("Couldn't fetch checklist JSON from the URL", "warning", true);
       return false;
     }
     // Validate and update the checklist
     const veXChecklistInfo = await response.json();
-    if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veXChecklistUrl?.veXChecklistUrl, veXLoadOnStart?.veXLoadOnStart) === true) {
+    if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl?.veXChecklistRemoteUrl, veXLoadOnStart?.veXLoadOnStart) === true) {
     } else {
       return false;
     }
@@ -789,22 +797,31 @@ async function onTicketTitleChange(change) {
 
     // If we are using a remote URL to maintain the checklist,
     // then refresh the checklist locally first
-    let veXLoadOnStart = await chrome.storage.sync.get("veXLoadOnStart")
-    if (veXLoadOnStart?.veXLoadOnStart === true) {
+    let veXChecklistData = await chrome.storage.local.get("veXChecklistData");
+    let checklist={};
+    let loadOnStart=false;
+    let veXChecklistRemoteUrl ="";
+    if(veXChecklistData)
+    { 
+      veXChecklistData = veXChecklistData["veXChecklistData"]
+    }
+    if(veXChecklistData)
+    {
+      checklist = veXChecklistData["checklist"];
+      loadOnStart = veXChecklistData["loadOnStart"];
+      veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
+    }
+    if (loadOnStart === true) {
       const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
       if (!remoteRefreshSuccess) {
         return;
       }
     }
-    let tempDOD = await chrome.storage.sync.get(veXCurrentTicketInfo.type);
-    if (!Util.isEmptyObject(tempDOD)) {
-      veXCurrentTicketChecklist = tempDOD[veXCurrentTicketInfo.type];
-    }
+    veXCurrentTicketChecklist = checklist[veXCurrentTicketInfo.type];
 
     if (!Util.isEmptyObject(veXCurrentTicketChecklist)) {
       initChecklist();
       veXIsViewInitialised = initView();
-      // MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
     }
   }
   catch (err) {

@@ -1,7 +1,7 @@
 var veXPromptsPopupNode = document.createElement("div");
 var veXPromptsPopupOverlay = document.createElement("div");
 var currentPromptTone = "";
-const prompts = Constants.veXDefaultPrompts;
+var prompts = Constants.veXDefaultPrompts;
 const promptTones = Constants.veXDefaultPromptsTone;
 let promptVariableData = [];
 
@@ -19,6 +19,7 @@ async function loadModules() {
 async function initialize() {
   try {
     await loadModules();
+    await loadPrompts();
     veXPromptViewSetup();
     initializePromptVariableData();
   } catch (err) {
@@ -26,23 +27,40 @@ async function initialize() {
   }
 }
 
+async function loadPrompts() {
+  try {
+    prompts=await chrome.storage.local.get("veXPromptsData");
+    if(Util.isEmptyObject(prompts) || !prompts.veXPromptsData || !Array.isArray(prompts.veXPromptsData)) {
+      prompts = Constants.veXDefaultPrompts;
+    } else {
+      prompts = prompts.prompts;
+    }
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Get Prompts", err.message), true);
+  }
+}
 
 function initializeTonesDropdown() {
   try {
     const dropdown = veXPromptsPopupNode.querySelector('.veX_prompts_tone_selector');
     const selected = dropdown.querySelector('.veX_dropdown_selected');
-  selected.setAttribute('data-value', "");
-  selected.textContent = "Select Tone";
-  const options = dropdown.querySelector('.veX_dropdown_options');
-  let toneOptions = Object.keys(promptTones);
-  let option = document.createElement('div');
-  option.classList.add('veX_dropdown_option');
-  option.classList.add('veX_truncate');
-  option.setAttribute('data-value', "");
-  option.setAttribute('title', "None");
-  option.textContent = "None";
-  options.appendChild(option);
-  toneOptions.forEach(tone => {
+
+    selected.classList.add('veX_truncate');
+    selected.setAttribute('data-value', "");
+    selected.textContent = "Select Tone";
+
+    const options = dropdown.querySelector('.veX_dropdown_options');
+    let toneOptions = Object.keys(promptTones);
+    // Add None option
+    let option = document.createElement('div');
+    option.classList.add('veX_dropdown_option');
+    option.classList.add('veX_truncate');
+    option.setAttribute('data-value', "");
+    option.setAttribute('title', "None");
+    option.textContent = "None";
+
+    options.appendChild(option);
+    toneOptions.forEach(tone => {
       let option = document.createElement('div');
       option.classList.add('veX_dropdown_option');
       option.classList.add('veX_truncate');
@@ -87,25 +105,25 @@ function attachToneSelectorEvents() {
     const options = dropdown.querySelector('.veX_dropdown_options');
     const allOptions = dropdown.querySelectorAll('.veX_dropdown_option');
     allOptions.forEach(option => {
-    option.addEventListener('click', (e) => {
-      e.stopPropagation();
-      selected.innerText = `${option.textContent.trim()}`;
-      let target=e.target;
-      if(target.getAttribute('data-value') === ""){
-        currentPromptTone = "";
-      }else{
-        currentPromptTone = target.getAttribute('data-value') || option.textContent.trim();
-      }
+      option.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selected.innerText = `${option.textContent.trim()}`;
+        let target = e.target;
+        if (target.getAttribute('data-value') === "") {
+          currentPromptTone = "";
+        } else {
+          currentPromptTone = target.getAttribute('data-value') || option.textContent.trim();
+        }
+        options.classList.remove('veX_show');
+      });
+    });
+
+    dropdown.addEventListener('click', (e) => {
+      options.classList.toggle('veX_show');
+    });
+    dropdown.addEventListener('blur', (e) => {
       options.classList.remove('veX_show');
     });
-  });
-
-  dropdown.addEventListener('click', (e) => {
-      options.classList.toggle('veX_show');
-  });
-  dropdown.addEventListener('blur', (e) => {
-    options.classList.remove('veX_show');
-  });
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Attaching Prompt Tone Selector Events", err.message), true);
   }
@@ -131,7 +149,7 @@ function initializePromptList() {
 function initializePromptVariableData() {
   try {
     prompts.forEach((promptData, index) => {
-      let variables = promptData["variables"];  
+      let variables = promptData["variables"];
       promptVariableData[index] = {};
       variables.forEach((variableData) => {
         promptVariableData[index][variableData["name"]] = extractValueFromElement(variableData["selector"]) || "";
@@ -192,36 +210,36 @@ function closePromptsPopup() {
     veXPromptsPopupNode.classList.remove("veX_checklist_popup_active");
     veXPromptsPopupNode.classList.add("veX_checklist_popup_disable");
   }
-    catch (err) {
+  catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Checklist Popup", err.message), true);
   }
 }
 
 function draftInstructions(unresolved = [], currentPromptTone = '') {
   try {
-      const HallucinationPreventionInstructions = 
-  `\n- If the user's query references or  requires the context of a specific content (e.g., ${unresolved.join(', ')}) that are NOT present in their message or in the ticket context
+    const HallucinationPreventionInstructions =
+      `\n- If the user's query references or  requires the context of a specific content (e.g., ${unresolved.join(', ')}) that are NOT present in their message or in the ticket context
   - ask the user to provide the missing input.
   - Do **not** infer, assume, or fabricate any information not explicitly provided by the user.
   - Only proceed when sufficient context has been provided.`;
-  
-  const ToneInstructions = `
+
+    const ToneInstructions = `
   \n- Maintain **${promptTones[currentPromptTone] || currentPromptTone}** tone throughout your response.
   `;
 
-  let instructions = '';
+    let instructions = '';
 
-  if(unresolved.length > 0 || currentPromptTone){
-    instructions = '\n\n*Instructions:*\n';
-  }
+    if (unresolved.length > 0 || currentPromptTone) {
+      instructions = '\n\n*Instructions:*\n';
+    }
 
-  if (unresolved.length > 0) {
-    instructions += HallucinationPreventionInstructions;
-  }
+    if (unresolved.length > 0) {
+      instructions += HallucinationPreventionInstructions;
+    }
 
-  if (currentPromptTone) {
-    instructions += ToneInstructions;
-  }
+    if (currentPromptTone) {
+      instructions += ToneInstructions;
+    }
     return instructions.trim();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Draft Instructions", err.message), true);
@@ -253,12 +271,12 @@ function getPromptRowHTML(prompt, index) {
         <div class="veX_prompt_rows" data-index="${index}">
           <div class="veX_prompt_name">${prompt.name}
               <span class="veX_expand_btn" title="Expand" data-index="${index}">
-              <img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />
+              <img src="${Constants.veXIconsURLs.expand}" alt="Expand Icon" />
               </span>
           </div>
           <div class="veX_icons">
               <span class="veX_send_btn" title="Send to AI" data-index="${index}">
-              <img src="${Constants.checklistIconsUrl.send}" alt="Send Icon" />
+              <img src="${Constants.veXIconsURLs.send}" alt="Send Icon" />
               </span>
           </div>
         </div>
@@ -273,25 +291,25 @@ function onVariableChange(textarea, index, name) {
 function getPromptExpandHTML(prompt, index) {
   try {
     return `
-          <div class="veX_prompt_expand_section veX_selectable" id="expand-${index}" style="display: none;">
+          <div class="veX_prompt_expand_section veX_selectable" id="veX_expand_${index}" style="display: none;">
             <p><strong>Description:</strong> ${prompt.description}</p>
             <p><strong>Template:</strong></p>
             <div class="veX_prompt_template_container">
                 <span class="veX_prompt_edit_template_btn" title="Edit Template" data-index="${index}">
-                  <img src="${Constants.checklistIconsUrl.edit}" alt="Edit Icon" />
+                  <img src="${Constants.veXIconsURLs.edit}" alt="Edit Icon" />
                 </span>
                 <pre class="veX_prompt_template_content" data-index="${index}">${prompt.template}</pre>
             </div>
             <p><strong>Variables:</strong></p>
             <ul class="veX_prompt_variable_list">
                 ${prompt.variables.map(
-                (v) =>
-                `
+      (v) =>
+        `
                 <li>${v.name}</li>
                 <li><textarea class="veX_variable_input veX_selectable" placeholder="Enter ${v.name} here..." data-index="${index}" data-name="${v.name}">${promptVariableData[index] || ""}</textarea></li>
                 `
-                )
-                .join("")}
+    )
+        .join("")}
             </ul>
           </div>
 `;
@@ -302,21 +320,21 @@ function getPromptExpandHTML(prompt, index) {
 function attachTemplateEditEvents(container) {
   try {
     container.querySelectorAll('.veX_prompt_edit_template_btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const index = btn.getAttribute('data-index');
-      const preElement = container.querySelector(`.veX_prompt_template_content[data-index="${index}"]`);
-      if (preElement.contentEditable !== 'true') {
-        preElement.contentEditable = 'true';
-        preElement.focus();
-        btn.querySelector('img').src = Constants.checklistIconsUrl.check;
-      } else {
-        preElement.contentEditable = 'false';
-        prompts[index].template = preElement.textContent;
-        btn.querySelector('img').src = Constants.checklistIconsUrl.edit;
+      btn.addEventListener('click', () => {
+        const index = btn.getAttribute('data-index');
+        const preElement = container.querySelector(`.veX_prompt_template_content[data-index="${index}"]`);
+        if (preElement.contentEditable !== 'true') {
+          preElement.contentEditable = 'true';
+          preElement.focus();
+          btn.querySelector('img').src = Constants.veXIconsURLs.check;
+        } else {
+          preElement.contentEditable = 'false';
+          prompts[index].template = preElement.textContent;
+          btn.querySelector('img').src = Constants.veXIconsURLs.edit;
 
-      }
+        }
+      });
     });
-  });
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Attach Template Edit Events", err.message), true);
   }
@@ -324,21 +342,21 @@ function attachTemplateEditEvents(container) {
 
 function onExpandBtnClick(btn, index) {
   try {
-    const promptContainers = document.querySelectorAll('.veX_prompt_container');
+    const promptContainers = veXPromptsPopupNode.querySelectorAll('.veX_prompt_container');
     promptContainers.forEach(container => {
       const expandBtn = container.querySelector('.veX_expand_btn');
       const expandSection = container.querySelector('.veX_prompt_expand_section');
-      if (expandSection.id === `expand-${index}` && expandSection.style.display === "none") {
+      if (expandSection.id === `veX_expand_${index}` && expandSection.style.display === "none") {
         expandSection.style.display = "block";
-        expandBtn.innerHTML = `<img src="${Constants.checklistIconsUrl.close}" alt="Close Icon" />`;
+        expandBtn.innerHTML = `<img src="${Constants.veXIconsURLs.close}" alt="Close Icon" />`;
       }
-      else if (expandSection.id === `expand-${index}` && expandSection.style.display !== "none") {
+      else if (expandSection.id === `veX_expand_${index}` && expandSection.style.display !== "none") {
         expandSection.style.display = "none";
-        expandBtn.innerHTML = `<img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />`;
+        expandBtn.innerHTML = `<img src="${Constants.veXIconsURLs.expand}" alt="Expand Icon" />`;
       }
-      else if (expandSection.id !== `expand-${index}` && expandSection.style.display !== "none") {
+      else if (expandSection.id !== `veX_expand_${index}` && expandSection.style.display !== "none") {
         expandSection.style.display = "none";
-        expandBtn.innerHTML = `<img src="${Constants.checklistIconsUrl.expand}" alt="Expand Icon" />`;
+        expandBtn.innerHTML = `<img src="${Constants.veXIconsURLs.expand}" alt="Expand Icon" />`;
       }
     });
   } catch (err) {
@@ -349,13 +367,20 @@ function onExpandBtnClick(btn, index) {
 async function onSendBtnClick(index) {
   try {
     const prompt = prompts[index];
-    const filledPrompt = draftPromptTemplate(prompt.template,index, prompt.variables, promptVariableData);
+    const filledPrompt = draftPromptTemplate(prompt.template, index, prompt.variables, promptVariableData);
     Util.openRightSidebar();
     await Util.delay(500);
-    document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton).click();
+    if(document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton))
+    {
+      document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton).click();
+    }
+    else
+    {
+      Util.notify("🤔 Aviator tab not found. Please ensure it is accessible.", Constants.NotificationType.Warning, true);
+      return;
+    }
     await Util.delay(500);
     Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
-    //document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-send-button']").click();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "On Send Btn Click", err.message), true);
   }
@@ -388,30 +413,26 @@ function draftPromptTemplate(template, index, variables, promptVariableData) {
   try {
     const unresolved = [];
 
-  variables.forEach(({ name, selector }) => {
-    const element = document.querySelector(selector);
-    let value = null;
-    const placeholder = new RegExp(`{\\s*${name}\\s*}`, 'g');
-    if (promptVariableData[index] && promptVariableData[index][name] && promptVariableData[index][name].trim() !== '') {
-      value = promptVariableData[index][name];
-      template = template.replace(placeholder, value);
-    } else if (element) {
-      if ('value' in element) {
-        value = element.value;
+    variables.forEach(({ name, selector }) => {
+      let selectorElementValue = extractValueFromElement(selector);
+      let value = null;
+      const placeholder = new RegExp(`{\\s*${name}\\s*}`, 'g');
+      if (promptVariableData[index] && promptVariableData[index][name] && promptVariableData[index][name].trim() !== '') {
+        value = promptVariableData[index][name];
+        template = template.replace(placeholder, value);
+      } else if (selectorElementValue) {
+        value = selectorElementValue;
+        value = removeExtraSpaces(value);
+        template = template.replace(placeholder, value);
       } else {
-        value = element.textContent;
+        value = `${name}`;
+        unresolved.push(name);
       }
-      value = removeExtraSpaces(value);
-      template = template.replace(placeholder, value);
-    } else {
-      value = `${name}`;
-      unresolved.push(name);
-    }
-  });
+    });
 
     const instructions = `\n${draftInstructions(unresolved, currentPromptTone)}`;
     template += instructions;
-      return template;
+    return template;
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Draft Prompt Template", err.message), true);
   }
@@ -424,9 +445,9 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
     switch (request) {
       case "openPromptsPopup":
         if (!Util.isEmptyObject(veXCurrentTicketInfo))
-            openPromptsPopup();
+          openPromptsPopup();
         else if (Util.isEmptyObject(veXCurrentTicketInfo))
-          Util.notify(Util.getRandomMessage(Constants.Notifications.OpenTicketToSeeChecklist), Constants.NotificationType.Info, true)
+          Util.notify(Util.getRandomMessage(Constants.Notifications.OpenTicketToSeePrompts), Constants.NotificationType.Info, true)
         break;
     }
   }

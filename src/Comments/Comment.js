@@ -43,6 +43,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Warning, true);
       return;
     }
+    Util.showLoading();
     // Open comment sidebar
     if(Util.openRightSidebar()==false)
     {
@@ -50,7 +51,16 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
       return;
     }
     await Util.delay(500);
-
+    if(document.querySelector(Constants.ValueEdgeNodeSelectors.CommentButton))
+    {
+      document.querySelector(Constants.ValueEdgeNodeSelectors.CommentButton).click();
+    }else
+    {
+      Util.notify("Comment button not found in the sidebar. Please try again.", Constants.NotificationType.Error, true);
+      return;
+    }
+    
+    await Util.delay(500);
     // Click on add new comment box
     let addNewCommentBox = document.querySelector(Constants.ValueEdgeNodeSelectors.NewCommentBox)
     if (!addNewCommentBox) {
@@ -103,6 +113,10 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
   catch (ex) {
     Util.onError(ex, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Add Checklist to Comments", ex.message), true)
   }
+  finally
+  {
+    Util.hideLoading();
+  }
 
 }
 
@@ -117,6 +131,7 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
       return;
     }
+    Util.showLoading();
     if(Util.openRightSidebar()==false)
     {
       Util.notify("Comment box icon not found in the sidebar. Please try again.", Constants.NotificationType.Error, true);
@@ -165,6 +180,10 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Edit Existing Comment", err.message), true);
+  }
+  finally
+  {
+    Util.hideLoading();
   }
 
 }
