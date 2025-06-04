@@ -433,11 +433,14 @@ const Notifications = {
         "💾 Checklist saved! Ready for the next step? ⏳",
         "📌 Your checklist is saved. You’re good to go! 😊",
         "😌 Your checklist is saved. No worries, it's all there!",
-        "Checklist saved! That was easy, right? 😏",
         "🚀 Saved successfully! Ready to check things off? ",
         "🎊 Your checklist is saved. Let’s get things done! 🤗",
         "🔥 Checklist locked & loaded! Time to make progress! 🚀",
         " Yep, it’s saved. Now, no excuses—let’s get to work!😜 "
+    ],
+    AviatorPromptsSavedSuccessfully: [
+           "💡 Prompts saved. Next stop: smarter decisions!",
+            "All set! 🙌🏻, Your prompt is ready for deployment in to Aviator 🚀",
     ],
     ReminderToUpdateChecklist: [
         "🔔 Reminder: Don’t forget to update the checklist! 😊",

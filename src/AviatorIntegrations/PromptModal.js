@@ -29,11 +29,20 @@ async function initialize() {
 
 async function loadPrompts() {
   try {
-    prompts=await chrome.storage.local.get("veXPromptsData");
-    if(Util.isEmptyObject(prompts) || !prompts.veXPromptsData || !Array.isArray(prompts.veXPromptsData)) {
+    let promptsResponse=await chrome.storage.local.get("veXPromptsData");
+    if(Util.isEmptyObject(promptsResponse)){
+      prompts=Constants.veXDefaultPrompts;
+      return;
+    }
+    let promptsData = promptsResponse.veXPromptsData;
+    if(Util.isEmptyObject(promptsData)) {
       prompts = Constants.veXDefaultPrompts;
-    } else {
-      prompts = prompts.prompts;
+      return;
+    } 
+    prompts = promptsData.prompts;
+    if(Util.isEmptyArray(prompts)) {
+      prompts = Constants.veXDefaultPrompts;
+      return;
     }
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Get Prompts", err.message), true);

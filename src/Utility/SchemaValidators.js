@@ -21,7 +21,7 @@ function validateChecklist(veXChecklistInfo) {
       }
   
       if (Object.keys(veXChecklistInfo).length === 0) {
-        Util.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue.", "warning", true);
+        Util.notify("The checklist JSON file appears to be empty. Please upload a valid file to continue.", Constants.NotificationType.Error, true);
         return false;
       }
   
@@ -35,12 +35,12 @@ function validateChecklist(veXChecklistInfo) {
         }
   
         if (Object.keys(entityChecklist).length === 0) {
-          Util.notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, "warning", true);
+          Util.notify(`It looks like the '${ticketEntityName}' entity is empty. Please add the necessary fields to continue.`, Constants.NotificationType.Error, true);
           return false;
         }
   
         if (!entityChecklist.hasOwnProperty("categories")) {
-          Util.notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, "warning", true);
+          Util.notify(`The 'categories' is missing from the '${ticketEntityName}' entity. Please add it, as it is a mandatory field.`, Constants.NotificationType.Error, true);
           return false;
         }
   
@@ -50,7 +50,7 @@ function validateChecklist(veXChecklistInfo) {
         }
   
         if (Object.keys(entityChecklist.categories).length === 0) {
-          Util.notify(`No categories are specified in the '${ticketEntityName}'. Please add at least one, as it is a mandatory field.`, "warning", true);
+          Util.notify(`No categories are specified in the '${ticketEntityName}'. Please add at least one, as it is a mandatory field.`, Constants.NotificationType.Error, true);
           return false;
         }
   
@@ -86,7 +86,7 @@ function validateChecklist(veXChecklistInfo) {
         }
   
         if (!category.hasOwnProperty("checklist")) {
-          Util.notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, "warning", true);
+          Util.notify(`The 'checklist' key is missing in the '${categoryName}' category of the '${ticketEntityName}' entity. Please add it, as it is required.`, Constants.NotificationType.Error, true);
           return false;
         }
   
@@ -101,7 +101,7 @@ function validateChecklist(veXChecklistInfo) {
         }
   
         if (category.checklist.length === 0) {
-          Util.notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add at least one item, as it is required.`, "warning", true);
+          Util.notify(`The 'checklist' array is empty in the '${categoryName}' category for the '${ticketEntityName}' entity. Please add at least one item, as it is required.`, Constants.NotificationType.Error, true);
           return false;
         }
   
@@ -119,7 +119,7 @@ function validateChecklist(veXChecklistInfo) {
           }
   
           if (item.trim().length === 0) {
-            Util.notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' is empty. All items must contain text.`, "warning", true);
+            Util.notify(`Checklist item at position ${i + 1} in '${categoryName}' category of '${ticketEntityName}' is empty. All items must contain text.`, Constants.NotificationType.Error, true);
             return false;
           }
         }

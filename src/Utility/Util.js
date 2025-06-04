@@ -109,7 +109,7 @@ async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOn
   }
 }
 
-function savePromtsData(prompts, veXPromptsRemoteUrl, loadOnStart) {
+function savePromtsData(prompts, veXPromptsRemoteUrl) {
   try {
     let promptsData=chrome.storage.local.get("veXPromptsData") || {};
     promptsData["prompts"] = prompts;
