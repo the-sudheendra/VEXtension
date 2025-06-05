@@ -94,12 +94,11 @@ async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOn
         return false;
       keyValue[ticketEntityName] = veXChecklistInfo[ticketEntityName];
     }
-    let checklistData=chrome.storage.local.get("veXChecklistData") || {};
+    let checklistData= await chrome.storage.local.get("veXChecklistData") || {};
     checklistData["checklist"] = keyValue;
     if(veXChecklistRemoteUrl)
     checklistData["veXChecklistRemoteUrl"] = veXChecklistRemoteUrl;
-    if(veXLoadOnStart)
-    checklistData["veXLoadOnStart"] = veXLoadOnStart;
+    checklistData["veXLoadOnStart"] = (loadOnStart === true ? true : false);
     await chrome.storage.local.set({veXChecklistData : checklistData});
     return true;
   }
@@ -109,9 +108,9 @@ async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOn
   }
 }
 
-function savePromtsData(prompts, veXPromptsRemoteUrl) {
+async function savePromtsData(prompts, veXPromptsRemoteUrl) {
   try {
-    let promptsData=chrome.storage.local.get("veXPromptsData") || {};
+    let promptsData= await chrome.storage.local.get("veXPromptsData") || {};
     promptsData["prompts"] = prompts;
     if(veXPromptsRemoteUrl) promptsData["veXPromptsRemoteUrl"] = veXPromptsRemoteUrl;
     chrome.storage.local.set({veXPromptsData : promptsData});

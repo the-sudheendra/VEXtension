@@ -102,7 +102,7 @@ async function loadChecklistData() {
 
     let loadOnStart = false;
     let veXChecklistRemoteUrl = "";
-    loadOnStart = veXChecklistData["loadOnStart"];
+    loadOnStart = veXChecklistData["veXLoadOnStart"];
     veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
     veXConfiguredChecklist = veXChecklistData["checklist"];
 
@@ -130,15 +130,9 @@ async function loadPromptsData() {
 
 async function onSaveURL() {
     const url = document.getElementById('veXRemoteUrl').value;
-    if (!url || url === '') {
-        if (!url) {
+    if (!url) {
             Util.notify("Please enter a valid remote URL 👀", Constants.NotificationType.Warning, true);
             return;
-        }
-        if (await saveURLMetaData('') === true) {
-            Util.notify("Checklist URL cleared successfully! 🙌🏻", Constants.NotificationType.Success, true);
-        }
-        return;
     }
     try {
         Util.showLoading();
@@ -153,6 +147,7 @@ async function onSaveURL() {
         }
         else if (uploadType === 'checklist') {
             validateAndSaveRemoteChecklist(responseData, url);
+
         }
 
     } catch (error) {
@@ -167,21 +162,27 @@ async function validateAndSaveRemoteChecklist(responseData, url) {
     const loadOnStart = document.getElementById('loadOnStart').checked;
     const veXChecklistInfo = responseData;
     if (Validators.validateChecklist(veXChecklistInfo) === true) {
-        if (await Util.saveChecklistData(veXChecklistInfo, url, loadOnStart) === false) {
-            Util.notify("Failed to save checklist data. Please try again.", Constants.NotificationType.Error, true);
-            return;
+        isChecklistSaved = await Util.saveChecklistData(veXChecklistInfo, url, loadOnStart);
+        if (isChecklistSaved === true) {
+            Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
+            // clear the url input box since we are using remote checklist
+            veXChecklistData = undefined;
+            loadChecklistData();
         }
-        Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
+        else {
+            Util.notify("Failed to save checklist data. Please try again.", Constants.NotificationType.Error, true);
+        }
     }
 }
 async function validateAndSaveRemotePrompts(responseData, url) {
     const promptsData = responseData;
     if (Validators.validatePromptTemplates(promptsData) === true)
-        if (await Util.savePromtsData(promptsData, url) === false) {
-            Util.notify("Failed to save prompts data. Please try again.", Constants.NotificationType.Error, true);
-            return;
+        if (await Util.savePromtsData(promptsData, url) === true) {
+            Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
         }
-    Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
+        else {
+            Util.notify("Failed to save prompts data. Please try again.", Constants.NotificationType.Error, true);
+        }
 }
 function onChecklistFileUpload(event) {
     const file = event.target.files[0]; // File is already selected by the input change event
