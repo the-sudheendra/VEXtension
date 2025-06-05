@@ -1,5 +1,7 @@
 const fileInput = document.getElementById('jsonFile');
 const urlInputSaveBtn = document.getElementById('SaveChecklistBtn');
+const downloadChecklistBtn = document.getElementById('downloadChecklistBtn');
+const downloadPromptsBtn = document.getElementById('downloadPromptsBtn');
 var veXChecklistRemoteUrl = "";
 var veXLoadOnStart = false;
 var uploadType = 'checklist';
@@ -9,7 +11,7 @@ var Validators;
 var checkListData = null;
 var promptsData = null;
 var veXChecklistData;
-var veXpromptsData;
+var veXPromptsData;
 var veXConfiguredChecklist;
 var veXConfiguredPrompts;
 
@@ -45,6 +47,8 @@ function setupEventListeners() {
 
     loadUrlURLMetaData();
 
+    downloadChecklistBtn.addEventListener('click', onDownloadChecklist);
+    downloadPromptsBtn.addEventListener('click', onDownloadPrompts);
     document.querySelector(".file-upload").addEventListener("click", () => {
         document.getElementById("jsonFile").click();
     });
@@ -78,6 +82,39 @@ function setupEventListeners() {
     });
 }
 
+function onDownloadChecklist() {
+    if (!veXChecklistData) {
+        alert("Checklist data not available");
+        return;
+    }
+    const data = JSON.stringify(veXChecklistData, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'checklist_data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function onDownloadPrompts() {
+    if (!veXpromptsData) {
+        alert("Prompts data not available");
+        return;
+    }
+    const data = JSON.stringify(veXpromptsData, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'prompts_data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
 
 async function loadUrlURLMetaData() {
     if (uploadType == "checklist") {
@@ -112,17 +149,17 @@ async function loadChecklistData() {
         document.getElementById('loadOnStart').checked = (loadOnStart === true ? true : false);
 }
 async function loadPromptsData() {
-    if (!veXpromptsData) {
+    if (!veXPromptsData) {
         let tempPromptsData = await chrome.storage.local.get("veXPromptsData");
         if (tempPromptsData)
-            veXpromptsData = tempPromptsData["veXPromptsData"];
+            veXPromptsData = tempPromptsData["veXPromptsData"];
         else
             return;
     }
-    if (!veXpromptsData) return;
+    if (!veXPromptsData) return;
 
-    veXConfiguredPrompts = veXpromptsData["prompts"];
-    veXRemoteUrl = veXpromptsData["veXPromptsRemoteUrl"];
+    veXConfiguredPrompts = veXPromptsData["prompts"];
+    veXRemoteUrl = veXPromptsData["veXPromptsRemoteUrl"];
     if (document.getElementById('veXRemoteUrl'))
         document.getElementById('veXRemoteUrl').value = veXRemoteUrl || "";
 
@@ -130,7 +167,7 @@ async function loadPromptsData() {
 
 async function onSaveURL() {
     const url = document.getElementById('veXRemoteUrl').value;
-    if (!url) {
+    if (!url || Util.isValidURL(url) === false) {
             Util.notify("Please enter a valid remote URL 👀", Constants.NotificationType.Warning, true);
             return;
     }
@@ -192,12 +229,14 @@ function onChecklistFileUpload(event) {
             try {
                 Util.showLoading();
                 const veXChecklistInfo = JSON.parse(reader.result);
-                if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo) === true) {
+                if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo,'',false) === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
                     // clear the url input box since
                     // we are now using the file mode
                     document.getElementById('veXRemoteUrl').value = '';
                     document.getElementById('loadOnStart').checked = false;
+                    veXChecklistData = undefined;
+                    loadChecklistData();
                 }
                 fileInput.value = '';
             } catch (err) {
@@ -223,9 +262,13 @@ function onPromptFileUpload(event) {
             try {
                 Util.showLoading();
                 const promptsData = JSON.parse(reader.result);
-                if (Validators.validatePromptTemplates(promptsData) === true && await Util.savePromtsData(promptsData) === true) {
+                if (Validators.validatePromptTemplates(promptsData) === true && await Util.savePromtsData(promptsData,'') === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
                     fileInput.value = '';
+                    veXPromptsData=undefined;
+                    loadPromptsData();
+
+
                 }
                 else {
                     fileInput.value = '';
@@ -241,24 +284,5 @@ function onPromptFileUpload(event) {
     }
 }
 
-
-async function saveURLMetaData(veXChecklistRemoteUrl, veXChecklistInfo, loadOnStart) {
-    try {
-        Util.showLoading();
-        if (veXChecklistRemoteUrl && veXChecklistInfo) {
-            if (await Util.saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOnStart) === false) return false;
-            await chrome.storage.local.set({ "veXChecklistRemoteUrl": veXChecklistRemoteUrl });
-            await chrome.storage.local.set({ "veXLoadOnStart": loadOnStart });
-        }
-        return true;
-    }
-    catch (err) {
-        Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Saving the Checklist Metadata", err.message), true);
-        return false;
-    }
-    finally {
-        Util.hideLoading();
-    }
-}
 
 initialize();

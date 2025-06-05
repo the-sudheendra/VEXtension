@@ -376,6 +376,14 @@ function makeCursorLoading() {
 function makeCursorDefault() {
   document.body.style.cursor = "default";
 }
+function isValidURL(str) {
+  try {
+    new URL(str);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
 export {
   onError,
   notify,
@@ -406,4 +414,5 @@ export {
   getRemoteListData,
   makeCursorLoading,
   makeCursorDefault,
+  isValidURL
 }
