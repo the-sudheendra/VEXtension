@@ -204,9 +204,9 @@ function openPromptsPopup() {
       closeChecklistPopup();
     }
     veXPromptsPopupOverlay.style.visibility = "visible";
-    veXPromptsPopupNode.classList.add("veX_checklist_popup_active");
+    veXPromptsPopupNode.classList.add("veX_popup_active");
     centerThePopup(veXPromptsPopupNode);
-    veXPromptsPopupNode.classList.remove("veX_checklist_popup_disable");
+    veXPromptsPopupNode.classList.remove("veX_popup_disable");
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Prompts Popup", err.message), true);
   }
@@ -216,8 +216,8 @@ function closePromptsPopup() {
   try {
     if (!veXPromptsPopupOverlay || !veXPromptsPopupNode) return;
     veXPromptsPopupOverlay.style.visibility = "hidden";
-    veXPromptsPopupNode.classList.remove("veX_checklist_popup_active");
-    veXPromptsPopupNode.classList.add("veX_checklist_popup_disable");
+    veXPromptsPopupNode.classList.remove("veX_popup_active");
+    veXPromptsPopupNode.classList.add("veX_popup_disable");
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Checklist Popup", err.message), true);
@@ -390,6 +390,9 @@ async function onSendBtnClick(index) {
     }
     await Util.delay(500);
     Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
+    closePromptsPopup();
+    document.querySelector("[data-aid = 'chat-with-entity-panel-bottom-section-on-submit-btn']").click();
+    
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "On Send Btn Click", err.message), true);
   }

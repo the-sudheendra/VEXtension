@@ -116,7 +116,7 @@
   border-radius: 10px;
 }
 
-.veX_checklist_popup_disable , .veX_prompts_popup_disable {
+.veX_popup_disable , .veX_prompts_popup_disable {
   opacity: 0 !important;
   transform: translate(-50%, -60%) !important;
   visibility: hidden !important;
@@ -128,7 +128,7 @@
   transform: translate(-50%, -50%);
 }
 
-.veX_checklist_popup_active {
+.veX_popup_active {
   opacity: 1 !important;
   transform: translate(-50%, -50%) !important;
   visibility: visible !important;
@@ -676,19 +676,29 @@ color: var(--veX-common-fontColor);
   transform: translate(-50%, -50%);
   z-index: 4000;
 }
-
+/*
 #veX_loader::before {
   content: "";
   width: 30px;
   height: 30px;
   border-radius: 50%;
   display: block;
-  background: conic-gradient(#6a8eff, #c06cf5, #f26b6b, #6a8eff);
+  background: conic-gradient(#1a6aff, #078bb2);
   mask: radial-gradient(farthest-side, transparent calc(100% - 5px), black 0);
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), black 0);
   animation: rotation 1s linear infinite;
+}  */
+#veX_loader {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: block;
+  /* This creates the light blue track */
+  border: 5px solid #cceeff; /* A light blue/grey for the track */
+  /* This creates the darker blue spinning arc */
+  border-top-color: #1a6aff;
+  animation: rotation 1s linear infinite;
 }
-
 @keyframes rotation {
   0% {
     transform: rotate(0deg);

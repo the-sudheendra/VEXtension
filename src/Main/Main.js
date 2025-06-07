@@ -76,7 +76,7 @@ function veXSetup() {
 
 function setupChecklistPopupNode() {
   veXPopUpNode.id = "veX_checklist_popup_container";
-   veXPopUpNode.classList.add("veX_checklist_popup_disable");
+   veXPopUpNode.classList.add("veX_popup_disable");
   veXPopUpNode.innerHTML = Constants.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
 }
@@ -355,6 +355,13 @@ function updateMainContentView() {
       return;
     }
     veXNodes.veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
+    // Add event listener for 'Mark as Completed' button
+    const markCompletedBtn = veXPopUpNode.querySelector('.veX_mark_category_completed_btn');
+    if (markCompletedBtn) {
+      markCompletedBtn.onclick = function() {
+        markCurrentCategoryAsCompleted();
+      };
+    }
     veXNodes.veXSidebarParentNode.querySelectorAll(".veX_category_button").forEach((buttonNode) => {
       buttonNode.classList.remove("veX-Active-Button");
     });
@@ -585,8 +592,8 @@ function closeChecklistPopup() {
   try {
     if (!veXPopUpOverlay || !veXPopUpNode) return;
     veXPopUpOverlay.style.visibility = "hidden";
-    veXPopUpNode.classList.remove("veX_checklist_popup_active");
-    veXPopUpNode.classList.add("veX_checklist_popup_disable");
+    veXPopUpNode.classList.remove("veX_popup_active");
+    veXPopUpNode.classList.add("veX_popup_disable");
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Checklist Popup", err.message), true);
@@ -599,9 +606,9 @@ function openChecklistPopup() {
       PromptModal.closePromptsPopup();
     }
     veXPopUpOverlay.style.visibility = "visible";
-    veXPopUpNode.classList.add("veX_checklist_popup_active");
+    veXPopUpNode.classList.add("veX_popup_active");
     centerThePopup(veXPopUpNode);
-    veXPopUpNode.classList.remove("veX_checklist_popup_disable");
+    veXPopUpNode.classList.remove("veX_popup_disable");
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Checklist Popup", err.message), true);
   }
@@ -897,6 +904,32 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   }
 }
 
+function markCurrentCategoryAsCompleted() {
+  try {
+    const currentCategoryName = veXCurrentCategory.name;
+    const currentCheckList = veXChecklistItems[currentCategoryName];
+    if (!currentCheckList) return;
+    for (let i = 0; i < currentCheckList.length; i++) {
+      currentCheckList[i].CursorState.position = 1; // 1 = Completed
+      currentCheckList[i].Completed = true;
+      currentCheckList[i].Selected = true;
+      currentCheckList[i].NotApplicable = false;
+    }
+    // Recalculate total completed items
+    veXTotalCompletedItems = 0;
+    Object.keys(veXChecklistItems).forEach(categoryName => {
+      veXChecklistItems[categoryName].forEach(item => {
+        if (Util.getChecklistStatus(item) === Constants.CheckListStatus.Completed || Util.getChecklistStatus(item) === Constants.CheckListStatus.NotApplicable) {
+          veXTotalCompletedItems++;
+        }
+      });
+    });
+    updateChecklist();
+    updateDonePercentage();
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Mark Category Completed", err.message), true);
+  }
+}
 
 initialize();
 //<-Event Handlers

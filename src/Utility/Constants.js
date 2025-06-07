@@ -91,7 +91,12 @@ const ChecklistUI = `
         <div class="veX_ui_categories">No Item</div>
     </div>
     <div class="veX_main_content">
-        <div class="veX_ui_title">No Item</div>
+        <div class="veX_ui_title_container">
+          <div class="veX_ui_title">No Item</div>
+          <button class="veX_mark_category_completed_btn" title="Mark all as completed for this category">
+            <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark all as completed" />
+          </button>
+        </div>
          <!-- <div class="veX_header_actions">
             <button id="mark-all-completed">Mark all as completed</button> 
         </div> -->
@@ -421,43 +426,43 @@ const ErrorMessages = {
 
 const Notifications = {
     SelectAtLeastOneItem: [
-        "Oops! You forgot to select an item. Pick at least one and you’re good to go! 🎉",
-        "Almost there! Just select at least one item, and you’re all set! 🚀✨",
+        "Oops! You forgot to select an item. Pick at least one and you're good to go! 🎉",
+        "Almost there! Just select at least one item, and you're all set! 🚀✨",
         "Wait a sec! You need to select at least one item before adding to comments. ⏳",
         "You're so close! Just pick one item to continue. You got this! 💪",
-        "Hmm... looks like you didn’t select anything. Please pick at least one item! 🤔",
-        "Wait a minute! You forgot to pick an item. Choose one and let’s roll! 😃",
+        "Hmm... looks like you didn't select anything. Please pick at least one item! 🤔",
+        "Wait a minute! You forgot to pick an item. Choose one and let's roll! 😃",
     ],
     ChecklistSavedSuccessfully: [
         "🚀 Boom! Your checklist is saved! Time to tackle those tasks! 💪",
         "💾 Checklist saved! Ready for the next step? ⏳",
-        "📌 Your checklist is saved. You’re good to go! 😊",
+        "📌 Your checklist is saved. You're good to go! 😊",
         "😌 Your checklist is saved. No worries, it's all there!",
         "🚀 Saved successfully! Ready to check things off? ",
-        "🎊 Your checklist is saved. Let’s get things done! 🤗",
+        "🎊 Your checklist is saved. Let's get things done! 🤗",
         "🔥 Checklist locked & loaded! Time to make progress! 🚀",
-        " Yep, it’s saved. Now, no excuses—let’s get to work!😜 "
+        " Yep, it's saved. Now, no excuses—let's get to work!😜 "
     ],
     AviatorPromptsSavedSuccessfully: [
            "💡 Prompts saved. Next stop: smarter decisions!",
             "All set! 🙌🏻, Your prompt is ready for deployment in to Aviator 🚀",
     ],
     ReminderToUpdateChecklist: [
-        "🔔 Reminder: Don’t forget to update the checklist! 😊",
+        "🔔 Reminder: Don't forget to update the checklist! 😊",
         "📝 Hey there! Give your checklist a quick update before switching phases.",
         "💡 Reminder: A quick checklist update would be great! 😊",
         "🔔 Tiny task: Just update the checklist when you have a moment!",
         "📝 Checklist needs a little love! Give it a quick update.",
         "🤔 Did you forget something? The checklist needs an update!",
         "😊 No rush! Just a gentle nudge to update the checklist.",
-        "✅ You’re doing great! Just update the checklist and keep going!",
-        "✏️ Don’t forget to update the checklist!",
+        "✅ You're doing great! Just update the checklist and keep going!",
+        "✏️ Don't forget to update the checklist!",
         "📌 A quick checklist update, please!",
         "🔄 Time for a small checklist update!",
         "📝 Just a tiny update needed for the checklist!",
         "⏳ Quick check—update the checklist when ready!",
         "🛠 Almost there! Just update the checklist.",
-        "🎯 Quick checklist update, and you’re good!",
+        "🎯 Quick checklist update, and you're good!",
         "🔔 Tiny task: Update the checklist!",
         "🚀 Smooth transition? Just update the checklist!",
         "💡 Quick refresh—update the checklist!",
@@ -476,7 +481,7 @@ const Notifications = {
         "✨ Almost there! Open a ticket to see the checklist.",
     ],
     OpenTicketToSeePrompts: [
-    "🙋 Need the prompts? You’ll need to open a ticket first!"
+    "🙋 Need the prompts? You'll need to open a ticket first!"
   ],
     UnableToFindChecklist: [
         "🤔 No checklist found for '$0'. Maybe it wasn't uploaded?",
@@ -508,16 +513,16 @@ const Notifications = {
         "📝 Checklist updated! Review the changes and save.",
         "📝 Checklist edited successfully! Take a look and save.",
         "🎯 Boom! Checklist updated. Give it a quick review and save.",
-        " Edits done! Give it a look and don’t forget to save.",
+        " Edits done! Give it a look and don't forget to save.",
     ],
     NotAbleToEditComment: [
-        "You can’t edit this comment, but a new one is just a click away! 😃",
-        "⚡ Quick tip! This comment isn’t editable, but you can drop a new one right away!😃",
-        "💡 Heads up! This comment can’t be edited, but feel free to add a new one instead.",
-        "😯 Hmm… looks like this comment can’t be changed. Maybe try adding a new one?",
-        "🌟 Keep the conversation going! You can’t edit this comment, but adding a new one keeps things flowing!",
-        "Oops! Editing is locked, but hey, who doesn’t love a fresh new comment? 😃",
-        "Can’t edit 😯 No big deal! Just drop a new comment and keep things rolling.",
+        "You can't edit this comment, but a new one is just a click away! 😃",
+        "⚡ Quick tip! This comment isn't editable, but you can drop a new one right away!😃",
+        "💡 Heads up! This comment can't be edited, but feel free to add a new one instead.",
+        "😯 Hmm… looks like this comment can't be changed. Maybe try adding a new one?",
+        "🌟 Keep the conversation going! You can't edit this comment, but adding a new one keeps things flowing!",
+        "Oops! Editing is locked, but hey, who doesn't love a fresh new comment? 😃",
+        "Can't edit 😯 No big deal! Just drop a new comment and keep things rolling.",
     ],
     "DoneMessages": {
         "10": [
@@ -527,19 +532,19 @@ const Notifications = {
         ],
         "25": [
             "Good start! Keep it up! 💪",
-            "Work has begun! Let’s roll! 🔥",
+            "Work has begun! Let's roll! 🔥",
             "This is just the warm-up... the real fun begins now! 😉",
-            "The party’s just getting started! 🔥"
+            "The party's just getting started! 🔥"
         ],
         "50": [
-            "Half the work’s done! Great going! 👏",
-            "You’re crushing it! Keep up the momentum! 🔥",
+            "Half the work's done! Great going! 👏",
+            "You're crushing it! Keep up the momentum! 🔥",
             "Midway milestone reached 🚀",
             "Just a bit more push – 'All is well, remember?' 😄"
         ],
         "75": [
             "Just a few tasks left! You're on fire! 🚀",
-            "Getting close — let’s wrap it up strong! 💪",
+            "Getting close — let's wrap it up strong! 💪",
             "Great effort — you're in the final lap! 😄",
         ],
         "90": [
@@ -547,13 +552,13 @@ const Notifications = {
             "Almost done! Just a little more hustle! 🚀",
             "Just a final touch! Wrap it up in style! 😎",
             "So close! One final push! ✨",
-            "Almost there! 🎉 'Now it’s gonna be fun, pal!' 😄",
+            "Almost there! 🎉 'Now it's gonna be fun, pal!' 😄",
             "Just a little more — you're nearly through! 🎉"
         ],
         "100": [
-            "When you said you’d do it – you *actually* did! 😄",
-            "Mission complete – ‘How’s the josh?’ HIGH, Sir! 🫡",
-            "Definition of Done met! 🥇 You’re the boss of tasks! 🫡",
+            "When you said you'd do it – you *actually* did! 😄",
+            "Mission complete – 'How's the josh?' HIGH, Sir! 🫡",
+            "Definition of Done met! 🥇 You're the boss of tasks! 🫡",
             "Checklist completed — fantastic work! 🥇",
             "Great job — everything's marked complete! ✅",
             "All tasks done. This ticket is cleaner than your weekend plans. 😉",

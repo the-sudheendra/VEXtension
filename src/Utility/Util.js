@@ -294,14 +294,14 @@ function createCelebration() {
 function isChecklistPopupOpen() {
   let container = document.querySelector("#veX_checklist_popup_container");
   if (container) {
-    return container.classList.contains("veX_checklist_popup_active");
+    return container.classList.contains("veX_popup_active");
   }
   return false;
 }
 function isPromptsPopupOpen() {
   let container = document.querySelector("#veX_prompts_popup_container");
   if (container) {
-    return container.classList.contains("veX_checklist_popup_active");
+    return container.classList.contains("veX_popup_active");
   }
   return false;
 }

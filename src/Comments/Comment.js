@@ -122,15 +122,16 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
 
 async function editExistingComment(veXChecklistItems, donePercentage) {
   try {
+    if (!isCommentAllowed(veXChecklistItems)) {
+      Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
+      return;
+    }
     if(!isVexChecklistCommentAvailable())
     {
       Util.notify(Util.getRandomMessage(Constants.Notifications.NoChecklistFoundInComments), Constants.NotificationType.Info, true);
       return;
     }
-    if (!isCommentAllowed(veXChecklistItems)) {
-      Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
-      return;
-    }
+
     Util.showLoading();
     if(Util.openRightSidebar()==false)
     {

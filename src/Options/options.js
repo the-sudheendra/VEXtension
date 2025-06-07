@@ -142,7 +142,10 @@ async function loadChecklistData() {
     loadOnStart = veXChecklistData["veXLoadOnStart"];
     veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
     veXConfiguredChecklist = veXChecklistData["checklist"];
-
+    if(document.getElementById('SaveChecklistBtn'))
+    {
+        document.getElementById('SaveChecklistBtn').textContent = veXChecklistRemoteUrl? "Get Latest" : "Save";
+    }
     if (document.getElementById('veXRemoteUrl'))
         document.getElementById('veXRemoteUrl').value = veXChecklistRemoteUrl || "";
     if (document.getElementById('loadOnStart'))

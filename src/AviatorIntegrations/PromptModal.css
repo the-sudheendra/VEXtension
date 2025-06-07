@@ -59,8 +59,8 @@
 textarea.veX_variable_input{
   width: 100%;
   max-width: 700px;
-  height: 100px;
-  padding: 1rem;
+  height: 50px;
+  padding: 10px;
   font-size: 1rem;
   line-height: 1.6;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

@@ -1,5 +1,5 @@
 {
-  "name": "VE Assist",
+  "name": "VEXtenstion",
   "description": "Checklist Tool for OpenText ValueEdge",
   "version": "3.0.0",
   "manifest_version": 3,
@@ -13,7 +13,7 @@
   ],
   "action": {
     "default_popup": "/src/Popup/Popup.html",
-    "default_title": "VE Assist"
+    "default_title": "VEXtenstion"
   },
   "background": {
     "service_worker": "/src/Utility/Background.js",
