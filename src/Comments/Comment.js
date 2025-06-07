@@ -336,10 +336,11 @@ function getLastChecklistComment() {
 
 async function  doCelebration(donePercentage)
 {
+  /* After disucssing with team we descided not to show celebration for now.
   if (donePercentage == 100) {
     await Util.delay(1500);
     Util.createCelebration();
-  }
+  } */
 }
 
 function getChecklistCommentData() {

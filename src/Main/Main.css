@@ -707,3 +707,27 @@ color: var(--veX-common-fontColor);
     transform: rotate(360deg);
   }
 }
+
+.veX_ui_title_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.veX_mark_category_completed_btn {
+ /* background: var(--veX-successColor); */
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+  margin-bottom: 10px;
+}
+
+.veX_mark_category_completed_btn img {
+  width: 22px;
+  height: 22px;
+}

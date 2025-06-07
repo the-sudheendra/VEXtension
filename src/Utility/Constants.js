@@ -64,7 +64,7 @@ const veXIconsURLs = {
     edit: chrome.runtime.getURL("icons/edit_24dp_000000.png"),
     send: chrome.runtime.getURL("icons/send_24.png"),
     expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
-    markAllCompleted: chrome.runtime.getURL("icons/done_all_24dp_FFFFFF.png"),
+    markAllCompleted: chrome.runtime.getURL("icons/done_all_24dp_1aa364.png"),
     logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
     check: chrome.runtime.getURL("icons/check_24dp.png"),
     close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
