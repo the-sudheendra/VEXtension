@@ -55,11 +55,10 @@ async function loadModules() {
   if (!Validators)
     Validators = await import(URL);
   URL = chrome.runtime.getURL("src/Common/UITemplates.js");
-  if(!UITemplates)
-  {
+  if (!UITemplates) {
     UITemplates = await import(URL);
   }
-  }
+}
 
 async function initialize() {
   await loadModules();
@@ -82,15 +81,14 @@ function veXSetup() {
 
 function setupChecklistPopupNode() {
   veXPopUpNode.id = "veX_checklist_popup_container";
-   veXPopUpNode.classList.add("veX_popup_disable");
+  veXPopUpNode.classList.add("veX_popup_disable");
   veXPopUpNode.innerHTML = UITemplates.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
 }
-function  addLoadingElement()
-{
-  let veX_loader=document.createElement('span');
-  veX_loader.id="veX_loader";
-  veX_loader.style.display="none";
+function addLoadingElement() {
+  let veX_loader = document.createElement('span');
+  veX_loader.id = "veX_loader";
+  veX_loader.style.display = "none";
   document.body.appendChild(veX_loader);
 }
 function setupChecklistPopupOverlay() {
@@ -364,7 +362,7 @@ function updateMainContentView() {
     // Add event listener for 'Mark as Completed' button
     const markCompletedBtn = veXPopUpNode.querySelector('.veX_mark_category_completed_btn');
     if (markCompletedBtn) {
-      markCompletedBtn.onclick = function() {
+      markCompletedBtn.onclick = function () {
         markCurrentCategoryAsCompleted();
       };
     }
@@ -421,13 +419,11 @@ function createChecklistItem({ itemValue, index, currentCheckList }) {
       theme: 'snow',
     };
 
-    if(!currentCheckList[index].RichTextNote)
-    {
+    if (!currentCheckList[index].RichTextNote) {
       const quill = new Quill(quillContainer, quillOptions);
       currentCheckList[index]["RichTextNote"] = quill;
     }
-    else
-    {
+    else {
       const delta = currentCheckList[index]["RichTextNote"].getContents();
       const quill = new Quill(quillContainer, quillOptions);
       quill.setContents(delta);
@@ -608,7 +604,7 @@ function closeChecklistPopup() {
 
 function openChecklistPopup() {
   try {
-    if(Util.isPromptsPopupOpen()) {
+    if (Util.isPromptsPopupOpen()) {
       PromptModal.closePromptsPopup();
     }
     veXPopUpOverlay.style.visibility = "visible";
@@ -622,7 +618,7 @@ function openChecklistPopup() {
 
 function openPromptsPopup() {
   try {
-  
+
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening PromptPopup", err.message), true);
   }
@@ -811,15 +807,13 @@ async function onTicketTitleChange(change) {
     // If we are using a remote URL to maintain the checklist,
     // then refresh the checklist locally first
     let veXChecklistData = await chrome.storage.local.get("veXChecklistData");
-    let checklist={};
-    let loadOnStart=false;
-    let veXChecklistRemoteUrl ="";
-    if(veXChecklistData)
-    { 
+    let checklist = {};
+    let loadOnStart = false;
+    let veXChecklistRemoteUrl = "";
+    if (veXChecklistData) {
       veXChecklistData = veXChecklistData["veXChecklistData"]
     }
-    if(veXChecklistData)
-    {
+    if (veXChecklistData) {
       checklist = veXChecklistData["checklist"];
       loadOnStart = veXChecklistData["loadOnStart"];
       veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];

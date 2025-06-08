@@ -45,8 +45,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
     }
     Util.showLoading();
     // Open comment sidebar
-    if(Util.openCommentsPanel()==false)
-    {
+    if (Util.openCommentsPanel() == false) {
       Util.notify("Hmm... can't able to access the comment panel right now. 😕 Let's try again", Constants.NotificationType.Error, true);
       return;
     }
@@ -58,8 +57,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
       Util.openRightSidebar();
       await Util.delay(500);
       addNewCommentBox = document.querySelector(Constants.ValueEdgeNodeSelectors.NewCommentBox)
-      if(!addNewCommentBox)
-      {
+      if (!addNewCommentBox) {
         Util.notify(Util.getRandomMessage(Constants.Notifications.CommentsBoxNotFound), Constants.NotificationType.Warning, true);
         return;
       }
@@ -102,8 +100,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
   catch (ex) {
     Util.onError(ex, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Add Checklist to Comments", ex.message), true)
   }
-  finally
-  {
+  finally {
     Util.hideLoading();
   }
 
@@ -115,8 +112,7 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
       return;
     }
-    if(await isVexChecklistCommentAvailable() == false)
-    {
+    if (await isVexChecklistCommentAvailable() == false) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.NoChecklistFoundInComments), Constants.NotificationType.Info, true);
       return;
     }
@@ -127,17 +123,16 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
     if (!lastComment) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.NoChecklistFoundInComments), Constants.NotificationType.Info, true); return;
     }
-    let inLineMenuNode=lastComment.querySelector("inline-menu");
+    let inLineMenuNode = lastComment.querySelector("inline-menu");
     if (!inLineMenuNode) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.NotAbleToEditComment), Constants.NotificationType.Warning, true);
       return;
     }
-    let commentMenu=inLineMenuNode.querySelector(".uxa-menu-content");
-    if(!commentMenu)
-    {
+    let commentMenu = inLineMenuNode.querySelector(".uxa-menu-content");
+    if (!commentMenu) {
       inLineMenuNode.querySelector("button").click();
       await Util.delay(500);
-      commentMenu=inLineMenuNode.querySelector(".uxa-menu-content");
+      commentMenu = inLineMenuNode.querySelector(".uxa-menu-content");
     }
     commentMenu.childNodes[0].click();
     await Util.delay(500);
@@ -160,7 +155,7 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
     let button = document.querySelector("[data-aid='comments-pane-edit-comment-button']");
 
     button.removeAttribute("disabled");
-    
+
     // Allow DOM reflow before clicking
     setTimeout(() => button.click(), 500);
 
@@ -171,8 +166,7 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Edit Existing Comment", err.message), true);
   }
-  finally
-  {
+  finally {
     Util.hideLoading();
   }
 
@@ -251,7 +245,7 @@ function createItemNode(item, categoryName) {
     <div class="${baseClassName}" style="${COMMENT_STYLES.ITEM_STYLES.wrapper}">
       <p style="${COMMENT_STYLES.ITEM_STYLES.text}"><span style="color:${setColor(item)};">[${setPrefixForList(item)}]</span>&nbsp;&nbsp;<span class="veX_checklist_comment_item_value">${DOMPurify.sanitize(item.ListContent)}</span>
       </p>
-      ${item["RichTextNote"].getLength()>1 ? createNoteSection(noteContent) : ''}
+      ${item["RichTextNote"].getLength() > 1 ? createNoteSection(noteContent) : ''}
     </div>`;
   itemNode.innerHTML = itemContent;
   return itemNode;
@@ -303,7 +297,7 @@ function setPrefixForList(item) {
 }
 function setColor(item) {
   let status = Util.getChecklistStatus(item);
-switch (status) {
+  switch (status) {
     case Constants.CheckListStatus.Completed: return "#1aa364";
     case Constants.CheckListStatus.NotCompleted: return "#dd4a40";
     case Constants.CheckListStatus.NotApplicable: return "#808080"
@@ -323,8 +317,7 @@ function getLastChecklistComment() {
 }
 
 
-async function  doCelebration(donePercentage)
-{
+async function doCelebration(donePercentage) {
   /* After disucssing with team we descided not to show celebration for now.
   if (donePercentage == 100) {
     await Util.delay(1500);
@@ -397,16 +390,15 @@ function onSyncChecklistComments() {
 }
 
 async function isVexChecklistCommentAvailable() {
-    await Util.openCommentsPanel();
-    let commentData = document.querySelector(".veX_checklist_comment_wrapper");
-    if (!commentData) return false;
-    return true;
+  await Util.openCommentsPanel();
+  let commentData = document.querySelector(".veX_checklist_comment_wrapper");
+  if (!commentData) return false;
+  return true;
 }
 
-function isCommentBarOpen()
-{
+function isCommentBarOpen() {
   let CommentsContainer = document.querySelector(Constants.ValueEdgeNodeSelectors.CommentsContainer);
-  if(CommentsContainer)
+  if (CommentsContainer)
     return true;
   return false;
 }

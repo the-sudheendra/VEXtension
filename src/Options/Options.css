@@ -194,10 +194,12 @@ input::placeholder {
   cursor: pointer;
   color: white;
 }
+
 .dropdown-select option {
   background-color: #f4f4f4;
   color: black;
 }
+
 @media (max-width: 480px) {
   .heading-row {
     flex-direction: column;

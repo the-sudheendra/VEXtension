@@ -56,8 +56,8 @@ const EntityMetaData = {
     }
 }
 const listTypes = {
-  "checklist":0,
-  "prompts":1
+    "checklist": 0,
+    "prompts": 1
 }
 
 
@@ -88,17 +88,17 @@ const ValueEdgeNodeSelectors = {
     PhaseNode: "[data-aid='entity-life-cycle-widget-phase']",
     CollapseRightSidebar: ".collapsable-panel",
     CommentsContainer: "comment-lines",
-    AviatorButton:"[data-aid='panel-item-aviatorPanel']",
-    CommentButton:"[data-aid='panel-item-commentsPanel']",
-    AviatorTextArea:"[data-aid='chat-with-entity-panel-bottom-section-textarea']",
-    AviatorPromptSubmitButton:"[data-aid = 'chat-with-entity-panel-bottom-section-on-submit-btn']"
+    AviatorButton: "[data-aid='panel-item-aviatorPanel']",
+    CommentButton: "[data-aid='panel-item-commentsPanel']",
+    AviatorTextArea: "[data-aid='chat-with-entity-panel-bottom-section-textarea']",
+    AviatorPromptSubmitButton: "[data-aid = 'chat-with-entity-panel-bottom-section-on-submit-btn']"
 }
 
 
 const ErrorMessages = {
     UnHandledException: [
         "Oops! Something went wrong in '$0'. Error: '$1'. See console logs for details."
-       
+
     ],
     SomethingWentWrong: [
         "⚠️ Oops! Something went wrong. Please report the bug.",
@@ -125,8 +125,8 @@ const Notifications = {
         " Yep, it's saved. Now, no excuses—let's get to work!😜 "
     ],
     AviatorPromptsSavedSuccessfully: [
-           "💡 Prompts saved. Next stop: smarter decisions!",
-            "All set! 🙌🏻, Your prompt is ready for deployment in to Aviator 🚀",
+        "💡 Prompts saved. Next stop: smarter decisions!",
+        "All set! 🙌🏻, Your prompt is ready for deployment in to Aviator 🚀",
     ],
     ReminderToUpdateChecklist: [
         "🔔 Reminder: Don't forget to update the checklist! 😊",
@@ -162,8 +162,8 @@ const Notifications = {
         "✨ Almost there! Open a ticket to see the checklist.",
     ],
     OpenTicketToSeePrompts: [
-    "🙋 Need the prompts? You'll need to open a ticket first!"
-  ],
+        "🙋 Need the prompts? You'll need to open a ticket first!"
+    ],
     UnableToFindChecklist: [
         "🤔 No checklist found for '$0'. Maybe it wasn't uploaded?",
         " Checklist not available. Consider adding one for '$0'.😊",

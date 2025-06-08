@@ -19,26 +19,28 @@
   --vex-notApplicableColor: #808080; //*fdec83*/
 }
 
- .veX_truncate { 
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-  span.veX_truncate,
-  div.veX_truncate,
-  p.veX_truncate,
-  td.veX_truncate,
-  th.veX_truncate,
-  button {
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-  }
-  
-#veX_checklist_popup_container ::-webkit-scrollbar-track,#veX_prompts_popup_container ::-webkit-scrollbar-track {
+.veX_truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+span.veX_truncate,
+div.veX_truncate,
+p.veX_truncate,
+td.veX_truncate,
+th.veX_truncate,
+button {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+#veX_checklist_popup_container ::-webkit-scrollbar-track,
+#veX_prompts_popup_container ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   background-color: #F5F5F5;
   border-radius: var(--veX-common-borderRadius);
@@ -46,14 +48,16 @@
 
 }
 
-#veX_checklist_popup_container ::-webkit-scrollbar,#veX_prompts_popup_container ::-webkit-scrollbar {
+#veX_checklist_popup_container ::-webkit-scrollbar,
+#veX_prompts_popup_container ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
   background-color: var(--veX-common-backgroundColor);
   border-radius: var(--veX-common-borderRadius);
 }
 
-#veX_checklist_popup_container ::-webkit-scrollbar-thumb,#veX_prompts_popup_container ::-webkit-scrollbar-thumb {
+#veX_checklist_popup_container ::-webkit-scrollbar-thumb,
+#veX_prompts_popup_container ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #8f8e8e;
 }
@@ -94,13 +98,14 @@
 }
 
 
-#veX_checklist_popup_container,#veX_prompts_popup_container {
+#veX_checklist_popup_container,
+#veX_prompts_popup_container {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; 
+  user-select: none;
   min-width: 600px;
   max-width: 900px;
   width: 70vw;
@@ -116,11 +121,13 @@
   border-radius: 10px;
 }
 
-.veX_popup_disable , .veX_prompts_popup_disable {
+.veX_popup_disable,
+.veX_prompts_popup_disable {
   opacity: 0 !important;
   transform: translate(-50%, -60%) !important;
   visibility: hidden !important;
 }
+
 .veX_Center {
   position: absolute;
   left: 50%;
@@ -192,7 +199,7 @@
   MIN-HEIGHT: 50vh;
   max-height: 50vh;
   height: 50vh;
-  
+
 }
 
 .veX_sidebar {
@@ -395,7 +402,8 @@
 }
 
 
-#veX_checklist_popup_overlay, #veX_prompt_popup_overlay {
+#veX_checklist_popup_overlay,
+#veX_prompt_popup_overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -543,8 +551,8 @@
   z-index: 1;
   background-color: white;
 }
-.ql-editor
-{
+
+.ql-editor {
   max-height: 300px;
   color: black;
 }
@@ -584,7 +592,7 @@
 }
 
 .veX_banner.veX_footer {
-  background-color: #f8f9fa; 
+  background-color: #f8f9fa;
   padding: 10px;
   display: flex;
   justify-content: center;
@@ -641,32 +649,34 @@
 .veX_segment:last-child:hover {
   background-color: #f0f0f0;
 }
-.veX_leave_comment_btn_txt,.veX_edit_comment_btn_txt
-{
-color: var(--veX-common-fontColor);
+
+.veX_leave_comment_btn_txt,
+.veX_edit_comment_btn_txt {
+  color: var(--veX-common-fontColor);
 }
 
 
-.veX_header_actions
-{
-  display: block; 
+.veX_header_actions {
+  display: block;
   margin-top: 10px;
-  padding: 8px 15px; 
-  background-color: var(--veX-successColor); 
-  color: white; 
-  border: none; 
+  padding: 8px 15px;
+  background-color: var(--veX-successColor);
+  color: white;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px; 
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
 }
+
 .veX_selectable {
   user-select: text;
   -webkit-user-select: text;
 }
+
 #veX_loader {
   width: 30px;
   height: 30px;
@@ -676,6 +686,7 @@ color: var(--veX-common-fontColor);
   transform: translate(-50%, -50%);
   z-index: 4000;
 }
+
 /*
 #veX_loader::before {
   content: "";
@@ -694,15 +705,18 @@ color: var(--veX-common-fontColor);
   border-radius: 50%;
   display: block;
   /* This creates the light blue track */
-  border: 5px solid #cceeff; /* A light blue/grey for the track */
+  border: 5px solid #cceeff;
+  /* A light blue/grey for the track */
   /* This creates the darker blue spinning arc */
   border-top-color: #1a6aff;
   animation: rotation 1s linear infinite;
 }
+
 @keyframes rotation {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -716,7 +730,7 @@ color: var(--veX-common-fontColor);
 }
 
 .veX_mark_category_completed_btn {
- /* background: var(--veX-successColor); */
+  /* background: var(--veX-successColor); */
   border: none;
   border-radius: 4px;
   padding: 4px 8px;

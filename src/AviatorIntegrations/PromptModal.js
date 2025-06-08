@@ -17,17 +17,15 @@ async function loadModules() {
     Constants = await import(URL);
   veXSelectors = Constants.VEChecklistNodeSelectors;
   URL = chrome.runtime.getURL("src/Common/UITemplates.js");
-  if(!UITemplates)
-  {
+  if (!UITemplates) {
     UITemplates = await import(URL);
   }
   URL = chrome.runtime.getURL("src/Common/DefaultList.js");
-  if(!DefaultList)
-  {
+  if (!DefaultList) {
     DefaultList = await import(URL);
   }
-   prompts = DefaultList.veXDefaultPrompts;
-   promptTones = DefaultList.veXDefaultPromptsTone;
+  prompts = DefaultList.veXDefaultPrompts;
+  promptTones = DefaultList.veXDefaultPromptsTone;
 }
 
 async function initialize() {
@@ -43,18 +41,18 @@ async function initialize() {
 
 async function loadPrompts() {
   try {
-    let promptsResponse=await chrome.storage.local.get("veXPromptsData");
-    if(Util.isEmptyObject(promptsResponse)){
-      prompts=DefaultList.veXDefaultPrompts;
+    let promptsResponse = await chrome.storage.local.get("veXPromptsData");
+    if (Util.isEmptyObject(promptsResponse)) {
+      prompts = DefaultList.veXDefaultPrompts;
       return;
     }
     let promptsData = promptsResponse.veXPromptsData;
-    if(Util.isEmptyObject(promptsData)) {
+    if (Util.isEmptyObject(promptsData)) {
       prompts = DefaultList.veXDefaultPrompts;
       return;
-    } 
+    }
     prompts = promptsData.prompts;
-    if(Util.isEmptyArray(prompts)) {
+    if (Util.isEmptyArray(prompts)) {
       prompts = DefaultList.veXDefaultPrompts;
       return;
     }
@@ -393,8 +391,7 @@ async function onSendBtnClick(index) {
     const filledPrompt = draftPromptTemplate(prompt.template, index, prompt.variables, promptVariableData);
     Util.openRightSidebar();
     await Util.delay(500);
-    if(await Util.openAviatorPanel()==false)
-    {
+    if (await Util.openAviatorPanel() == false) {
       Util.notify("🤔 Aviator tab not found. Please ensure it is accessible.", Constants.NotificationType.Warning, true);
       return;
     }

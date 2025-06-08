@@ -89,17 +89,17 @@ async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOn
     let entites = Object.keys(veXChecklistInfo);
     for (let i = 0; i < entites.length; i++) {
       let ticketEntityName = entites[i];
-      
+
       if (isEmptyObject(veXChecklistInfo[ticketEntityName]))
         return false;
       keyValue[ticketEntityName] = veXChecklistInfo[ticketEntityName];
     }
-    let checklistData= await chrome.storage.local.get("veXChecklistData") || {};
+    let checklistData = await chrome.storage.local.get("veXChecklistData") || {};
     checklistData["checklist"] = keyValue;
-    if(veXChecklistRemoteUrl)
-    checklistData["veXChecklistRemoteUrl"] = veXChecklistRemoteUrl;
+    if (veXChecklistRemoteUrl)
+      checklistData["veXChecklistRemoteUrl"] = veXChecklistRemoteUrl;
     checklistData["veXLoadOnStart"] = (loadOnStart === true ? true : false);
-    await chrome.storage.local.set({veXChecklistData : checklistData});
+    await chrome.storage.local.set({ veXChecklistData: checklistData });
     return true;
   }
   catch (err) {
@@ -110,10 +110,10 @@ async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOn
 
 async function savePromtsData(prompts, veXPromptsRemoteUrl) {
   try {
-    let promptsData= await chrome.storage.local.get("veXPromptsData") || {};
+    let promptsData = await chrome.storage.local.get("veXPromptsData") || {};
     promptsData["prompts"] = prompts;
-    if(veXPromptsRemoteUrl) promptsData["veXPromptsRemoteUrl"] = veXPromptsRemoteUrl;
-    chrome.storage.local.set({veXPromptsData : promptsData});
+    if (veXPromptsRemoteUrl) promptsData["veXPromptsRemoteUrl"] = veXPromptsRemoteUrl;
+    chrome.storage.local.set({ veXPromptsData: promptsData });
     return true;
   }
   catch (err) {
@@ -131,12 +131,10 @@ function cleanupMutationObserver(observer) {
 }
 
 async function getLocalListData(listType) {
-  if(listType == "checklist")
-  {
+  if (listType == "checklist") {
     return chrome.storage.local.get("veXChecklistData") || {};
   }
-  else if(listType == "prompts")
-  {
+  else if (listType == "prompts") {
     return chrome.storage.local.get("veXPromptsData") || [];
   }
   return {};
@@ -308,12 +306,12 @@ function isPromptsPopupOpen() {
 function showLoading() {
   let loader = document.getElementById("veX_loader");
   if (loader)
-      loader.style.display = "block";
+    loader.style.display = "block";
 }
 function hideLoading() {
   let loader = document.getElementById("veX_loader");
   if (loader)
-      loader.style.display = "none";
+    loader.style.display = "none";
 }
 
 function setNativeValue(element, value) {
@@ -327,26 +325,20 @@ function setNativeValue(element, value) {
   element.dispatchEvent(event);
 }
 
-function isCommentPanelOpen()
-{
-  if(document.querySelector("comments-wrapper"))
-  {
+function isCommentPanelOpen() {
+  if (document.querySelector("comments-wrapper")) {
     return true;
   }
   return false;
 }
-function isAviatorPanelOpen()
-{
-  if(document.querySelector(".aviator-tab-title"))
-  {
+function isAviatorPanelOpen() {
+  if (document.querySelector(".aviator-tab-title")) {
     return true;
   }
   return false;
 }
-function openRightSidebar()
-{
-  if(document.querySelector("[data-aid='panel-content']") || isCommentPanelOpen() )
-  {
+function openRightSidebar() {
+  if (document.querySelector("[data-aid='panel-content']") || isCommentPanelOpen()) {
     return true;
   }
   let rightSidebarCommentButton = document.querySelector(Constants.ValueEdgeNodeSelectors.RightSidebarCommentButton)
@@ -359,46 +351,37 @@ function openRightSidebar()
   return true;
 }
 
-async function openCommentsPanel()
-{
-  try
-  {
-    if(document.querySelector("[data-aid='panel-item-commentsPanel']"))
-      {
-        document.querySelector("[data-aid='panel-item-commentsPanel']").click();
-        await delay(1000);
-        return true;
-      }
-      return false;
+async function openCommentsPanel() {
+  try {
+    if (document.querySelector("[data-aid='panel-item-commentsPanel']")) {
+      document.querySelector("[data-aid='panel-item-commentsPanel']").click();
+      await delay(1000);
+      return true;
+    }
+    return false;
   }
-  catch(err)
-  {
+  catch (err) {
     onError(err, "Unable to open comments panel", false);
     return false;
   }
 }
 
-async function openAviatorPanel()
-{
-  try
-  {
-    if(document.querySelector("[data-aid='panel-item-aviatorPanel']"))
-      {
-        document.querySelector("[data-aid='panel-item-aviatorPanel']").click();
-        await delay(1000);
-        return true;
-      }
-      return false;
+async function openAviatorPanel() {
+  try {
+    if (document.querySelector("[data-aid='panel-item-aviatorPanel']")) {
+      document.querySelector("[data-aid='panel-item-aviatorPanel']").click();
+      await delay(1000);
+      return true;
+    }
+    return false;
   }
-  catch(err)
-  {
+  catch (err) {
     onError(err, "Unable to open aviator panel", false);
     return false;
   }
 }
 
-function closeRightSidebar()
-{
+function closeRightSidebar() {
   let rightSidebarCollapseBtn = document.querySelector(Constants.ValueEdgeNodeSelectors.CollapseRightSidebar)
   if (!rightSidebarCollapseBtn) {
     notify("🤷‍♂️ Unable to close right sidebar ", Constants.NotificationType.Warning, true);

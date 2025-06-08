@@ -46,8 +46,7 @@ function setupEventListeners() {
         Util.onError(undefined, 'Could not find the URL input box', true);
     }
 
-    if(remoteURLInput)
-    {
+    if (remoteURLInput) {
         remoteURLInput.addEventListener('input', function () {
             urlInputSaveBtn.textContent = "Save";
         });
@@ -150,9 +149,8 @@ async function loadChecklistData() {
     loadOnStart = veXChecklistData["veXLoadOnStart"];
     veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
     veXConfiguredChecklist = veXChecklistData["checklist"];
-    if(document.getElementById('SaveChecklistBtn'))
-    {
-        document.getElementById('SaveChecklistBtn').textContent = veXChecklistRemoteUrl? "Get Latest" : "Save";
+    if (document.getElementById('SaveChecklistBtn')) {
+        document.getElementById('SaveChecklistBtn').textContent = veXChecklistRemoteUrl ? "Get Latest" : "Save";
     }
     if (document.getElementById('veXRemoteUrl'))
         document.getElementById('veXRemoteUrl').value = veXChecklistRemoteUrl || "";
@@ -171,10 +169,9 @@ async function loadPromptsData() {
     let veXPromptsRemoteUrl = "";
     veXConfiguredPrompts = veXPromptsData["prompts"];
     veXPromptsRemoteUrl = veXPromptsData["veXPromptsRemoteUrl"];
-    if(document.getElementById('SaveChecklistBtn'))
-        {
-            document.getElementById('SaveChecklistBtn').textContent = veXPromptsRemoteUrl? "Get Latest" : "Save";
-        }
+    if (document.getElementById('SaveChecklistBtn')) {
+        document.getElementById('SaveChecklistBtn').textContent = veXPromptsRemoteUrl ? "Get Latest" : "Save";
+    }
 
 
     if (document.getElementById('veXRemoteUrl'))
@@ -186,8 +183,8 @@ async function loadPromptsData() {
 async function onSaveURL() {
     const url = document.getElementById('veXRemoteUrl').value;
     if (!url || Util.isValidURL(url) === false) {
-            Util.notify("Please enter a valid remote URL 👀", Constants.NotificationType.Warning, true);
-            return;
+        Util.notify("Please enter a valid remote URL 👀", Constants.NotificationType.Warning, true);
+        return;
     }
     try {
         Util.showLoading();
@@ -249,7 +246,7 @@ function onChecklistFileUpload(event) {
             try {
                 Util.showLoading();
                 const veXChecklistInfo = JSON.parse(reader.result);
-                if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo,'',false) === true) {
+                if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, '', false) === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
                     // clear the url input box since
                     // we are now using the file mode
@@ -282,10 +279,10 @@ function onPromptFileUpload(event) {
             try {
                 Util.showLoading();
                 const promptsData = JSON.parse(reader.result);
-                if (Validators.validatePromptTemplates(promptsData) === true && await Util.savePromtsData(promptsData,'') === true) {
+                if (Validators.validatePromptTemplates(promptsData) === true && await Util.savePromtsData(promptsData, '') === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
                     fileInput.value = '';
-                    veXPromptsData=undefined;
+                    veXPromptsData = undefined;
                     loadPromptsData();
                 }
                 else {

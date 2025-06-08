@@ -1,5 +1,6 @@
 @import url("../Common/Common.css");
 @import url("../Main/Main.css");
+
 #veX_prompts_popup_container {
   width: 700px;
   border-radius: var(--veX-common-borderRadius);
@@ -49,14 +50,13 @@
   overflow-x: auto;
 }
 
-.veX_prompt_variable_list
-{
+.veX_prompt_variable_list {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-textarea.veX_variable_input{
+textarea.veX_variable_input {
   width: 100%;
   max-width: 700px;
   height: 50px;
@@ -74,12 +74,13 @@ textarea.veX_variable_input{
   resize: none;
   transition: border 0.3s ease;
 }
-textarea.veX_variable_input:hover
-{
+
+textarea.veX_variable_input:hover {
   border: 2px solid #ddd;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   border-radius: var(--veX-common-borderRadius);
 }
+
 textarea.veX_variable_input:focus,
 textarea.veX_variable_input:active {
   outline: none;
@@ -103,7 +104,8 @@ textarea.veX_variable_input:active {
   padding: 1rem;
   background-color: #1c1c1e;
   border-bottom: 1px solid #333;
-  flex-wrap: wrap; /* Ensures it wraps if screen is narrow */
+  flex-wrap: wrap;
+  /* Ensures it wraps if screen is narrow */
   gap: 0.5rem;
   color: white;
   border-top-left-radius: var(--veX-common-borderRadius);
@@ -122,10 +124,11 @@ textarea.veX_variable_input:active {
   background-color: #fff;
   color: #000;
   border: 1px solid #444;
-  border-radius:var(--veX-common-borderRadius);
+  border-radius: var(--veX-common-borderRadius);
   font-size: 0.9rem;
   outline: none;
-  max-width: 180px; /* Ensures it's fully visible */
+  max-width: 180px;
+  /* Ensures it's fully visible */
   min-width: 140px;
   height: 40px !important;
   all: unset;
@@ -156,19 +159,19 @@ textarea.veX_variable_input:active {
 .veX_close_icon:hover {
   transform: scale(1.1);
 }
-#veX_prompts_list_container
-{
+
+#veX_prompts_list_container {
   max-height: 70vh !important;
   overflow-y: scroll !important;
 }
-.veX_prompts_tone_selector_container
-{
+
+.veX_prompts_tone_selector_container {
   display: flex;
   align-items: center;
-  gap: 0.5rem;  
+  gap: 0.5rem;
 }
-.veX_prompts_tone_selector_container label
-{
+
+.veX_prompts_tone_selector_container label {
   font-size: 0.9rem;
   font-weight: 500;
   color: #ccc;
@@ -176,17 +179,18 @@ textarea.veX_variable_input:active {
   align-items: center;
   gap: 0.25rem;
 }
-.veX_send_btn
-{
+
+.veX_send_btn {
   padding: 10px;
   cursor: pointer;
 }
-.veX_expand_btn
-{
+
+.veX_expand_btn {
   height: 15px;
   width: 15px;
   cursor: pointer;
 }
+
 .veX_prompts_tone_selector {
   position: relative;
   width: 220px;
@@ -235,8 +239,8 @@ textarea.veX_variable_input:active {
 .veX_prompts_tone_selector .veX_dropdown_option:hover {
   background: #444;
 }
-.veX_dropdown_options
-{
+
+.veX_dropdown_options {
   display: none;
   position: absolute;
   top: 50px;
@@ -267,17 +271,21 @@ textarea.veX_variable_input:active {
 .veX_dropdown_selected.active::after {
   transform: translateY(-50%) rotate(180deg);
 }
+
 @keyframes borderMove {
   0% {
     border-image-source: linear-gradient(to right, #6a8eff, #c06cf5, #f26b6b);
   }
+
   50% {
     border-image-source: linear-gradient(to right, #f26b6b, #c06cf5, #6a8eff);
   }
+
   100% {
     border-image-source: linear-gradient(to right, #6a8eff, #c06cf5, #f26b6b);
   }
 }
+
 .veX_prompt_template_container {
   position: relative;
 }

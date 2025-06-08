@@ -109,6 +109,7 @@
     transform: translateX(-50%) scale(1);
     visibility: visible;
   }
+
   to {
     top: -25px;
     opacity: 0;
@@ -152,6 +153,7 @@
   from {
     width: 100%;
   }
+
   to {
     width: 0%;
   }
