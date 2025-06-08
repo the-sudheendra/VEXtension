@@ -8,7 +8,7 @@
     {
       "matches": ["https://*.saas.microfocus.com/*"],
       "js": ["src/Main/Main.js","src/External/Quill/quill.js"],
-      "css": ["src/Main/Main.css", "src/Notification/Notification.css","src/External/Quill/quill.snow.css","src/AviatorIntegrations/PromptModal.css"]
+      "css": ["src/Main/Main.css", "src/Notification/Notification.css","src/External/Quill/quill.snow.css","src/AviatorPrompts/PromptModal.css"]
     }
   ],
   "action": {
@@ -56,7 +56,7 @@
         "icons/edit_24dp_000000.png",
         "icons/send_24.png",
         "icons/keyboard_arrow_down_24.png",
-        "src/AviatorIntegrations/PromptModal.js",
+        "src/AviatorPrompts/PromptModal.js",
         "src/Common/SchemaValidators.js",
         "src/Common/UITemplates.js",
         "src/Common/DefaultList.js",

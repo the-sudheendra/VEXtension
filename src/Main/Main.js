@@ -48,7 +48,7 @@ async function loadModules() {
   URL = chrome.runtime.getURL("src/External/Quill/quill.js");
   if (!Quill)
     Quill = await import(URL);
-  URL = chrome.runtime.getURL("src/AviatorIntegrations/PromptModal.js");
+  URL = chrome.runtime.getURL("src/AviatorPrompts/PromptModal.js");
   if (!PromptModal)
     PromptModal = await import(URL);
   URL = chrome.runtime.getURL("src/Common/SchemaValidators.js");
