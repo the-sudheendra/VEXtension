@@ -1,13 +1,20 @@
+
+const veXIconsURLs = {
+    add: chrome.runtime.getURL("icons/add_24dp_000000.png"),
+    edit: chrome.runtime.getURL("icons/edit_24dp_000000.png"),
+    send: chrome.runtime.getURL("icons/send_24.png"),
+    expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
+    markAllCompleted: chrome.runtime.getURL("icons/done_all_24dp_1aa364.png"),
+    logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
+    check: chrome.runtime.getURL("icons/check_24dp.png"),
+    close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
+};
 const ChecklistUI = `
 <header class="veX_header veX_banner">
     <div class="veX_logo_container">
         <img class="veX_logo" src="${veXIconsURLs.logo}" title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
     </div>
-    <p class="veX_header_title"></p>
-        <div class="veX_header_actions">
-            <!--<img class="veX_mark_all_completed_icon" title="Mark all as completed" alt="Mark all as completed" src="${veXIconsURLs.markAllCompleted}">-->
-            <!--<span class="veX_mark_all_completed_txt">Mark all as completed</span>-->
-        </div>
+    <p class="veX_header_title veX_truncate"></p>
 </header>
 <div class="veX_done_status"></div>
 <div class="veX_content_wrapper">
@@ -23,7 +30,12 @@ const ChecklistUI = `
         <div class="veX_ui_categories">No Item</div>
     </div>
     <div class="veX_main_content">
-        <div class="veX_ui_title">No Item</div>
+        <div class="veX_ui_title_container">
+          <div class="veX_ui_title">No Item</div>
+          <button class="veX_mark_category_completed_btn" title="Mark all as completed for this category">
+            <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark all as completed" />
+          </button>
+        </div>
          <!-- <div class="veX_header_actions">
             <button id="mark-all-completed">Mark all as completed</button> 
         </div> -->
@@ -67,5 +79,6 @@ const PromptsUI = `
 
 export {
     ChecklistUI,
-    PromptsUI
+    PromptsUI,
+    veXIconsURLs
 }

@@ -1,4 +1,4 @@
-@import url("../Utility/Common.css");
+@import url("../Common/Common.css");
 @import url("../Main/Main.css");
 #veX_prompts_popup_container {
   width: 700px;

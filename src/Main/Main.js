@@ -24,21 +24,22 @@ var Quill;
 var PromptModal;
 var Validators;
 var DefaultList;
+var UITemplates;
 // < veX Objects Declarations
 
 // > Loading Modules 
 async function loadModules() {
-  let URL = chrome.runtime.getURL("src/Utility/Util.js");
+  let URL = chrome.runtime.getURL("src/Common/Util.js");
   if (!Util)
     Util = await import(URL);
   URL = chrome.runtime.getURL("src/External/purify.min.js");
   if (!DomPurify)
     DomPurify = await import(URL);
-  URL = chrome.runtime.getURL("src/Utility/Constants.js");
+  URL = chrome.runtime.getURL("src/Common/Constants.js");
   if (!Constants)
     Constants = await import(URL);
   veXSelectors = Constants.VEChecklistNodeSelectors;
-  URL = chrome.runtime.getURL("src/Utility/MutationObservers.js");
+  URL = chrome.runtime.getURL("src/Common/MutationObservers.js");
   if (!MutationObservers)
     MutationObservers = await import(URL);
   URL = chrome.runtime.getURL("src/Comments/Comment.js");
@@ -50,9 +51,14 @@ async function loadModules() {
   URL = chrome.runtime.getURL("src/AviatorIntegrations/PromptModal.js");
   if (!PromptModal)
     PromptModal = await import(URL);
-  URL = chrome.runtime.getURL("src/Utility/SchemaValidators.js");
+  URL = chrome.runtime.getURL("src/Common/SchemaValidators.js");
   if (!Validators)
     Validators = await import(URL);
+  URL = chrome.runtime.getURL("src/Common/UITemplates.js");
+  if(!UITemplates)
+  {
+    UITemplates = await import(URL);
+  }
   }
 
 async function initialize() {
@@ -77,7 +83,7 @@ function veXSetup() {
 function setupChecklistPopupNode() {
   veXPopUpNode.id = "veX_checklist_popup_container";
    veXPopUpNode.classList.add("veX_popup_disable");
-  veXPopUpNode.innerHTML = Constants.ChecklistUI;
+  veXPopUpNode.innerHTML = UITemplates.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
 }
 function  addLoadingElement()
@@ -584,7 +590,7 @@ function setCompletedState(listItemNode, listIndex) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Completed State", err.message), true);
   }
 }
-//<-Utility Functions
+//<-Common Functions
 
 
 //->Event Handlers

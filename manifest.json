@@ -16,7 +16,7 @@
     "default_title": "VEXtenstion"
   },
   "background": {
-    "service_worker": "/src/Utility/Background.js",
+    "service_worker": "/src/Common/Background.js",
     "type": "module"
   },
   "web_accessible_resources": [
@@ -30,9 +30,9 @@
         "src/Main/Main.js",
         "src/Popup/Popup.html",
         "src/Options/Options.js",
-        "src/Utility/Util.js",
-        "src/Utility/Constants.js",
-        "src/Utility/MutationObservers.js",
+        "src/Common/Util.js",
+        "src/Common/Constants.js",
+        "src/Common/MutationObservers.js",
         "src/Comments/Comment.js",
         "src/External/purify.min.js",
         "src/External/Quill/quill.js",
@@ -57,7 +57,9 @@
         "icons/send_24.png",
         "icons/keyboard_arrow_down_24.png",
         "src/AviatorIntegrations/PromptModal.js",
-        "src/Utility/SchemaValidators.js",
+        "src/Common/SchemaValidators.js",
+        "src/Common/UITemplates.js",
+        "src/Common/DefaultList.js",
         "icons/done_all_24dp_FFFFFF.png",
         "icons/close_24dp_000000.png",
         "icons/keyboard_arrow_up_24dp.png",

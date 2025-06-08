@@ -2,6 +2,7 @@ const fileInput = document.getElementById('jsonFile');
 const urlInputSaveBtn = document.getElementById('SaveChecklistBtn');
 const downloadChecklistBtn = document.getElementById('downloadChecklistBtn');
 const downloadPromptsBtn = document.getElementById('downloadPromptsBtn');
+const remoteURLInput = document.getElementById("veXRemoteUrl");
 var veXChecklistRemoteUrl = "";
 var veXLoadOnStart = false;
 var uploadType = 'checklist';
@@ -16,13 +17,13 @@ var veXConfiguredChecklist;
 var veXConfiguredPrompts;
 
 async function loadModules() {
-    let URL = chrome.runtime.getURL("src/Utility/Util.js");
+    let URL = chrome.runtime.getURL("src/Common/Util.js");
     if (!Util)
         Util = await import(URL);
-    URL = chrome.runtime.getURL("src/Utility/Constants.js");
+    URL = chrome.runtime.getURL("src/Common/Constants.js");
     if (!Constants)
         Constants = await import(URL);
-    URL = chrome.runtime.getURL("src/Utility/SchemaValidators.js");
+    URL = chrome.runtime.getURL("src/Common/SchemaValidators.js");
     if (!Validators)
         Validators = await import(URL);
 }
@@ -43,6 +44,13 @@ function setupEventListeners() {
         urlInputSaveBtn.addEventListener('click', onSaveURL);
     } else {
         Util.onError(undefined, 'Could not find the URL input box', true);
+    }
+
+    if(remoteURLInput)
+    {
+        remoteURLInput.addEventListener('input', function () {
+            urlInputSaveBtn.textContent = "Save";
+        });
     }
 
     loadUrlURLMetaData();
@@ -160,11 +168,18 @@ async function loadPromptsData() {
             return;
     }
     if (!veXPromptsData) return;
-
+    let veXPromptsRemoteUrl = "";
     veXConfiguredPrompts = veXPromptsData["prompts"];
-    veXRemoteUrl = veXPromptsData["veXPromptsRemoteUrl"];
+    veXPromptsRemoteUrl = veXPromptsData["veXPromptsRemoteUrl"];
+    if(document.getElementById('SaveChecklistBtn'))
+        {
+            document.getElementById('SaveChecklistBtn').textContent = veXPromptsRemoteUrl? "Get Latest" : "Save";
+        }
+
+
     if (document.getElementById('veXRemoteUrl'))
-        document.getElementById('veXRemoteUrl').value = veXRemoteUrl || "";
+        document.getElementById('veXRemoteUrl').value = veXPromptsRemoteUrl || "";
+
 
 }
 
@@ -191,7 +206,7 @@ async function onSaveURL() {
         }
 
     } catch (error) {
-        Util.onError(error, "Couldn't fetch JSON from the URL", true);
+        Util.onError(error, error.message, true);
     }
     finally {
         Util.hideLoading();
@@ -219,6 +234,8 @@ async function validateAndSaveRemotePrompts(responseData, url) {
     if (Validators.validatePromptTemplates(promptsData) === true)
         if (await Util.savePromtsData(promptsData, url) === true) {
             Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
+            veXPromptsData = undefined;
+            loadPromptsData();
         }
         else {
             Util.notify("Failed to save prompts data. Please try again.", Constants.NotificationType.Error, true);
@@ -270,8 +287,6 @@ function onPromptFileUpload(event) {
                     fileInput.value = '';
                     veXPromptsData=undefined;
                     loadPromptsData();
-
-
                 }
                 else {
                     fileInput.value = '';

@@ -359,6 +359,44 @@ function openRightSidebar()
   return true;
 }
 
+async function openCommentsPanel()
+{
+  try
+  {
+    if(document.querySelector("[data-aid='panel-item-commentsPanel']"))
+      {
+        document.querySelector("[data-aid='panel-item-commentsPanel']").click();
+        await delay(1000);
+        return true;
+      }
+      return false;
+  }
+  catch(err)
+  {
+    onError(err, "Unable to open comments panel", false);
+    return false;
+  }
+}
+
+async function openAviatorPanel()
+{
+  try
+  {
+    if(document.querySelector("[data-aid='panel-item-aviatorPanel']"))
+      {
+        document.querySelector("[data-aid='panel-item-aviatorPanel']").click();
+        await delay(1000);
+        return true;
+      }
+      return false;
+  }
+  catch(err)
+  {
+    onError(err, "Unable to open aviator panel", false);
+    return false;
+  }
+}
+
 function closeRightSidebar()
 {
   let rightSidebarCollapseBtn = document.querySelector(Constants.ValueEdgeNodeSelectors.CollapseRightSidebar)
@@ -414,5 +452,7 @@ export {
   getRemoteListData,
   makeCursorLoading,
   makeCursorDefault,
-  isValidURL
+  isValidURL,
+  openAviatorPanel,
+  openCommentsPanel
 }

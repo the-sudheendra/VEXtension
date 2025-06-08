@@ -1,19 +1,33 @@
 var veXPromptsPopupNode = document.createElement("div");
 var veXPromptsPopupOverlay = document.createElement("div");
 var currentPromptTone = "";
-var prompts = Constants.veXDefaultPrompts;
-const promptTones = Constants.veXDefaultPromptsTone;
+var UITemplates;
+var DefaultList;
+var prompts;
+var promptTones;
 let promptVariableData = [];
 
 
 async function loadModules() {
-  let URL = chrome.runtime.getURL("src/Utility/Util.js");
+  let URL = chrome.runtime.getURL("src/Common/Util.js");
   if (!Util)
     Util = await import(URL);
-  URL = chrome.runtime.getURL("src/Utility/Constants.js");
+  URL = chrome.runtime.getURL("src/Common/Constants.js");
   if (!Constants)
     Constants = await import(URL);
   veXSelectors = Constants.VEChecklistNodeSelectors;
+  URL = chrome.runtime.getURL("src/Common/UITemplates.js");
+  if(!UITemplates)
+  {
+    UITemplates = await import(URL);
+  }
+  URL = chrome.runtime.getURL("src/Common/DefaultList.js");
+  if(!DefaultList)
+  {
+    DefaultList = await import(URL);
+  }
+   prompts = DefaultList.veXDefaultPrompts;
+   promptTones = DefaultList.veXDefaultPromptsTone;
 }
 
 async function initialize() {
@@ -31,17 +45,17 @@ async function loadPrompts() {
   try {
     let promptsResponse=await chrome.storage.local.get("veXPromptsData");
     if(Util.isEmptyObject(promptsResponse)){
-      prompts=Constants.veXDefaultPrompts;
+      prompts=DefaultList.veXDefaultPrompts;
       return;
     }
     let promptsData = promptsResponse.veXPromptsData;
     if(Util.isEmptyObject(promptsData)) {
-      prompts = Constants.veXDefaultPrompts;
+      prompts = DefaultList.veXDefaultPrompts;
       return;
     } 
     prompts = promptsData.prompts;
     if(Util.isEmptyArray(prompts)) {
-      prompts = Constants.veXDefaultPrompts;
+      prompts = DefaultList.veXDefaultPrompts;
       return;
     }
   } catch (err) {
@@ -97,7 +111,7 @@ function setupPromptsPopupNode() {
   try {
     veXPromptsPopupNode.id = "veX_prompts_popup_container";
     veXPromptsPopupNode.classList.add("veX_prompts_popup_disable");
-    veXPromptsPopupNode.innerHTML = Constants.PromptsUI;
+    veXPromptsPopupNode.innerHTML = UITemplates.PromptsUI;
     document.body.appendChild(veXPromptsPopupNode);
     initializeTonesDropdown();
     attachToneSelectorEvents();
@@ -280,12 +294,12 @@ function getPromptRowHTML(prompt, index) {
         <div class="veX_prompt_rows" data-index="${index}">
           <div class="veX_prompt_name">${prompt.name}
               <span class="veX_expand_btn" title="Expand" data-index="${index}">
-              <img src="${Constants.veXIconsURLs.expand}" alt="Expand Icon" />
+              <img src="${UITemplates.veXIconsURLs.expand}" alt="Expand Icon" />
               </span>
           </div>
           <div class="veX_icons">
               <span class="veX_send_btn" title="Send to AI" data-index="${index}">
-              <img src="${Constants.veXIconsURLs.send}" alt="Send Icon" />
+              <img src="${UITemplates.veXIconsURLs.send}" alt="Send Icon" />
               </span>
           </div>
         </div>
@@ -305,7 +319,7 @@ function getPromptExpandHTML(prompt, index) {
             <p><strong>Template:</strong></p>
             <div class="veX_prompt_template_container">
                 <span class="veX_prompt_edit_template_btn" title="Edit Template" data-index="${index}">
-                  <img src="${Constants.veXIconsURLs.edit}" alt="Edit Icon" />
+                  <img src="${UITemplates.veXIconsURLs.edit}" alt="Edit Icon" />
                 </span>
                 <pre class="veX_prompt_template_content" data-index="${index}">${prompt.template}</pre>
             </div>
@@ -335,11 +349,11 @@ function attachTemplateEditEvents(container) {
         if (preElement.contentEditable !== 'true') {
           preElement.contentEditable = 'true';
           preElement.focus();
-          btn.querySelector('img').src = Constants.veXIconsURLs.check;
+          btn.querySelector('img').src = UITemplates.veXIconsURLs.check;
         } else {
           preElement.contentEditable = 'false';
           prompts[index].template = preElement.textContent;
-          btn.querySelector('img').src = Constants.veXIconsURLs.edit;
+          btn.querySelector('img').src = UITemplates.veXIconsURLs.edit;
 
         }
       });
@@ -357,15 +371,15 @@ function onExpandBtnClick(btn, index) {
       const expandSection = container.querySelector('.veX_prompt_expand_section');
       if (expandSection.id === `veX_expand_${index}` && expandSection.style.display === "none") {
         expandSection.style.display = "block";
-        expandBtn.innerHTML = `<img src="${Constants.veXIconsURLs.close}" alt="Close Icon" />`;
+        expandBtn.innerHTML = `<img src="${UITemplates.veXIconsURLs.close}" alt="Close Icon" />`;
       }
       else if (expandSection.id === `veX_expand_${index}` && expandSection.style.display !== "none") {
         expandSection.style.display = "none";
-        expandBtn.innerHTML = `<img src="${Constants.veXIconsURLs.expand}" alt="Expand Icon" />`;
+        expandBtn.innerHTML = `<img src="${UITemplates.veXIconsURLs.expand}" alt="Expand Icon" />`;
       }
       else if (expandSection.id !== `veX_expand_${index}` && expandSection.style.display !== "none") {
         expandSection.style.display = "none";
-        expandBtn.innerHTML = `<img src="${Constants.veXIconsURLs.expand}" alt="Expand Icon" />`;
+        expandBtn.innerHTML = `<img src="${UITemplates.veXIconsURLs.expand}" alt="Expand Icon" />`;
       }
     });
   } catch (err) {
@@ -379,20 +393,14 @@ async function onSendBtnClick(index) {
     const filledPrompt = draftPromptTemplate(prompt.template, index, prompt.variables, promptVariableData);
     Util.openRightSidebar();
     await Util.delay(500);
-    if(document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton))
-    {
-      document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorButton).click();
-    }
-    else
+    if(await Util.openAviatorPanel()==false)
     {
       Util.notify("🤔 Aviator tab not found. Please ensure it is accessible.", Constants.NotificationType.Warning, true);
       return;
     }
-    await Util.delay(500);
-    Util.setNativeValue(document.querySelector("[data-aid='chat-with-entity-panel-bottom-section-textarea']"), filledPrompt);
+    Util.setNativeValue(document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorTextArea), filledPrompt);
+    document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorPromptSubmitButton).click();
     closePromptsPopup();
-    document.querySelector("[data-aid = 'chat-with-entity-panel-bottom-section-on-submit-btn']").click();
-    
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "On Send Btn Click", err.message), true);
   }

@@ -2,10 +2,10 @@ var Util;
 var Constants;
 
 async function loadModules() {
-  let URL = chrome.runtime.getURL("src/Utility/Util.js");
+  let URL = chrome.runtime.getURL("src/Common/Util.js");
   if (!Util)
       Util = await import(URL);
-  URL = chrome.runtime.getURL("src/Utility/Constants.js");
+  URL = chrome.runtime.getURL("src/Common/Constants.js");
   if (!Constants)
       Constants = await import(URL);
 }
