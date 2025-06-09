@@ -93,6 +93,7 @@ function veXPromptViewSetup() {
     setupPromptsPopupNode();
     setupPromptsPopupOverlay();
     initializePromptList();
+    Util.makeElementDraggable(veXPromptsPopupNode.querySelector('.veX_prompts_header'),document.getElementById("veX_prompts_popup_container"));
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup Prompt View", err.message), true);
   }
@@ -210,7 +211,7 @@ function openPromptsPopup() {
     }
     veXPromptsPopupOverlay.style.visibility = "visible";
     veXPromptsPopupNode.classList.add("veX_popup_active");
-    centerThePopup(veXPromptsPopupNode);
+    Util.centerThePopup(veXPromptsPopupNode);
     veXPromptsPopupNode.classList.remove("veX_popup_disable");
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Prompts Popup", err.message), true);

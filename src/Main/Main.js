@@ -204,7 +204,7 @@ async function initView() {
 async function initHeaderView() {
   try {
     veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
-    Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'));
+    Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'),document.getElementById("veX_checklist_popup_container"));
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Header View initializing", err.message), true);
@@ -609,7 +609,7 @@ function openChecklistPopup() {
     }
     veXPopUpOverlay.style.visibility = "visible";
     veXPopUpNode.classList.add("veX_popup_active");
-    centerThePopup(veXPopUpNode);
+    Util.centerThePopup(veXPopUpNode);
     veXPopUpNode.classList.remove("veX_popup_disable");
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Checklist Popup", err.message), true);
@@ -625,17 +625,7 @@ function openPromptsPopup() {
 }
 
 
-function centerThePopup(veXPopUpNode) {
-  try {
-    if (veXPopUpNode) {
-      veXPopUpNode.style.left = "50%";
-      veXPopUpNode.style.top = "50%";
-      veXPopUpNode.style.transform = "translate(-50%, -50%) !important";
-    }
-  } catch {
 
-  }
-}
 /**
  * This function refreshes the checklist
  * from the remote URL if it exists.

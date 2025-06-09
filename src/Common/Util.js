@@ -171,7 +171,7 @@ function calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems) {
   return Math.min(Math.round(percentage), 100);
 }
 
-function makeElementDraggable(element) {
+function makeElementDraggable(element,targetElement) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (element) {
     element.onmousedown = dragMouseDown;
@@ -196,7 +196,6 @@ function makeElementDraggable(element) {
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
-    let targetElement = document.getElementById("veX_checklist_popup_container");
     // set the element's new position:
     targetElement.style.top = (targetElement.offsetTop - pos2) + "px";
     targetElement.style.left = (targetElement.offsetLeft - pos1) + "px";
@@ -209,6 +208,17 @@ function makeElementDraggable(element) {
   }
 }
 
+function centerThePopup(veXPopUpNode) {
+  try {
+    if (veXPopUpNode) {
+      veXPopUpNode.style.left = "50%";
+      veXPopUpNode.style.top = "50%";
+      veXPopUpNode.style.transform = "translate(-50%, -50%) !important";
+    }
+  } catch {
+
+  }
+}
 function getDoneMessage(percentage) {
   try {
     if (percentage < 0 || percentage > 100) {
@@ -472,5 +482,7 @@ export {
   openCommentsPanel,
   getDefaultChecklist,
   getDefaultPrompts,
-  getPromptsTone
+  getPromptsTone,
+  centerThePopup
+
 }

@@ -105,6 +105,7 @@ textarea.veX_variable_input:active {
   background-color: #1c1c1e;
   border-bottom: 1px solid #333;
   flex-wrap: wrap;
+  cursor: move;
   /* Ensures it wraps if screen is narrow */
   gap: 0.5rem;
   color: white;
@@ -161,6 +162,7 @@ textarea.veX_variable_input:active {
 }
 
 #veX_prompts_list_container {
+  min-height: 300px;
   max-height: 70vh !important;
   overflow-y: scroll !important;
 }
