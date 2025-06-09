@@ -1,3 +1,413 @@
+const veXDefaultChecklist = {
+  "Defect": {
+    "categories": {
+      "Planned": {
+        "checklist": [
+          "Confirm defect is reproducible",
+          "Attach evidence (screenshots/logs)",
+          "Assess customer impact",
+          "Notify stakeholders of decision"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "Proposed": {
+        "checklist": [
+          "Review feasibility with team",
+          "Document proposed solution approach",
+          "Estimate effort required"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "Deferred": {
+        "checklist": [
+          "Document reason for deferral",
+          "Set target date for revisit",
+          "Notify stakeholders"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "Rejected": {
+        "checklist": [
+          "Document rejection reason",
+          "Link to related issues if any",
+          "Notify reporter"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "In Progress": {
+        "checklist": [
+          "Identify root cause",
+          "Implement and test fix",
+          "Get code peer-reviewed"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Code Review": {
+        "checklist": [
+          "Code reviewed and approved",
+          "Meets coding standards",
+          "Address review comments"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "In Testing": {
+        "checklist": [
+          "Verify fix in test environment",
+          "Run regression tests",
+          "Confirm original issue resolved"
+        ],
+        "phases": [
+          "Fixed"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Verify fix in production",
+          "Update documentation",
+          "Close ticket with confirmation"
+        ],
+        "phases": [
+          "Done"
+        ]
+      },
+      "Duplicate": {
+        "checklist": [
+          "Link to original ticket",
+          "Notify reporter with reference"
+        ],
+        "phases": [
+          "New",
+          "In Progress"
+        ]
+      }
+    }
+  },
+  "Enhancement": {
+    "categories": {
+      "Planning": {
+        "checklist": [
+          "Validate business value",
+          "Confirm technical feasibility",
+          "Define acceptance criteria"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "In Progress": {
+        "checklist": [
+          "Implement enhancement",
+          "Write/update tests",
+          "Track against acceptance criteria"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Code Review": {
+        "checklist": [
+          "Peer review completed",
+          "Security review if needed",
+          "Code quality standards met"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "In Testing": {
+        "checklist": [
+          "Test all scenarios",
+          "Verify acceptance criteria",
+          "Get QA sign-off"
+        ],
+        "phases": [
+          "Fixed"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Deploy to production",
+          "Update release notes",
+          "Inform stakeholders"
+        ],
+        "phases": [
+          "Done"
+        ]
+      }
+    }
+  },
+  "CPE Incident": {
+    "categories": {
+      "Investigation": {
+        "checklist": [
+          "Assess customer impact",
+          "Collect logs/evidence",
+          "Assign support engineer"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "In Progress": {
+        "checklist": [
+          "Replicate the issue",
+          "Suggest workaround if possible",
+          "Engage engineering team"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Awaiting Decision": {
+        "checklist": [
+          "Provide all info to decision-maker",
+          "Document recommended action",
+          "Set expectations with customer"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "Pending Support": {
+        "checklist": [
+          "Acknowledge with support team",
+          "Request additional details if needed",
+          "Set appropriate priority"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "Fixed": {
+        "checklist": [
+          "Deliver fix to customer",
+          "Verify resolution with customer",
+          "Document solution"
+        ],
+        "phases": [
+          "Fixed"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Close customer ticket",
+          "Update knowledge base",
+          "Capture lessons learned"
+        ],
+        "phases": [
+          "Done"
+        ]
+      }
+    }
+  },
+  "Clone": {
+    "categories": {
+      "Tracking": {
+        "checklist": [
+          "Link to original ticket",
+          "Specify target branch/version",
+          "Document clone purpose"
+        ],
+        "phases": [
+          "New",
+          "In Progress"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Apply fix to all branches",
+          "Verify no duplicate work",
+          "Update original ticket"
+        ],
+        "phases": [
+          "Done"
+        ]
+      }
+    }
+  },
+  "User Story": {
+    "categories": {
+      "Ready": {
+        "checklist": [
+          "Acceptance criteria defined",
+          "Story estimated by team",
+          "Dependencies identified",
+          "Fits in one sprint"
+        ],
+        "phases": [
+          "Ready"
+        ]
+      },
+      "In Progress": {
+        "checklist": [
+          "Break down into tasks",
+          "Provide daily updates",
+          "Track against acceptance criteria"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Code Review": {
+        "checklist": [
+          "Code reviewed and approved",
+          "Meets Definition of Done",
+          "All tests passing"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Implemented - In Testing": {
+        "checklist": [
+          "Test acceptance criteria",
+          "Verify edge cases",
+          "No critical bugs found"
+        ],
+        "phases": [
+          "Implemented"
+        ]
+      },
+      "Tested": {
+        "checklist": [
+          "Document test results",
+          "Get stakeholder sign-off",
+          "Ready for deployment"
+        ],
+        "phases": [
+          "Implemented"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Deploy to production",
+          "Demo to stakeholders",
+          "Close with confirmation"
+        ],
+        "phases": [
+          "Done"
+        ]
+      },
+      "Cancelled": {
+        "checklist": [
+          "Document cancellation reason",
+          "Check impact on related stories",
+          "Notify stakeholders"
+        ],
+        "phases": [
+          "New",
+          "Ready",
+          "In Progress"
+        ]
+      }
+    }
+  },
+  "Spike": {
+    "categories": {
+      "Planning": {
+        "checklist": [
+          "Define spike goal clearly",
+          "Set timebox limit",
+          "Identify expected deliverables"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "Research": {
+        "checklist": [
+          "Document findings as you go",
+          "Identify risks and dependencies",
+          "Stay within timebox"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Present findings to team",
+          "Document recommendations",
+          "Create follow-up stories if needed"
+        ],
+        "phases": [
+          "Done"
+        ]
+      }
+    }
+  },
+  "Quality Story": {
+    "categories": {
+      "In Progress": {
+        "checklist": [
+          "Implement test automation",
+          "Update test documentation",
+          "Complete build verification tasks"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Commit QA assets to repo",
+          "Update QA documentation",
+          "Verify quality improvements"
+        ],
+        "phases": [
+          "Done"
+        ]
+      }
+    }
+  },
+  "Internal": {
+    "categories": {
+      "Planning": {
+        "checklist": [
+          "Clarify scope and goals",
+          "Estimate time needed",
+          "Identify dependencies"
+        ],
+        "phases": [
+          "New"
+        ]
+      },
+      "In Progress": {
+        "checklist": [
+          "Track work progress",
+          "Keep team informed",
+          "Update documentation"
+        ],
+        "phases": [
+          "In Progress"
+        ]
+      },
+      "Done": {
+        "checklist": [
+          "Complete internal documentation",
+          "Communicate changes to team",
+          "Verify goals achieved"
+        ],
+        "phases": [
+          "Done"
+        ]
+      }
+    }
+  }
+};
+
 const veXDefaultPrompts = [
   {
     "name": "Summarize Ticket for Standup",
@@ -245,5 +655,6 @@ const veXDefaultPromptsTone = {
 
 export {
   veXDefaultPrompts,
-  veXDefaultPromptsTone
+  veXDefaultPromptsTone,
+  veXDefaultChecklist
 }

@@ -188,7 +188,8 @@ async function onSaveURL() {
     }
     try {
         Util.showLoading();
-        const response = await fetch(url);
+        const response = await fetch(`${url}?ts=${Date.now()}`);
+
         if (!response.ok) {
             Util.notify("Couldn't fetch JSON from the URL", Constants.NotificationType.Warning, true);
             return;

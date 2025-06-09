@@ -1,7 +1,12 @@
 var notifyAPI;
+var DefaultList;
 (async () => {
   const notifyUrl = await chrome.runtime.getURL("src/Notification/Notification.js");
   notifyAPI = await import(notifyUrl);
+  let URL = chrome.runtime.getURL("src/Common/DefaultList.js");
+  if (!DefaultList) {
+    DefaultList = await import(URL);
+  }
 })();
 
 function isEmptyObject(obj) {
@@ -144,8 +149,8 @@ async function getRemoteListData(remoteUrl, listType) {
     onError("Invalid remote url",)
     return;
   }
-  try {
-    const response = await fetch(remoteUrl);
+  try {    
+    const response = await fetch(`${remoteUrl}?ts=${Date.now()}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -391,18 +396,47 @@ function closeRightSidebar() {
   return true;
 }
 
-function makeCursorLoading() {
-  document.body.style.cursor = "wait";
-}
-function makeCursorDefault() {
-  document.body.style.cursor = "default";
-}
 function isValidURL(str) {
   try {
     new URL(str);
     return true;
   } catch (_) {
     return false;
+  }
+}
+
+async function getDefaultPrompts() {
+  try {
+    
+    const response = await fetch(`${Constants.defaultPromptsRemoteURL}?ts=${Date.now()}`);
+    return await response.json() || DefaultList.veXDefaultPrompts || [];
+  }
+  catch (err) {
+    onError(err, "Unable to fetch default prompts", false);
+    return [];
+  }
+}
+async function getDefaultChecklist() {
+  try {
+    
+    const response = await fetch(`${Constants.defaultCheklistRemoteURL}?ts=${Date.now()}`);
+    return await response.json() || DefaultList.veXDefaultChecklist || {};
+  }
+  catch (err) {
+    onError(err, "Unable to fetch default checklist", false);
+    return {};
+  }
+}
+
+async function getPromptsTone() {
+  try {
+    
+    const response =await fetch(`${Constants.defaultPromptsTonesURL}?ts=${Date.now()}`);
+    return await response.json() || DefaultList.veXDefaultPromptsTone || {};
+  }
+  catch (err) {
+    onError(err, "Unable to fetch default promptsTones", false);
+    return {};
   }
 }
 export {
@@ -433,9 +467,10 @@ export {
   savePromtsData,
   getLocalListData,
   getRemoteListData,
-  makeCursorLoading,
-  makeCursorDefault,
   isValidURL,
   openAviatorPanel,
-  openCommentsPanel
+  openCommentsPanel,
+  getDefaultChecklist,
+  getDefaultPrompts,
+  getPromptsTone
 }

@@ -651,7 +651,8 @@ async function refreshChecklistFromRemoteIfExists() {
     // and fetch the checklist from the remote URL
     const veXChecklistRemoteUrl = await chrome.storage.local.get("veXChecklistRemoteUrl");
     const veXLoadOnStart = await chrome.storage.local.get("veXLoadOnStart");
-    const response = await fetch(veXChecklistRemoteUrl?.veXChecklistRemoteUrl);
+    
+    const response = await fetch(`${veXChecklistRemoteUrl?.veXChecklistRemoteUrl}?ts=${Date.now()}`);
     if (!response.ok) {
       Util.notify("Couldn't fetch checklist JSON from the URL", "warning", true);
       return false;

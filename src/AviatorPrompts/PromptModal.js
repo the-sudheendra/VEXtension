@@ -42,20 +42,11 @@ async function initialize() {
 async function loadPrompts() {
   try {
     let promptsResponse = await chrome.storage.local.get("veXPromptsData");
-    if (Util.isEmptyObject(promptsResponse)) {
+    if (Util.isEmptyObject(promptsResponse) || Util.isEmptyObject(promptsResponse.veXPromptsData) || Util.isEmptyArray(promptsResponse.veXPromptsData.prompts)) {
       prompts = DefaultList.veXDefaultPrompts;
       return;
     }
-    let promptsData = promptsResponse.veXPromptsData;
-    if (Util.isEmptyObject(promptsData)) {
-      prompts = DefaultList.veXDefaultPrompts;
-      return;
-    }
-    prompts = promptsData.prompts;
-    if (Util.isEmptyArray(prompts)) {
-      prompts = DefaultList.veXDefaultPrompts;
-      return;
-    }
+    prompts = promptsResponse.veXPromptsData.prompts;
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Get Prompts", err.message), true);
   }
@@ -71,25 +62,27 @@ function initializeTonesDropdown() {
     selected.textContent = "Select Tone";
 
     const options = dropdown.querySelector('.veX_dropdown_options');
+    const fragment = document.createDocumentFragment();
     let toneOptions = Object.keys(promptTones);
+
     // Add None option
     let option = document.createElement('div');
-    option.classList.add('veX_dropdown_option');
-    option.classList.add('veX_truncate');
+    option.classList.add('veX_dropdown_option', 'veX_truncate');
     option.setAttribute('data-value', "");
     option.setAttribute('title', "None");
     option.textContent = "None";
+    fragment.appendChild(option);
 
-    options.appendChild(option);
     toneOptions.forEach(tone => {
       let option = document.createElement('div');
-      option.classList.add('veX_dropdown_option');
-      option.classList.add('veX_truncate');
+      option.classList.add('veX_dropdown_option', 'veX_truncate');
       option.setAttribute('data-value', promptTones[tone]);
       option.setAttribute('title', tone);
       option.textContent = tone;
-      options.appendChild(option);
+      fragment.appendChild(option);
     });
+
+    options.appendChild(fragment);
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Initialize Prompt Tones Dropdown", err.message), true);
   }
