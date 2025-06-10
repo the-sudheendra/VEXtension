@@ -17,11 +17,21 @@
 
 
 ## Features 🚀
-- Displays relevant Definition of Done (DoD) & Definition of Ready (DOR) Checklist based on the currently opened ticket and its status.
-- Reminds users to review and complete Checklist when changing ticket phases.
-- Users can create their own customized Checklist based on their project requirements.
-- Users can add text or HTML notes to each checklist, and these notes will be included in the comments
-- Allows users to add completed Checklist in comments to track and maintain a record of the completion status for each item.
+
+- 📌 **Context-Aware Checklists**  
+  Shows the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
+
+- 🛠️ **Customizable & Remote Checklists**  
+  You can create your own checklist to match your project needs, or load one from a link (remote URL).
+
+- 📝  **Rich Text Notes on Each Item**  
+  Write notes for each checklist item using a rich text editor. These notes will appear in the ticket comments.
+
+- ✅ **Track Completion in Comments** 
+  Add or update finished checklist items in the comments to help track progress and keep a clear record.
+  
+- 🖱️ **Quick Access with Right-Click**  
+  Just right-click on a ticket to quickly open the checklist from the context menu — no extra clicks or searching needed!
 
 ## How to 💡
 **Use the Extension?**
@@ -31,7 +41,7 @@
 * Click on it to open a pop-up displaying the Done Checklist for the ticket.
 
 
-#### Example Checklist
+## Example Checklist 📜
 
 ```json
 {
@@ -78,19 +88,19 @@
   }
 }
 ```
-Get started with the **[predefined checklists](https://github.com/the-sudheendra/ChecklistHub)** ✅.
+**Get started with [predefined checklists](https://github.com/the-sudheendra/ChecklistHub) and learn more about the checklist schema** ✅.
 
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
 - Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
 
 
-## Third-Party Libraries
+### Shoutout to libraries 🔥
 
 This project uses the following open-source libraries:
 
 - [Quill](https://quilljs.com) — BSD 3-Clause License
 - [DOMPurify](https://github.com/cure53/DOMPurify) — Apache License 2.0
 
-See the [THIRD_PARTY_LICENSES](./third_party_licenses) folder for full license texts and attribution notices.
+See the [LICENSES](./third_party_licenses) folder for full license texts.
 

@@ -4,6 +4,10 @@ var veXChecklistCommentData = {};
 async function loadModules() {
   let URL = chrome.runtime.getURL("src/Common/Util.js");
   if (!Util)
+
+/**
+ * Dynamically imports the Util and Constants modules.
+ */
     Util = await import(URL);
   URL = chrome.runtime.getURL("src/Common/Constants.js");
   if (!Constants)
@@ -11,9 +15,16 @@ async function loadModules() {
 }
 async function initialize() {
   await loadModules();
-}
+}/**
+ * Initializes the comment functionality by loading required modules.
+ */
 initialize();
 
+/**
+ * Checks if adding a comment is allowed based on the checklist items.
+ * @param {object} veXChecklistItems - The checklist items.
+ * @returns {boolean} - True if adding a comment is allowed, false otherwise.
+ */
 function isCommentAllowed(veXChecklistItems) {
   try {
     if (Util.isEmptyObject(veXChecklistItems))
@@ -37,6 +48,11 @@ function isCommentAllowed(veXChecklistItems) {
   }
 }
 
+/**
+ * Adds the checklist items to the comments section.
+ * @param {object} veXChecklistItems - The checklist items.
+ * @param {number} donePercentage - The percentage of completed items.
+ */
 async function addChecklistToComments(veXChecklistItems, donePercentage) {
   try {
     if (!isCommentAllowed(veXChecklistItems)) {
@@ -182,6 +198,11 @@ const COMMENT_STYLES = {
   }
 };
 
+/**
+ * Drafts the checklist content for comments.
+ * @param {object} veXChecklistItems - The checklist items.
+ * @param {number} donePercentage - The percentage of completed items.
+ */
 async function draftChecklistForComments(veXChecklistItems, donePercentage) {
   try {
     const fragment = document.createElement("div");
@@ -198,6 +219,10 @@ async function draftChecklistForComments(veXChecklistItems, donePercentage) {
 
 }
 
+/**
+ * Creates the wrapper element for the comment content.
+ * @returns {HTMLElement} - The created wrapper element.
+ */
 function createCommentWrapper() {
   const wrapper = document.createElement('div');
   wrapper.classList.add("veX_checklist_comment_wrapper");
@@ -205,6 +230,11 @@ function createCommentWrapper() {
   return wrapper;
 }
 
+/**
+ * Creates the header section for the comment.
+ * @param {number} donePercentage - The percentage of completed items.
+ * @returns {HTMLElement} - The created header element.
+ */
 function createCommentHeader(donePercentage) {
   if (!donePercentage) donePercentage = 0;
   const headerNode = document.createElement("p");
@@ -236,6 +266,12 @@ function createCategorySection(categoryName, doneItemsInCategory, totalItemsInCa
   return categoryNode;
 }
 
+/**
+ * Creates the item node for the comment.
+ * @param {object} item - The checklist item.
+ * @param {string} categoryName - The name of the category.
+ * @returns {HTMLElement} - The created item node element.
+ */
 function createItemNode(item, categoryName) {
   const itemNode = document.createElement("div");
   const status = Util.getChecklistStatus(item);
@@ -287,6 +323,11 @@ async function processCategories(commentWrapper, veXChecklistItems, donePercenta
   }
 }
 
+/**
+ * Sets the prefix for a checklist item based on its status.
+ * @param {object} item - The checklist item.
+ * @returns {string} - The prefix for the item.
+ */
 function setPrefixForList(item) {
   let status = Util.getChecklistStatus(item);
   switch (status) {
@@ -295,6 +336,11 @@ function setPrefixForList(item) {
     case Constants.CheckListStatus.NotApplicable: return "NA";
   }
 }
+/**
+ * Sets the color for a checklist item based on its status.
+ * @param {object} item - The checklist item.
+ * @returns {string} - The color for the item.
+ */
 function setColor(item) {
   let status = Util.getChecklistStatus(item);
   switch (status) {
@@ -305,6 +351,10 @@ function setColor(item) {
   }
 }
 
+/**
+ * Gets the last checklist comment from the comments section.
+ * @returns {HTMLElement|null} - The last checklist comment element or null if not found.
+ */
 function getLastChecklistComment() {
   let CommentsContainer = document.querySelectorAll('.comment-container');
   for (let i = 0; i < CommentsContainer.length; i++) {
@@ -365,6 +415,9 @@ function getChecklistCommentData() {
   }
 }
 
+/**
+ * Syncs the checklist data with the comments section.
+ */
 function onSyncChecklistComments() {
   try {
     let backUp_checklistData = structuredClone(veXChecklistItems);
