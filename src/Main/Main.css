@@ -156,6 +156,7 @@ button {
 }
 
 .veX_logo_container {
+  min-width: 50px;
   width: 50px;
   display: flex;
   justify-content: center;

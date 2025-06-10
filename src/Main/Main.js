@@ -900,25 +900,32 @@ function markCurrentCategoryAsCompleted() {
     const currentCategoryName = veXCurrentCategory.name;
     const currentCheckList = veXChecklistItems[currentCategoryName];
     if (!currentCheckList) return;
+    let newlyCompletedCount = 0;
     for (let i = 0; i < currentCheckList.length; i++) {
-      currentCheckList[i].CursorState.position = 1; // 1 = Completed
-      currentCheckList[i].Completed = true;
-      currentCheckList[i].Selected = true;
-      currentCheckList[i].NotApplicable = false;
+      const item = currentCheckList[i];
+      const prevStatus = Util.getChecklistStatus(item);
+      if (prevStatus !== Constants.CheckListStatus.Completed && prevStatus !== Constants.CheckListStatus.NotApplicable) {
+        newlyCompletedCount++;
+      }
+      item.CursorState.position = 1; // 1 = Completed
+      item.Completed = true;
+      item.Selected = true;
+      item.NotApplicable = false;
     }
-    // Recalculate total completed items
-    veXTotalCompletedItems = 0;
-    Object.keys(veXChecklistItems).forEach(categoryName => {
-      veXChecklistItems[categoryName].forEach(item => {
-        if (Util.getChecklistStatus(item) === Constants.CheckListStatus.Completed || Util.getChecklistStatus(item) === Constants.CheckListStatus.NotApplicable) {
-          veXTotalCompletedItems++;
-        }
-      });
-    });
+    // Only increment by the number of items that were not already completed or not applicable
+    veXTotalCompletedItems += newlyCompletedCount;
     updateChecklist();
     updateDonePercentage();
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Mark Category Completed", err.message), true);
+    Util.onError(
+      err,
+      Util.formatMessage(
+        Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
+        "Mark Category Completed",
+        err.message
+      ),
+      true
+    );
   }
 }
 

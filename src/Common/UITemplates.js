@@ -32,8 +32,8 @@ const ChecklistUI = `
     <div class="veX_main_content">
         <div class="veX_ui_title_container">
           <div class="veX_ui_title">No Item</div>
-          <button class="veX_mark_category_completed_btn" title="Mark all as completed for this category">
-            <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark all as completed" />
+          <button class="veX_mark_category_completed_btn" title="Mark as done">
+            <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark as done" />
           </button>
         </div>
          <!-- <div class="veX_header_actions">
