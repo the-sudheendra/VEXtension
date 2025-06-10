@@ -19,29 +19,50 @@
   --vex-notApplicableColor: #808080; //*fdec83*/
 }
 
-#veX-PopUp-Container ::-webkit-scrollbar {
-  width: 5px;
+.veX_truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
+span.veX_truncate,
+div.veX_truncate,
+p.veX_truncate,
+td.veX_truncate,
+th.veX_truncate,
+button {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
 
-#veX-PopUp-Container ::-webkit-scrollbar-track {
+#veX_checklist_popup_container ::-webkit-scrollbar-track,
+#veX_prompts_popup_container ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   background-color: #F5F5F5;
+  border-radius: var(--veX-common-borderRadius);
+  overflow: hidden;
 
 }
 
-#veX-PopUp-Container ::-webkit-scrollbar {
-  width: 5px;
+#veX_checklist_popup_container ::-webkit-scrollbar,
+#veX_prompts_popup_container ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
   background-color: var(--veX-common-backgroundColor);
   border-radius: var(--veX-common-borderRadius);
 }
 
-#veX-PopUp-Container ::-webkit-scrollbar-thumb {
+#veX_checklist_popup_container ::-webkit-scrollbar-thumb,
+#veX_prompts_popup_container ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #8f8e8e;
 }
 
-#veX-PopUp-Container {
+#veX_checklist_popup_container {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -77,13 +98,14 @@
 }
 
 
-#veX-PopUp-Container {
+#veX_checklist_popup_container,
+#veX_prompts_popup_container {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; 
+  user-select: none;
   min-width: 600px;
   max-width: 900px;
   width: 70vw;
@@ -99,13 +121,21 @@
   border-radius: 10px;
 }
 
-.veX_pop_deactive {
+.veX_popup_disable,
+.veX_prompts_popup_disable {
   opacity: 0 !important;
   transform: translate(-50%, -60%) !important;
   visibility: hidden !important;
 }
 
-.veX_pop_active {
+.veX_Center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.veX_popup_active {
   opacity: 1 !important;
   transform: translate(-50%, -50%) !important;
   visibility: visible !important;
@@ -126,6 +156,7 @@
 }
 
 .veX_logo_container {
+  min-width: 50px;
   width: 50px;
   display: flex;
   justify-content: center;
@@ -147,8 +178,6 @@
   color: var(--veX-fontColorAgainstTicketColor);
   padding: 5px;
   margin: 0px;
-  width: 85%;
-  max-width: 85%;
   overflow: hidden;
 }
 
@@ -171,7 +200,7 @@
   MIN-HEIGHT: 50vh;
   max-height: 50vh;
   height: 50vh;
-  
+
 }
 
 .veX_sidebar {
@@ -374,7 +403,8 @@
 }
 
 
-#veX-PopUp-Overlay {
+#veX_checklist_popup_overlay,
+#veX_prompt_popup_overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -522,8 +552,8 @@
   z-index: 1;
   background-color: white;
 }
-.ql-editor
-{
+
+.ql-editor {
   max-height: 300px;
   color: black;
 }
@@ -563,7 +593,7 @@
 }
 
 .veX_banner.veX_footer {
-  background-color: #f8f9fa; 
+  background-color: #f8f9fa;
   padding: 10px;
   display: flex;
   justify-content: center;
@@ -599,7 +629,7 @@
   transition: background-color 0.3s ease;
 }
 
-.veX_segment i.material-icons {
+.veX_segment i.veX_material_icons {
   font-size: 18px;
 }
 
@@ -620,7 +650,99 @@
 .veX_segment:last-child:hover {
   background-color: #f0f0f0;
 }
-.veX_leave_comment_btn_txt,.veX_edit_comment_btn_txt
-{
-color: var(--veX-common-fontColor);
+
+.veX_leave_comment_btn_txt,
+.veX_edit_comment_btn_txt {
+  color: var(--veX-common-fontColor);
+}
+
+
+.veX_header_actions {
+  display: block;
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: var(--veX-successColor);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.veX_selectable {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+#veX_loader {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 4000;
+}
+
+/*
+#veX_loader::before {
+  content: "";
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: block;
+  background: conic-gradient(#1a6aff, #078bb2);
+  mask: radial-gradient(farthest-side, transparent calc(100% - 5px), black 0);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 5px), black 0);
+  animation: rotation 1s linear infinite;
+}  */
+#veX_loader {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: block;
+  /* This creates the light blue track */
+  border: 5px solid #cceeff;
+  /* A light blue/grey for the track */
+  /* This creates the darker blue spinning arc */
+  border-top-color: #1a6aff;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.veX_ui_title_container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.veX_mark_category_completed_btn {
+  /* background: var(--veX-successColor); */
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+  margin-bottom: 10px;
+}
+
+.veX_mark_category_completed_btn img {
+  width: 22px;
+  height: 22px;
 }
