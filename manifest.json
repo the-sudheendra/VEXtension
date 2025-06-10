@@ -64,7 +64,10 @@
         "icons/close_24dp_000000.png",
         "icons/keyboard_arrow_up_24dp.png",
         "icons/check_24dp.png",
-        "icons/done_all_24dp_1aa364.png"
+        "icons/done_all_24dp_1aa364.png",
+        "icons/CategoryNotDone.png",
+        "icons/CategotyNotApplicable.png",
+        "icons/CategoryDone.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }

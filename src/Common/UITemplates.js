@@ -1,10 +1,11 @@
-
 const veXIconsURLs = {
     add: chrome.runtime.getURL("icons/add_24dp_000000.png"),
     edit: chrome.runtime.getURL("icons/edit_24dp_000000.png"),
     send: chrome.runtime.getURL("icons/send_24.png"),
     expand: chrome.runtime.getURL("icons/keyboard_arrow_down_24.png"),
-    markAllCompleted: chrome.runtime.getURL("icons/done_all_24dp_1aa364.png"),
+    markAllCompleted: chrome.runtime.getURL("icons/CategoryDone.png"),
+    markAllNotDone: chrome.runtime.getURL("icons/CategoryNotDone.png"),
+    markAllNotApplicable: chrome.runtime.getURL("icons/CategotyNotApplicable.png"),
     logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
     check: chrome.runtime.getURL("icons/check_24dp.png"),
     close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
@@ -32,9 +33,17 @@ const ChecklistUI = `
     <div class="veX_main_content">
         <div class="veX_ui_title_container">
           <div class="veX_ui_title">No Item</div>
-          <button class="veX_mark_category_completed_btn" title="Mark as done">
-            <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark as done" />
-          </button>
+          <div class="veX_mark_category_buttons">
+            <button class="veX_mark_category_completed_btn" title="Mark as done">
+              <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark as done">
+            </button>
+            <button class="veX_mark_category_not_done_btn" title="Mark as not done">
+              <img class="veX_material_icons" src="${veXIconsURLs.markAllNotDone}" alt="Mark as not done">
+            </button>
+            <button class="veX_mark_category_not_applicable_btn" title="Mark as not applicable">
+              <img class="veX_material_icons" src="${veXIconsURLs.markAllNotApplicable}" alt="Mark as not applicable">
+            </button>
+          </div>
         </div>
          <!-- <div class="veX_header_actions">
             <button id="mark-all-completed">Mark all as completed</button> 

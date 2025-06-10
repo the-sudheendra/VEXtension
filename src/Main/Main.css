@@ -338,7 +338,6 @@ button {
   font-size: var(--veX-header-fontSize);
   font-weight: 500;
   color: var(--veX-common-fontColor);
-  margin-bottom: 10px;
 }
 
 .veX_ui_list_container ul {
@@ -730,8 +729,15 @@ button {
   margin-bottom: 10px;
 }
 
-.veX_mark_category_completed_btn {
-  /* background: var(--veX-successColor); */
+.veX_mark_category_buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.veX_mark_category_completed_btn,
+.veX_mark_category_not_done_btn,
+.veX_mark_category_not_applicable_btn {
   border: none;
   border-radius: 4px;
   padding: 4px 8px;
@@ -739,10 +745,18 @@ button {
   display: flex;
   align-items: center;
   transition: background 0.2s;
-  margin-bottom: 10px;
+  background: transparent;
 }
 
-.veX_mark_category_completed_btn img {
+.veX_mark_category_completed_btn:hover,
+.veX_mark_category_not_done_btn:hover,
+.veX_mark_category_not_applicable_btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.veX_mark_category_completed_btn img,
+.veX_mark_category_not_done_btn img,
+.veX_mark_category_not_applicable_btn img {
   width: 22px;
   height: 22px;
 }

@@ -359,13 +359,28 @@ function updateMainContentView() {
       return;
     }
     veXNodes.veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
-    // Add event listener for 'Mark as Completed' button
+    
+    // Add event listeners for mark category buttons
     const markCompletedBtn = veXPopUpNode.querySelector('.veX_mark_category_completed_btn');
+    const markNotDoneBtn = veXPopUpNode.querySelector('.veX_mark_category_not_done_btn');
+    const markNotApplicableBtn = veXPopUpNode.querySelector('.veX_mark_category_not_applicable_btn');
+
     if (markCompletedBtn) {
       markCompletedBtn.onclick = function () {
         markCurrentCategoryAsCompleted();
       };
     }
+    if (markNotDoneBtn) {
+      markNotDoneBtn.onclick = function () {
+        markCurrentCategoryAsNotDone();
+      };
+    }
+    if (markNotApplicableBtn) {
+      markNotApplicableBtn.onclick = function () {
+        markCurrentCategoryAsNotApplicable();
+      };
+    }
+
     veXNodes.veXSidebarParentNode.querySelectorAll(".veX_category_button").forEach((buttonNode) => {
       buttonNode.classList.remove("veX-Active-Button");
     });
@@ -904,7 +919,7 @@ function markCurrentCategoryAsCompleted() {
     for (let i = 0; i < currentCheckList.length; i++) {
       const item = currentCheckList[i];
       const prevStatus = Util.getChecklistStatus(item);
-      if (prevStatus !== Constants.CheckListStatus.Completed && prevStatus !== Constants.CheckListStatus.NotApplicable) {
+      if (prevStatus == Constants.CheckListStatus.NotSelected || prevStatus == Constants.CheckListStatus.NotCompleted) {
         newlyCompletedCount++;
       }
       item.CursorState.position = 1; // 1 = Completed
@@ -922,6 +937,74 @@ function markCurrentCategoryAsCompleted() {
       Util.formatMessage(
         Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
         "Mark Category Completed",
+        err.message
+      ),
+      true
+    );
+  }
+}
+
+function markCurrentCategoryAsNotDone() {
+  try {
+    const currentCategoryName = veXCurrentCategory.name;
+    const currentCheckList = veXChecklistItems[currentCategoryName];
+    if (!currentCheckList) return;
+    let newlyNotDoneCount = 0;
+    for (let i = 0; i < currentCheckList.length; i++) {
+      const item = currentCheckList[i];
+      const prevStatus = Util.getChecklistStatus(item);
+      if (prevStatus == Constants.CheckListStatus.Completed || prevStatus === Constants.CheckListStatus.NotApplicable ) {
+        newlyNotDoneCount++;
+      }
+      item.CursorState.position = 2; // 0 = Not Done
+      item.Completed = false;
+      item.Selected = false;
+      item.NotApplicable = false;
+    }
+    // Decrement by the number of items that were previously completed or not applicable
+    veXTotalCompletedItems -= newlyNotDoneCount;
+    updateChecklist();
+    updateDonePercentage();
+  } catch (err) {
+    Util.onError(
+      err,
+      Util.formatMessage(
+        Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
+        "Mark Category Not Done",
+        err.message
+      ),
+      true
+    );
+  }
+}
+
+function markCurrentCategoryAsNotApplicable() {
+  try {
+    const currentCategoryName = veXCurrentCategory.name;
+    const currentCheckList = veXChecklistItems[currentCategoryName];
+    if (!currentCheckList) return;
+    let newlyNotApplicableCount = 0;
+    for (let i = 0; i < currentCheckList.length; i++) {
+      const item = currentCheckList[i];
+      const prevStatus = Util.getChecklistStatus(item);
+      if (prevStatus == Constants.CheckListStatus.NotCompleted  || prevStatus ==  Constants.CheckListStatus.NotSelected) {
+        newlyNotApplicableCount++;
+      }
+      item.CursorState.position = 3; 
+      item.Completed = false;
+      item.Selected = false;
+      item.NotApplicable = true;
+    }
+    // Increment by the number of items that were not previously not applicable
+    veXTotalCompletedItems += newlyNotApplicableCount;
+    updateChecklist();
+    updateDonePercentage();
+  } catch (err) {
+    Util.onError(
+      err,
+      Util.formatMessage(
+        Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
+        "Mark Category Not Applicable",
         err.message
       ),
       true
