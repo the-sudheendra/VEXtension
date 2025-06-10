@@ -1,22 +1,22 @@
 {
-  "name": "VE Checklist",
+  "name": "VEXtenstion",
   "description": "Checklist Tool for OpenText ValueEdge",
-  "version": "2.3.7",
+  "version": "3.0.0",
   "manifest_version": 3,
   "permissions": ["contextMenus", "storage"],
   "content_scripts": [
     {
       "matches": ["https://*.saas.microfocus.com/*"],
-      "js": ["./src/Main/Main.js","src/External/Quill-TextEditor/quill.js"],
-      "css": ["./src/Main/Main.css", "./src/Notification/Notification.css","./src/External/Quill-TextEditor/quill.snow.css"]
+      "js": ["src/Main/Main.js","src/External/Quill/quill.js"],
+      "css": ["src/Main/Main.css", "src/Notification/Notification.css","src/External/Quill/quill.snow.css","src/AviatorPrompts/PromptModal.css"]
     }
   ],
   "action": {
-    "default_popup": "./src/Popup/Popup.html",
-    "default_title": "VE Checklist"
+    "default_popup": "/src/Popup/Popup.html",
+    "default_title": "VEXtenstion"
   },
   "background": {
-    "service_worker": "./src/Utility/Background.js",
+    "service_worker": "/src/Common/Background.js",
     "type": "module"
   },
   "web_accessible_resources": [
@@ -30,12 +30,12 @@
         "src/Main/Main.js",
         "src/Popup/Popup.html",
         "src/Options/Options.js",
-        "src/Utility/Util.js",
-        "src/Utility/Constants.js",
-        "src/Utility/MutationObservers.js",
+        "src/Common/Util.js",
+        "src/Common/Constants.js",
+        "src/Common/MutationObservers.js",
         "src/Comments/Comment.js",
         "src/External/purify.min.js",
-        "src/External/Quill-TextEditor/quill.js",
+        "src/External/Quill/quill.js",
         "src/Notification/Notification.js",
         "icons/check_circle_24.png",
         "icons/error_24.png",
@@ -53,7 +53,18 @@
         "icons/disabled.png",
         "icons/sync_24.png",
         "icons/add_24dp_000000.png",
-        "icons/edit_24dp_000000.png"
+        "icons/edit_24dp_000000.png",
+        "icons/send_24.png",
+        "icons/keyboard_arrow_down_24.png",
+        "src/AviatorPrompts/PromptModal.js",
+        "src/Common/SchemaValidators.js",
+        "src/Common/UITemplates.js",
+        "src/Common/DefaultList.js",
+        "icons/done_all_24dp_FFFFFF.png",
+        "icons/close_24dp_000000.png",
+        "icons/keyboard_arrow_up_24dp.png",
+        "icons/check_24dp.png",
+        "icons/done_all_24dp_1aa364.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
@@ -65,7 +76,7 @@
     "128": "icons/fact_check_128.png"
   },
   "options_ui": {
-    "page": "./src/Options/Options.html",
+    "page": "/src/Options/Options.html",
     "open_in_tab": true
   }
 }

@@ -4,7 +4,7 @@ var veXTicketTitleMutationObserver;
 var veXTicketTypeMutationObserver;
 
 (async () => {
-    const utilURL = chrome.runtime.getURL("src/Utility/Util.js");
+    const utilURL = chrome.runtime.getURL("src/Common/Util.js");
     if (!Util)
         Util = await import(utilURL);
 })();

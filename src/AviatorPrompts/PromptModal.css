@@ -1,0 +1,308 @@
+@import url("../Common/Common.css");
+@import url("../Main/Main.css");
+
+#veX_prompts_popup_container {
+  width: 700px;
+  border-radius: var(--veX-common-borderRadius);
+}
+
+.veX_prompts_header h2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+}
+
+.veX_prompt_rows {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.veX_prompt_name {
+  flex-grow: 1;
+}
+
+.veX_icons {
+  display: flex;
+  gap: 12px;
+}
+
+.veX_material_icons {
+  cursor: pointer;
+  color: #3f51b5;
+}
+
+.veX_prompt_expand_section {
+  background: #f9f9f9;
+  border-left: 3px solid #204fd3;
+  padding: 12px 16px;
+  margin-top: -1px;
+  margin-bottom: 16px;
+}
+
+.veX_prompt_expand_section pre {
+  background: #eee;
+  padding: 6px;
+  border-radius: var(--veX-common-borderRadius);
+  overflow-x: auto;
+}
+
+.veX_prompt_variable_list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+textarea.veX_variable_input {
+  width: 100%;
+  max-width: 700px;
+  height: 50px;
+  padding: 10px;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #2c3e50;
+  background-color: #fefefe;
+  border: 2px solid #ddd;
+  border-radius: var(--veX-common-borderRadius);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  resize: none;
+  transition: border 0.3s ease;
+}
+
+textarea.veX_variable_input:hover {
+  border: 2px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  border-radius: var(--veX-common-borderRadius);
+}
+
+textarea.veX_variable_input:focus,
+textarea.veX_variable_input:active {
+  outline: none;
+  border: 2px solid var(--veX-ticktColor);
+  border-radius: var(--veX-common-borderRadius) !important;
+}
+
+.veX_gradient_text {
+  background: linear-gradient(to right, #6a8eff, #c06cf5, #f26b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.veX_prompts_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1c1c1e;
+  border-bottom: 1px solid #333;
+  flex-wrap: wrap;
+  cursor: move;
+  /* Ensures it wraps if screen is narrow */
+  gap: 0.5rem;
+  color: white;
+  border-top-left-radius: var(--veX-common-borderRadius);
+  border-top-right-radius: var(--veX-common-borderRadius);
+}
+
+.veX_prompts_header_actions {
+  display: flex;
+  align-items: center;
+  gap: 50px;
+}
+
+
+.veX_prompts_tone_selector {
+  padding: 0.4rem 0.8rem;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #444;
+  border-radius: var(--veX-common-borderRadius);
+  font-size: 0.9rem;
+  outline: none;
+  max-width: 180px;
+  /* Ensures it's fully visible */
+  min-width: 140px;
+  height: 40px !important;
+  all: unset;
+  display: block;
+  width: 150px;
+  appearance: auto;
+  pointer-events: auto;
+  position: relative;
+  z-index: 9999;
+  background: white;
+  color: black;
+
+}
+
+.veX_prompts_tone_selector:focus {
+  border-color: var(--veX-ticktColor);
+}
+
+/* Close icon */
+.veX_close_icon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  filter: brightness(0) invert(1);
+  transition: transform 0.2s;
+}
+
+.veX_close_icon:hover {
+  transform: scale(1.1);
+}
+
+#veX_prompts_list_container {
+  min-height: 300px;
+  max-height: 70vh !important;
+  overflow-y: scroll !important;
+}
+
+.veX_prompts_tone_selector_container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.veX_prompts_tone_selector_container label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.veX_send_btn {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.veX_expand_btn {
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+}
+
+.veX_prompts_tone_selector {
+  position: relative;
+  width: 220px;
+  font-size: 14px;
+  color: black;
+  user-select: none;
+  border-radius: var(--veX-common-borderRadius);
+  color: black;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-weight: 400;
+  font-size: 16px;
+  width: 150px;
+  padding-left: 10px;
+  cursor: pointer;
+}
+
+
+/* Dropdown list container 
+.veX_prompts_tone_selector .veX_dropdown_selected {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+  display: none;
+  z-index: 9999;
+}
+*/
+/* Show options when active */
+.veX_show {
+  display: block !important;
+}
+
+/* Individual option */
+.veX_prompts_tone_selector .veX_dropdown_option {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: block;
+}
+
+.veX_prompts_tone_selector .veX_dropdown_option:hover {
+  background: #444;
+}
+
+.veX_dropdown_options {
+  display: none;
+  position: absolute;
+  top: 50px;
+  background: black;
+  color: white;
+  width: 100%;
+  right: 2px;
+  overflow-y: scroll;
+  max-height: 150px;
+  border-radius: var(--veX-common-borderRadius);
+  left: 2px;
+}
+
+.veX_dropdown_selected::after {
+  content: "";
+  position: absolute;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #333;
+  right: 13px;
+  top: 53%;
+}
+
+/* Rotate arrow when dropdown is active */
+.veX_dropdown_selected.active::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+@keyframes borderMove {
+  0% {
+    border-image-source: linear-gradient(to right, #6a8eff, #c06cf5, #f26b6b);
+  }
+
+  50% {
+    border-image-source: linear-gradient(to right, #f26b6b, #c06cf5, #6a8eff);
+  }
+
+  100% {
+    border-image-source: linear-gradient(to right, #6a8eff, #c06cf5, #f26b6b);
+  }
+}
+
+.veX_prompt_template_container {
+  position: relative;
+}
+
+.veX_prompt_edit_template_btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  padding: 5px;
+  background: white;
+  border-radius: 50%;
+}
+
+.veX_prompt_template_content[contenteditable="true"] {
+  outline: 1px solid #ccc;
+  padding: 5px;
+}

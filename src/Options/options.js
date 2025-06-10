@@ -1,17 +1,31 @@
 const fileInput = document.getElementById('jsonFile');
 const urlInputSaveBtn = document.getElementById('SaveChecklistBtn');
-var veX_dod_url = "";
-var veX_loadOnStart = false;
+const downloadChecklistBtn = document.getElementById('downloadChecklistBtn');
+const downloadPromptsBtn = document.getElementById('downloadPromptsBtn');
+const remoteURLInput = document.getElementById("veXRemoteUrl");
+var veXChecklistRemoteUrl = "";
+var veXLoadOnStart = false;
+var uploadType = 'checklist';
 var Util;
 var Constants;
+var Validators;
+var checkListData = null;
+var promptsData = null;
+var veXChecklistData;
+var veXPromptsData;
+var veXConfiguredChecklist;
+var veXConfiguredPrompts;
 
 async function loadModules() {
-    let URL = chrome.runtime.getURL("src/Utility/Util.js");
+    let URL = chrome.runtime.getURL("src/Common/Util.js");
     if (!Util)
         Util = await import(URL);
-    URL = chrome.runtime.getURL("src/Utility/Constants.js");
+    URL = chrome.runtime.getURL("src/Common/Constants.js");
     if (!Constants)
         Constants = await import(URL);
+    URL = chrome.runtime.getURL("src/Common/SchemaValidators.js");
+    if (!Validators)
+        Validators = await import(URL);
 }
 
 async function initialize() {
@@ -25,98 +39,222 @@ async function initialize() {
 }
 
 function setupEventListeners() {
+
     if (urlInputSaveBtn) {
         urlInputSaveBtn.addEventListener('click', onSaveURL);
     } else {
         Util.onError(undefined, 'Could not find the URL input box', true);
     }
 
+    if (remoteURLInput) {
+        remoteURLInput.addEventListener('input', function () {
+            urlInputSaveBtn.textContent = "Save";
+        });
+    }
+
     loadUrlURLMetaData();
 
+    downloadChecklistBtn.addEventListener('click', onDownloadChecklist);
+    downloadPromptsBtn.addEventListener('click', onDownloadPrompts);
     document.querySelector(".file-upload").addEventListener("click", () => {
         document.getElementById("jsonFile").click();
     });
 
     document.getElementById("jsonFile").addEventListener("change", (event) => {
-        onFileUpload(event);
-        const fileName = event.target.files[0] ? event.target.files[0].name : "No file chosen";
-        document.querySelector(".file-upload span").textContent = fileName;
+        const file = event.target.files[0];
+        if (file) {
+            if (uploadType === 'prompts') {
+                onPromptFileUpload(event);
+            } else {
+                onChecklistFileUpload(event);
+            }
+            const fileName = file.name;
+            document.querySelector(".file-upload span").textContent = fileName;
+        }
+        else {
+            document.querySelector(".file-upload span").textContent = "No file chosen";
+        }
+    });
+
+    document.getElementById('uploadType').addEventListener('change', function () {
+        uploadType = this.value;
+        if (uploadType === 'checklist') {
+            document.querySelector(".checkbox-container").style.display = "flex";
+            loadChecklistData();
+        }
+        else if (uploadType === 'prompts') {
+            document.querySelector(".checkbox-container").style.display = "none";
+            loadPromptsData();
+        }
     });
 }
 
-/*
- * Load the saved URL from sync storage
- * when the page loads. Pre-fill it in
- * the URL input box.
- */
+function onDownloadChecklist() {
+    if (!veXChecklistData) {
+        alert("Checklist data not available");
+        return;
+    }
+    const data = JSON.stringify(veXChecklistData, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'checklist_data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function onDownloadPrompts() {
+    if (!veXpromptsData) {
+        alert("Prompts data not available");
+        return;
+    }
+    const data = JSON.stringify(veXpromptsData, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'prompts_data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 async function loadUrlURLMetaData() {
-    let temp_url = await chrome.storage.sync.get('veX_dod_url');
-    let temp_loadOnStart = await chrome.storage.sync.get('veX_loadOnStart');
-    if (temp_url) {
-        veX_dod_url = temp_url?.veX_dod_url;
+    if (uploadType == "checklist") {
+        loadChecklistData();
     }
-    if (temp_loadOnStart) {
-        veX_loadOnStart = temp_loadOnStart?.veX_loadOnStart;
+    else if (uploadType == "prompts") {
+        loadPromptsData();
     }
-    if (veX_dod_url)
-        document.getElementById('veX_dod_url').value = veX_dod_url;
-    document.getElementById('loadOnStart').checked = veX_loadOnStart;
+
 
 }
 
-/*
- * Invoked when the user clicks on
- * the Save button for the URL input
- */
-async function onSaveURL() {
-    const url = document.getElementById('veX_dod_url').value;
-    const loadOnStart = document.getElementById("loadOnStart")?.checked;;
-    if (!url || url === '') {
-        if (!veX_dod_url) {
-            Util.notify("Please enter a valid remote URL 👀", Constants.NotificationType.Warning, true);
+async function loadChecklistData() {
+    if (!veXChecklistData) {
+        let tempChecklistData = await chrome.storage.local.get("veXChecklistData");
+        if (tempChecklistData)
+            veXChecklistData = tempChecklistData["veXChecklistData"];
+        else
             return;
-        }
-        if (await saveURLMetaData('') === true) {
-            Util.notify("Checklist URL cleared successfully! 🙌🏻", Constants.NotificationType.Success, true);
-        }
+    }
+    if (!veXChecklistData) return;
+
+    let loadOnStart = false;
+    let veXChecklistRemoteUrl = "";
+    loadOnStart = veXChecklistData["veXLoadOnStart"];
+    veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
+    veXConfiguredChecklist = veXChecklistData["checklist"];
+    if (document.getElementById('SaveChecklistBtn')) {
+        document.getElementById('SaveChecklistBtn').textContent = veXChecklistRemoteUrl ? "Get Latest" : "Save";
+    }
+    if (document.getElementById('veXRemoteUrl'))
+        document.getElementById('veXRemoteUrl').value = veXChecklistRemoteUrl || "";
+    if (document.getElementById('loadOnStart'))
+        document.getElementById('loadOnStart').checked = (loadOnStart === true ? true : false);
+}
+async function loadPromptsData() {
+    if (!veXPromptsData) {
+        let tempPromptsData = await chrome.storage.local.get("veXPromptsData");
+        if (tempPromptsData)
+            veXPromptsData = tempPromptsData["veXPromptsData"];
+        else
+            return;
+    }
+    if (!veXPromptsData) return;
+    let veXPromptsRemoteUrl = "";
+    veXConfiguredPrompts = veXPromptsData["prompts"];
+    veXPromptsRemoteUrl = veXPromptsData["veXPromptsRemoteUrl"];
+    if (document.getElementById('SaveChecklistBtn')) {
+        document.getElementById('SaveChecklistBtn').textContent = veXPromptsRemoteUrl ? "Get Latest" : "Save";
+    }
+
+
+    if (document.getElementById('veXRemoteUrl'))
+        document.getElementById('veXRemoteUrl').value = veXPromptsRemoteUrl || "";
+
+
+}
+
+async function onSaveURL() {
+    const url = document.getElementById('veXRemoteUrl').value;
+    if (!url || Util.isValidURL(url) === false) {
+        Util.notify("Please enter a valid remote URL 👀", Constants.NotificationType.Warning, true);
         return;
     }
     try {
-        showLoading();
-        const response = await fetch(url);
+        Util.showLoading();
+        const response = await fetch(`${url}?ts=${Date.now()}`);
+
         if (!response.ok) {
-            Util.notify("Couldn't fetch JSON from the URL", "warning", true);
+            Util.notify("Couldn't fetch JSON from the URL", Constants.NotificationType.Warning, true);
             return;
         }
-        const veXChecklistInfo = await response.json();
-
-        if (Util.validateChecklist(veXChecklistInfo) === true && await saveURLMetaData(url, veXChecklistInfo, loadOnStart) === true) {
-            Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
+        const responseData = await response.json();
+        if (uploadType === 'prompts') {
+            validateAndSaveRemotePrompts(responseData, url);
         }
+        else if (uploadType === 'checklist') {
+            validateAndSaveRemoteChecklist(responseData, url);
+
+        }
+
     } catch (error) {
-        Util.onError(error, "Couldn't fetch JSON from the URL", true);
+        Util.onError(error, error.message, true);
     }
     finally {
-        hideLoading();
+        Util.hideLoading();
     }
 }
 
-function onFileUpload(event) {
-    const file = event.target.files[0];
+async function validateAndSaveRemoteChecklist(responseData, url) {
+    const loadOnStart = document.getElementById('loadOnStart').checked;
+    const veXChecklistInfo = responseData;
+    if (Validators.validateChecklist(veXChecklistInfo) === true) {
+        isChecklistSaved = await Util.saveChecklistData(veXChecklistInfo, url, loadOnStart);
+        if (isChecklistSaved === true) {
+            Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
+            // clear the url input box since we are using remote checklist
+            veXChecklistData = undefined;
+            loadChecklistData();
+        }
+        else {
+            Util.notify("Failed to save checklist data. Please try again.", Constants.NotificationType.Error, true);
+        }
+    }
+}
+async function validateAndSaveRemotePrompts(responseData, url) {
+    const promptsData = responseData;
+    if (Validators.validatePromptTemplates(promptsData) === true)
+        if (await Util.savePromtsData(promptsData, url) === true) {
+            Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
+            veXPromptsData = undefined;
+            loadPromptsData();
+        }
+        else {
+            Util.notify("Failed to save prompts data. Please try again.", Constants.NotificationType.Error, true);
+        }
+}
+function onChecklistFileUpload(event) {
+    const file = event.target.files[0]; // File is already selected by the input change event
     if (file.type === 'application/json') {
         const reader = new FileReader();
         reader.onload = async () => {
             try {
-                showLoading();
+                Util.showLoading();
                 const veXChecklistInfo = JSON.parse(reader.result);
-                if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo) === true) {
+                if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, '', false) === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
                     // clear the url input box since
                     // we are now using the file mode
-                    document.getElementById('veX_dod_url').value = '';
+                    document.getElementById('veXRemoteUrl').value = '';
                     document.getElementById('loadOnStart').checked = false;
-
-
+                    veXChecklistData = undefined;
+                    loadChecklistData();
                 }
                 fileInput.value = '';
             } catch (err) {
@@ -124,7 +262,7 @@ function onFileUpload(event) {
                 fileInput.value = '';
             }
             finally {
-                hideLoading();
+                Util.hideLoading();
             }
         };
         reader.readAsText(file);
@@ -133,36 +271,34 @@ function onFileUpload(event) {
     }
 }
 
-
-async function saveURLMetaData(veX_dod_url, veXChecklistInfo, loadOnStart) {
-    try {
-        showLoading();
-        await chrome.storage.sync.clear();
-        if (veX_dod_url && veXChecklistInfo) {
-            if (await Util.saveChecklist(veXChecklistInfo, veX_dod_url, loadOnStart) === false) return false;
-            await chrome.storage.sync.set({ "veX_dod_url": veX_dod_url });
-            await chrome.storage.sync.set({ "veX_loadOnStart": loadOnStart });
-        }
-        return true;
-    }
-    catch (err) {
-        Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Saving the Checklist Metadata", err.message), true);
-        return false;
-    }
-    finally {
-        hideLoading();
+// New function to handle prompt file upload
+function onPromptFileUpload(event) {
+    const file = event.target.files[0]; // File is already selected by the input change event
+    if (file.type === 'application/json') {
+        const reader = new FileReader();
+        reader.onload = async () => {
+            try {
+                Util.showLoading();
+                const promptsData = JSON.parse(reader.result);
+                if (Validators.validatePromptTemplates(promptsData) === true && await Util.savePromtsData(promptsData, '') === true) {
+                    Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
+                    fileInput.value = '';
+                    veXPromptsData = undefined;
+                    loadPromptsData();
+                }
+                else {
+                    fileInput.value = '';
+                }
+            } catch (err) {
+                Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Uploading Prompts", err.message), true);
+                fileInput.value = '';
+            } finally {
+                Util.hideLoading();
+            }
+        };
+        reader.readAsText(file);
     }
 }
 
-function showLoading() {
-    let loader = document.getElementById("veX_loader");
-    if (loader)
-        loader.style.display = "block";
-}
-function hideLoading() {
-    let loader = document.getElementById("veX_loader");
-    if (loader)
-        loader.style.display = "none";
-}
 
 initialize();

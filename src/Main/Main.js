@@ -21,6 +21,10 @@ var Constants;
 var MutationObservers;
 var Comments;
 var Quill;
+var PromptModal;
+var Validators;
+var DefaultList;
+var UITemplates;
 // < veX Objects Declarations
 
 /**
@@ -29,29 +33,37 @@ var Quill;
  */
 // > Loading Modules 
 async function loadModules() {
-  let URL = chrome.runtime.getURL("src/Utility/Util.js");
+  let URL = chrome.runtime.getURL("src/Common/Util.js");
   if (!Util)
     Util = await import(URL);
   URL = chrome.runtime.getURL("src/External/purify.min.js");
   if (!DomPurify)
     DomPurify = await import(URL);
-  URL = chrome.runtime.getURL("src/Utility/Constants.js");
+  URL = chrome.runtime.getURL("src/Common/Constants.js");
   if (!Constants)
     Constants = await import(URL);
   veXSelectors = Constants.VEChecklistNodeSelectors;
-  URL = chrome.runtime.getURL("src/Utility/MutationObservers.js");
+  URL = chrome.runtime.getURL("src/Common/MutationObservers.js");
   if (!MutationObservers)
     MutationObservers = await import(URL);
   URL = chrome.runtime.getURL("src/Comments/Comment.js");
   if (!Comments)
     Comments = await import(URL);
-  URL = chrome.runtime.getURL("src/External/Quill-TextEditor/quill.js");
+  URL = chrome.runtime.getURL("src/External/Quill/quill.js");
   if (!Quill)
     Quill = await import(URL);
+  URL = chrome.runtime.getURL("src/AviatorPrompts/PromptModal.js");
+  if (!PromptModal)
+    PromptModal = await import(URL);
+  URL = chrome.runtime.getURL("src/Common/SchemaValidators.js");
+  if (!Validators)
+    Validators = await import(URL);
+  URL = chrome.runtime.getURL("src/Common/UITemplates.js");
+  if (!UITemplates) {
+    UITemplates = await import(URL);
+  }
 }
-/**
- * Initializes the extension by loading modules and setting up the UI and observers.
- */
+
 async function initialize() {
   await loadModules();
   veXSetup();
@@ -65,32 +77,32 @@ async function initialize() {
 
 function veXSetup() {
   try {
-    setupPopUpNode();
-    setupPopUpOverlay();
+    setupChecklistPopupNode();
+    setupChecklistPopupOverlay();
+    addLoadingElement();
     initVEXNodes();
     MutationObservers.initTicketTitleMutationObserver(onTicketTitleChange);
+    PromptModal.initialize();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup", err.message), true);
   }
 }
-/**
- * Creates and appends the main popup node to the document body.
- */
-function setupPopUpNode() {
-  veXPopUpNode.id = "veX-PopUp-Container";
-  veXPopUpNode.classList.add("veX_pop_deactive");
-  veXPopUpNode.innerHTML = Constants.ChecklistUI;
+
+function setupChecklistPopupNode() {
+  veXPopUpNode.id = "veX_checklist_popup_container";
+  veXPopUpNode.classList.add("veX_popup_disable");
+  veXPopUpNode.innerHTML = UITemplates.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
 }
-
-/**
- * Creates and appends the popup overlay node to the document body and
- * adds an event listener to close the popup when the overlay is clicked.
- */
-
-function setupPopUpOverlay() {
-  veXPopUpOverlay.id = "veX-PopUp-Overlay";
-  veXPopUpOverlay.addEventListener("click", closeveXPopUp);
+function addLoadingElement() {
+  let veX_loader = document.createElement('span');
+  veX_loader.id = "veX_loader";
+  veX_loader.style.display = "none";
+  document.body.appendChild(veX_loader);
+}
+function setupChecklistPopupOverlay() {
+  veXPopUpOverlay.id = "veX_checklist_popup_overlay";
+  veXPopUpOverlay.addEventListener("click", closeChecklistPopup);
   document.body.appendChild(veXPopUpOverlay);
 }
 /**
@@ -178,7 +190,7 @@ function getTicketTitle(title) {
 
 function veXReset() {
   try {
-    closeveXPopUp();
+    closeChecklistPopup();
     veXCurrentCategory = {};
     veXChecklistItems = {};
     veXCurrentTicketChecklist = {};
@@ -224,11 +236,8 @@ async function initView() {
 
 async function initHeaderView() {
   try {
-    veXNodes.veXLogo.src = await chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png");
-    //veXNodes.veXSyncIcon.src = await chrome.runtime.getURL("icons/sync_24.png");
-    //veXNodes.veXSyncIconContainer.addEventListener('click', Comments.onSyncChecklistComments)
     veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
-    Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'));
+    Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'),document.getElementById("veX_checklist_popup_container"));
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Header View initializing", err.message), true);
@@ -416,6 +425,13 @@ function updateMainContentView() {
       return;
     }
     veXNodes.veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
+    // Add event listener for 'Mark as Completed' button
+    const markCompletedBtn = veXPopUpNode.querySelector('.veX_mark_category_completed_btn');
+    if (markCompletedBtn) {
+      markCompletedBtn.onclick = function () {
+        markCurrentCategoryAsCompleted();
+      };
+    }
     veXNodes.veXSidebarParentNode.querySelectorAll(".veX_category_button").forEach((buttonNode) => {
       buttonNode.classList.remove("veX-Active-Button");
     });
@@ -474,13 +490,11 @@ function createChecklistItem({ itemValue, index, currentCheckList }) {
       theme: 'snow',
     };
 
-    if(!currentCheckList[index].RichTextNote)
-    {
+    if (!currentCheckList[index].RichTextNote) {
       const quill = new Quill(quillContainer, quillOptions);
       currentCheckList[index]["RichTextNote"] = quill;
     }
-    else
-    {
+    else {
       const delta = currentCheckList[index]["RichTextNote"].getContents();
       const quill = new Quill(quillContainer, quillOptions);
       quill.setContents(delta);
@@ -678,52 +692,46 @@ function setCompletedState(listItemNode, listIndex) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Completed State", err.message), true);
   }
 }
-//<-Utility Functions
+//<-Common Functions
 
 
 //->Event Handlers
-/**
- * Closes the checklist popup and overlay.
- */
-function closeveXPopUp() {
+function closeChecklistPopup() {
   try {
     if (!veXPopUpOverlay || !veXPopUpNode) return;
     veXPopUpOverlay.style.visibility = "hidden";
-    veXPopUpNode.classList.remove("veX_pop_active");
-    veXPopUpNode.classList.add("veX_pop_deactive");
+    veXPopUpNode.classList.remove("veX_popup_active");
+    veXPopUpNode.classList.add("veX_popup_disable");
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Popup", err.message), true);
-  }
-
-}
-
-/**
- * Opens the checklist popup and overlay.
- */
-
-function openVexPopup() {
-  try {
-    veXPopUpOverlay.style.visibility = "visible";
-    veXPopUpNode.classList.add("veX_pop_active");
-    centerThePopup(veXPopUpNode);
-    veXPopUpNode.classList.remove("veX_pop_deactive");
-  } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Popup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Checklist Popup", err.message), true);
   }
 }
 
-function centerThePopup(veXPopUpNode) {
+function openChecklistPopup() {
   try {
-    if (veXPopUpNode) {
-      veXPopUpNode.style.left = "50%";
-      veXPopUpNode.style.top = "50%";
-      veXPopUpNode.style.transform = "translate(-50%, -50%) !important";
+    if (Util.isPromptsPopupOpen()) {
+      PromptModal.closePromptsPopup();
     }
-  } catch {
-
+    veXPopUpOverlay.style.visibility = "visible";
+    veXPopUpNode.classList.add("veX_popup_active");
+    Util.centerThePopup(veXPopUpNode);
+    veXPopUpNode.classList.remove("veX_popup_disable");
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Checklist Popup", err.message), true);
   }
 }
+
+function openPromptsPopup() {
+  try {
+
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening PromptPopup", err.message), true);
+  }
+}
+
+
+
 /**
  * This function refreshes the checklist
  * from the remote URL if it exists.
@@ -737,16 +745,17 @@ async function refreshChecklistFromRemoteIfExists() {
   try {
     // Get the remote URL from sync storage
     // and fetch the checklist from the remote URL
-    const veX_dod_url = await chrome.storage.sync.get("veX_dod_url");
-    const veX_loadOnStart = await chrome.storage.sync.get("veX_loadOnStart");
-    const response = await fetch(veX_dod_url?.veX_dod_url);
+    const veXChecklistRemoteUrl = await chrome.storage.local.get("veXChecklistRemoteUrl");
+    const veXLoadOnStart = await chrome.storage.local.get("veXLoadOnStart");
+    
+    const response = await fetch(`${veXChecklistRemoteUrl?.veXChecklistRemoteUrl}?ts=${Date.now()}`);
     if (!response.ok) {
       Util.notify("Couldn't fetch checklist JSON from the URL", "warning", true);
       return false;
     }
     // Validate and update the checklist
     const veXChecklistInfo = await response.json();
-    if (Util.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklist(veXChecklistInfo, veX_dod_url?.veX_dod_url, veX_loadOnStart?.veX_loadOnStart) === true) {
+    if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl?.veXChecklistRemoteUrl, veXLoadOnStart?.veXLoadOnStart) === true) {
     } else {
       return false;
     }
@@ -918,22 +927,29 @@ async function onTicketTitleChange(change) {
 
     // If we are using a remote URL to maintain the checklist,
     // then refresh the checklist locally first
-    let veX_loadOnStart = await chrome.storage.sync.get("veX_loadOnStart")
-    if (veX_loadOnStart?.veX_loadOnStart === true) {
+    let veXChecklistData = await chrome.storage.local.get("veXChecklistData");
+    let checklist = {};
+    let loadOnStart = false;
+    let veXChecklistRemoteUrl = "";
+    if (veXChecklistData) {
+      veXChecklistData = veXChecklistData["veXChecklistData"]
+    }
+    if (veXChecklistData) {
+      checklist = veXChecklistData["checklist"];
+      loadOnStart = veXChecklistData["loadOnStart"];
+      veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
+    }
+    if (loadOnStart === true) {
       const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
       if (!remoteRefreshSuccess) {
         return;
       }
     }
-    let tempDOD = await chrome.storage.sync.get(veXCurrentTicketInfo.type);
-    if (!Util.isEmptyObject(tempDOD)) {
-      veXCurrentTicketChecklist = tempDOD[veXCurrentTicketInfo.type];
-    }
+    veXCurrentTicketChecklist = checklist[veXCurrentTicketInfo.type];
 
     if (!Util.isEmptyObject(veXCurrentTicketChecklist)) {
       initChecklist();
       veXIsViewInitialised = initView();
-      // MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
     }
   }
   catch (err) {
@@ -958,7 +974,7 @@ function onTicketPhaseChange(mutation) {
       Util.notify(reminderMessage, Constants.NotificationType.Info, true);
     }
     veXCurrentTicketInfo.phase = newPhase;
-    //openVexPopup();
+    //openChecklistPopup();
 
 
   }
@@ -1010,10 +1026,9 @@ async function onEditComment(event) {
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   try {
     switch (request) {
-
-      case "openVexPopup":
+      case "openChecklistPopup":
         if (!(Util.isEmptyObject(veXCurrentTicketChecklist) || Util.isEmptyObject(veXCurrentTicketInfo)))
-          openVexPopup();
+          openChecklistPopup();
         else if (!Util.isEmptyObject(veXCurrentTicketInfo) && Util.isEmptyObject(veXCurrentTicketChecklist)) {
           Util.notify(Util.formatMessage(Util.getRandomMessage(Constants.Notifications.UnableToFindChecklist), veXCurrentTicketInfo.type), Constants.NotificationType.Info, true);
         }
@@ -1024,15 +1039,47 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
         }
         else
           Util.notify(Util.getRandomMessage(Constants.ErrorMessages.SomethingWentWrong), Constants.NotificationType.Error, true);
-
         break;
     }
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Handle Messages From Service Worker", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Handling Messages From Service Worker", err.message), true);
   }
 }
 
+function markCurrentCategoryAsCompleted() {
+  try {
+    const currentCategoryName = veXCurrentCategory.name;
+    const currentCheckList = veXChecklistItems[currentCategoryName];
+    if (!currentCheckList) return;
+    let newlyCompletedCount = 0;
+    for (let i = 0; i < currentCheckList.length; i++) {
+      const item = currentCheckList[i];
+      const prevStatus = Util.getChecklistStatus(item);
+      if (prevStatus !== Constants.CheckListStatus.Completed && prevStatus !== Constants.CheckListStatus.NotApplicable) {
+        newlyCompletedCount++;
+      }
+      item.CursorState.position = 1; // 1 = Completed
+      item.Completed = true;
+      item.Selected = true;
+      item.NotApplicable = false;
+    }
+    // Only increment by the number of items that were not already completed or not applicable
+    veXTotalCompletedItems += newlyCompletedCount;
+    updateChecklist();
+    updateDonePercentage();
+  } catch (err) {
+    Util.onError(
+      err,
+      Util.formatMessage(
+        Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
+        "Mark Category Completed",
+        err.message
+      ),
+      true
+    );
+  }
+}
 
 initialize();
 //<-Event Handlers

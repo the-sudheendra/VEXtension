@@ -11,11 +11,17 @@
 
 <body>
     <div class="container">
-        <h2>Upload Checklist</h2>
-        
-        <label for="veX_dod_url">URL of the JSON:</label>
+        <div class="heading-row">
+            <h2>Upload </h2>
+            <select id="uploadType" class="dropdown-select">
+                <option value="checklist">Checklist</option>
+                <option value="prompts">Prompts</option>
+            </select>
+        </div>
+
+        <label for="veXRemoteUrl">URL of the JSON:</label>
         <div class="url-container">
-            <input type="text" id="veX_dod_url" placeholder="Enter Remote Url">
+            <input type="text" id="veXRemoteUrl" placeholder="Enter Remote Url">
         </div>
 
         <div class="checkbox-container">
@@ -32,11 +38,18 @@
             <input type="file" id="jsonFile" accept=".json">
             <span>Choose File</span>
         </div>
+        <div>
+            <button class="btn" style="display: none;" id="downloadChecklistBtn">Download Checklist Data</button>
+            <button class="btn" style="display: none;" id="downloadPromptsBtn">Download Prompts Data</button>
+        </div>
         <div class="checklist-repo">
-       <p><a class="example-btn" target="_blank" href="https://github.com/the-sudheendra/ChecklistHub">Predefined Checklists</a></p>
+            <p><a class="example-btn" target="_blank" href="https://github.com/the-sudheendra/ChecklistHub">Examples
+                </a> <span>↗️</span></p>
+        </div>
     </div>
-    </div>
+
     <span id="veX_loader" style="display: none;"></span>
+
     <script src="./Options.js"></script>
 </body>
 
