@@ -136,6 +136,8 @@ function getCurrentTicketInfo(title) {
     }
 
     MutationObservers.initTicketTypeMutationObserver(onTicketTitleChange, onTicketPhaseChange);
+    //MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
+
 
     veXCurrentTicketInfo = {
       type: Constants.EntityMetaData[ticketType].name,
