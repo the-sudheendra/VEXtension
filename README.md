@@ -3,7 +3,7 @@
       <b>VEXtenstion </b> 
       <span><img alt="Version" src="https://img.shields.io/chrome-web-store/v/aeiiagpokicaeifancpnndjanamdmmdn?style=flat-square&label=latest&labelColor=white&color=white&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fve-checklist%2Faeiiagpokicaeifancpnndjanamdmmdn%2Freviews"/> </span> 
    </div>
-   <h4>The toolset that gives the Xtra edge to ValueEdge.</h4>
+   <h4>The toolset that gives the Xtra edge to OpenText ValueEdge.</h4>
 <div style="text-align: center;">
   <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews" target="_blank" rel="noopener noreferrer">
     Download from Chrome Web Store
