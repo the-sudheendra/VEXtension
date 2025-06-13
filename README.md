@@ -3,7 +3,7 @@
       <b>VEXtenstion </b> 
       <span><img alt="Version" src="https://img.shields.io/chrome-web-store/v/aeiiagpokicaeifancpnndjanamdmmdn?style=flat-square&label=latest&labelColor=white&color=white&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fve-checklist%2Faeiiagpokicaeifancpnndjanamdmmdn%2Freviews"/> </span> 
    </div>
-   <h4>Checklist Tool for OpenText ValueEdge platform.</h4>
+   <h4>The toolset that gives you the extra edge in OpenText ValueEdge ⚡ </h4>
 <div style="text-align: center;">
   <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews" target="_blank" rel="noopener noreferrer">
     Download from Chrome Web Store
@@ -18,81 +18,37 @@
 
 ## Features 🚀
 
-- 📌 **Context-Aware Checklists**  
-  Shows the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
+- **✅ Checklist**  
+    - Displays the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
+    - Write notes for each checklist item using a rich text editor. These notes will appear in the ticket comments.
+    - Add or update finished checklist items in the comments to help track progress and maintain a clear record.
 
-- 🛠️ **Customizable & Remote Checklists**  
-  You can create your own checklist to match your project needs, or load one from a link (remote URL).
+- **✨ Aviator Prompts**  
+  - Smart prompts for ValueEdge Aviator — no need for prompt engineering every time.
+  - Save and reuse efficient prompts that can be sent directly to the Aviator chat window.
+  - Auto-fill with values from the page using DOM selectors, or enter them manually
 
-- 📝  **Rich Text Notes on Each Item**  
-  Write notes for each checklist item using a rich text editor. These notes will appear in the ticket comments.
+- **✏️ Customizable Checklists & Prompts**  
+    - Create your own checklists to match your project needs, or load one from a remote URL.
 
-- ✅ **Track Completion in Comments** 
-  Add or update finished checklist items in the comments to help track progress and keep a clear record.
-  
-- 🖱️ **Quick Access with Right-Click**  
-  Just right-click on a ticket to quickly open the checklist from the context menu — no extra clicks or searching needed!
+- **🖱️ Quick Access with Right-Click**  
+    - Right-click on any ticket to quickly open the checklist or prompts from the context menu — no extra clicks or searching needed.
 
-## How to 💡
+
+**Get started with [VEXHub (Predefined Checklist & Prompts)](https://github.com/the-sudheendra/VEXHub) and learn more about the checklist schema** ✅.
+
+
+### How to 💡
 **Use the Extension?**
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
 * In the context menu, you will see an option called **VEXtenstion**.
-* Click on it to open a pop-up displaying the Done Checklist for the ticket.
+* Click on **checklist** or **Aviator Prompts** based on your choice
 
-
-## Example Checklist 📜
-
-```json
-{
-  "Defect": {
-    "categories": {
-      "Reproduction": {
-        "checklist": [
-          "Steps to reproduce the issue are clearly documented",
-          "Actual vs expected behavior is described",
-          "Screenshots or logs are attached, if applicable"
-        ],
-        "phases": ["New", "In Progress"]
-      },
-      "Resolution": {
-        "checklist": [
-          "Root cause analysis is documented",
-          "Solution has been tested and verified",
-          "All relevant stakeholders are informed of the fix",
-          "Test cases are updated to cover the issue"
-        ],
-        "phases": ["Done", "Resolved"]
-      }
-    }
-  },
-  "Spike": {
-    "categories": {
-      "Planning": {
-        "checklist": [
-          "Objective of the spike is clearly defined",
-          "Expected deliverables are documented",
-          "Team has agreed on a timebox for the spike"
-        ],
-        "phases": ["New", "In Progress"]
-      },
-      "Analysis": {
-        "checklist": [
-          "Relevant research and findings are documented",
-          "Any discovered blockers or risks are noted",
-          "Recommendations or next steps are provided"
-        ],
-        "phases": ["Done", "Resolved"]
-      }
-    }
-  }
-}
-```
-**Get started with [predefined checklists](https://github.com/the-sudheendra/ChecklistHub) and learn more about the checklist schema** ✅.
 
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
-- Whenever you refresh this extension, please do refresh the currently opened ValueEdge pages
+- Whenever you refresh this extension, please do refresh the already opened ValueEdge pages
 
 
 ### Shoutout to libraries 🔥
