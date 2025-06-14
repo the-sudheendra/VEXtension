@@ -140,10 +140,37 @@ input::placeholder {
 }
 
 .example-btn {
-
+  display: inline-block;
+  background: linear-gradient(135deg, #4f46e5, #6366f1); /* Indigo gradient */
   color: white;
-  text-decoration: underline;
+  text-decoration: none;
+  padding: 0.6em 1.2em;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
+
+.example-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #4338ca, #4f46e5);
+}
+
+.example-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+.example-btn .arrow {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+.example-btn:hover .arrow {
+  transform: translate(3px, -3px);
+}
+
 
 .checklist-repo {
   cursor: auto;
