@@ -9,7 +9,6 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       line-height: 1.5;
       color: #333;
-      border: 2px solid #4285f4;
       margin: 0px;
       padding: 0px;
     }
@@ -84,48 +83,64 @@
       text-align: center;
       margin-top: 16px;
     }
-    .footer
-    {
-     text-align: center;
+
+    .footer {
+      text-align: center;
       border-top: 1px solid #eee;
+    }
+
+    .cool-gradient-border {
+      padding: 1px;
+      border: 2px solid transparent;
+      border-radius: 1px;
+      background-image:
+        linear-gradient(white, white),
+        linear-gradient(45deg, #ff6ec4, #7873f5, #4ADEDE, #16e0bd, #f9d423);
+      background-origin: border-box;
+      background-clip: content-box, border-box;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="header">
-      <h1 class="title">VEXtenstion (V3.0.0)</h1>
-    </div>
-    <div class="body"> 
-      <p class="description">
-        The toolset that gives you the extra edge in ValueEdge ⚡.
-      </p>
-      <div class="links">
-        <a href="#" id="upload_checklist" class="link" target="_blank">
-        📋 Upload list 
-        </a>
-        <a href="https://github.com/the-sudheendra/VEXtenstion?tab=readme-ov-file#features-" class="link" target="_blank">
-        🤓 About 
-        </a>
-        <a href="https://github.com/the-sudheendra/VEXtenstion/issues" class="link" target="_blank">
-         🪲 Report Promblem 
-        </a>
-        <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews" class="link" target="_blank" title="Feedback">
-         🙂 Feedback 
-        </a>
+  <div class="cool-gradient-border">
+    <div class="container">
+      <div class="header">
+        <h1 class="title">VEXtenstion (V3.0.0)</h1>
+      </div>
+      <div class="body">
+        <p class="description">
+          The toolset that gives you the extra edge in ValueEdge ⚡.
+        </p>
+        <div class="links">
+          <a href="#" id="upload_checklist" class="link" target="_blank">
+            📋 Upload list
+          </a>
+          <a href="https://github.com/the-sudheendra/VEXtenstion?tab=readme-ov-file#features-" class="link"
+            target="_blank">
+            🤓 About
+          </a>
+          <a href="https://github.com/the-sudheendra/VEXtenstion/issues" class="link" target="_blank">
+            🪲 Report Promblem
+          </a>
+          <a href="https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews"
+            class="link" target="_blank" title="🙁😐🙂🤩🌟">
+            🙂 Feedback
+          </a>
+        </div>
       </div>
     </div>
-  </div>
-  <script type="text/javascript" src="Popup.js">
+    <script type="text/javascript" src="Popup.js">
 
-  </script>
-  <footer class="footer">
-  <p>
-    Made with ❤️ for OpenText — A side project by 
-    <a href="https://github.com/the-sudheendra" target="_blank">sudheendra</a>
-  </p>
-</footer>
+    </script>
+    <footer class="footer">
+      <p>
+        Made with ❤️ for OpenText — A side project by
+        <a href="https://github.com/the-sudheendra" target="_blank">sudheendra</a>
+      </p>
+    </footer>
+  </div>
 </body>
 
 </html>
