@@ -382,6 +382,7 @@ function onExpandBtnClick(btn, index) {
 
 async function onSendBtnClick(index) {
   try {
+    Util.showLoading();
     const prompt = prompts[index];
     const filledPrompt = draftPromptTemplate(prompt.template, index, prompt.variables, promptVariableData);
     Util.openRightSidebar();
@@ -389,12 +390,14 @@ async function onSendBtnClick(index) {
     if (await Util.openAviatorPanel() == false) {
       Util.notify("🤔 Aviator tab not found. Please ensure it is accessible.", Constants.NotificationType.Warning, true);
       return;
-    }
+    }  
     Util.setNativeValue(document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorTextArea), filledPrompt);
     document.querySelector(Constants.ValueEdgeNodeSelectors.AviatorPromptSubmitButton).click();
-    closePromptsPopup();
+    closePromptsPopup();  
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "On Send Btn Click", err.message), true);
+  } finally {
+    Util.hideLoading();
   }
 }
 

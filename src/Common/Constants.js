@@ -255,7 +255,12 @@ const Notifications = {
 
 }
 
-
+const StatusColors = {
+    Completed: "#1aa364",
+    NotCompleted: "#dd4a40",
+    NotApplicable: "#808080",
+    NotSelected: "#666666"
+}
 const VEPhaseOrder = {
     'new': 0,
     'ready': 1,
@@ -303,5 +308,6 @@ export {
     listTypes,
     defaultCheklistRemoteURL,
     defaultPromptsRemoteURL,
-    defaultPromptsTonesURL
+    defaultPromptsTonesURL,
+    StatusColors
 };

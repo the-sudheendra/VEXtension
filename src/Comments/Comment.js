@@ -208,7 +208,34 @@ async function draftChecklistForComments(veXChecklistItems, donePercentage) {
     const fragment = document.createElement("div");
     const commentWrapper = createCommentWrapper();
     fragment.appendChild(commentWrapper);
-    commentWrapper.appendChild(createCommentHeader(donePercentage));
+    const stats = {
+      completed: 0,
+      notCompleted: 0,
+      notApplicable: 0,
+      notSelected: 0
+    };
+
+    Object.values(veXChecklistItems).forEach(checklist => {
+      checklist.forEach(item => {
+        const status = Util.getChecklistStatus(item);
+        switch (status) {
+          case Constants.CheckListStatus.Completed:
+            stats.completed++;
+            break;
+          case Constants.CheckListStatus.NotCompleted:
+            stats.notCompleted++;
+            break;
+          case Constants.CheckListStatus.NotApplicable:
+            stats.notApplicable++;
+            break;
+          case Constants.CheckListStatus.NotSelected:
+            stats.notSelected++;
+            break;
+        }
+      });
+    });
+
+    commentWrapper.appendChild(createCommentHeader(donePercentage, stats));
     await processCategories(commentWrapper, veXChecklistItems, donePercentage);
     const finalComment = fragment.innerHTML;
     return finalComment;
@@ -233,15 +260,22 @@ function createCommentWrapper() {
 /**
  * Creates the header section for the comment.
  * @param {number} donePercentage - The percentage of completed items.
+ * @param {object} stats - Object containing statistics about checklist items
  * @returns {HTMLElement} - The created header element.
- */
-function createCommentHeader(donePercentage) {
+*/
+function createCommentHeader(donePercentage, stats) {
   if (!donePercentage) donePercentage = 0;
   const headerNode = document.createElement("p");
   headerNode.innerHTML = `
-    <strong>
-      <span style="color:#008000;" class="veX_checklist_comment_done_percentage @totalCompletedItems_${veXTotalCompletedItems}">${donePercentage}% Done</span>
-    </strong>`;
+    <div style="display: flex; align-items: center; gap: 5px;">
+      <p style="color: #008000;" class="veX_checklist_comment_done_percentage @totalCompletedItems_${veXTotalCompletedItems}">
+        <strong>${donePercentage}% Done | </strong>
+        ${stats.completed > 0 ? `<b style="color: ${Constants.StatusColors.Completed};"> ${stats.completed} Done  · </b>` : ''}
+        ${stats.notApplicable > 0 ? `<b style="color: ${Constants.StatusColors.NotApplicable};"> ${stats.notApplicable} N/A · </b>` : ''}
+        ${stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done · </b>` : ''}
+        ${stats.notSelected > 0 ? `<b style="color: ${Constants.StatusColors.NotSelected};"> ${stats.notSelected} Not Selected · </b>` : ''}    
+      </p>
+    </div>`;
   headerNode.style.color = COMMENT_STYLES.DEFAULT_COLOR;
   return headerNode;
 }
@@ -260,7 +294,7 @@ function createCategorySection(categoryName, doneItemsInCategory, totalItemsInCa
     categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}"> ${tickMark} ${categoryName} : </b>`;
 
   } else {
-    categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}">${categoryName} - ${doneItemsInCategory} of ${totalItemsInCategory} items done : </b>`;
+    categoryNode.innerHTML = `<b class="veX_checklist_comment_category_name @category_${categoryName}">${categoryName} - (${doneItemsInCategory} of ${totalItemsInCategory} done):</b>`;
   }
 
   return categoryNode;
@@ -332,8 +366,8 @@ function setPrefixForList(item) {
   let status = Util.getChecklistStatus(item);
   switch (status) {
     case Constants.CheckListStatus.Completed: return "✔";
-    case Constants.CheckListStatus.NotCompleted: return "✗";
-    case Constants.CheckListStatus.NotApplicable: return "NA";
+    case Constants.CheckListStatus.NotCompleted: return "X";
+    case Constants.CheckListStatus.NotApplicable: return "N/A";
   }
 }
 /**
@@ -344,9 +378,9 @@ function setPrefixForList(item) {
 function setColor(item) {
   let status = Util.getChecklistStatus(item);
   switch (status) {
-    case Constants.CheckListStatus.Completed: return "#1aa364";
-    case Constants.CheckListStatus.NotCompleted: return "#dd4a40";
-    case Constants.CheckListStatus.NotApplicable: return "#808080"
+    case Constants.CheckListStatus.Completed: return Constants.StatusColors.Completed;
+    case Constants.CheckListStatus.NotCompleted: return Constants.StatusColors.NotCompleted;
+    case Constants.CheckListStatus.NotApplicable: return Constants.StatusColors.NotApplicable;
     default: return "#000";
   }
 }
