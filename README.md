@@ -16,7 +16,7 @@
 </div>
 
 
-## Features 🚀
+## Features 🌟
 
 - **✅ Checklist**  
     - Displays the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
@@ -27,6 +27,7 @@
   - Smart prompts for ValueEdge Aviator — no need for prompt engineering every time.
   - Save and reuse efficient prompts that can be sent directly to the Aviator chat window.
   - Auto-fill with values from the page using DOM selectors, or enter them manually
+  - Edit prompt templates inline and save them easily.
 
 - **✏️ Customizable Checklists & Prompts**  
     - Create your own checklists to match your project needs, or load one from a remote URL.
@@ -35,7 +36,7 @@
     - Right-click on any ticket to quickly open the checklist or prompts from the context menu — no extra clicks or searching needed.
 
 
-**Get started with [VEXHub (Predefined Checklist & Prompts)](https://github.com/the-sudheendra/VEXHub) and learn more about the checklist schema** ✅.
+**Get started with [VEXHub(Starter Checklist & Prompts)](https://github.com/the-sudheendra/VEXHub) 🚀 and learn more about the checklist schema**.
 
 
 ### How to 💡
