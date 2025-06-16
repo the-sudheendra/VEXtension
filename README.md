@@ -27,6 +27,7 @@
   - Smart prompts for ValueEdge Aviator — no need for prompt engineering every time.
   - Save and reuse efficient prompts that can be sent directly to the Aviator chat window.
   - Auto-fill with values from the page using DOM selectors, or enter them manually
+  - Edit prompt templates inline and save them easily.
 
 - **✏️ Customizable Checklists & Prompts**  
     - Create your own checklists to match your project needs, or load one from a remote URL.
