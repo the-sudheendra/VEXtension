@@ -293,12 +293,11 @@ textarea.veX_variable_input:active {
 }
 
 .veX_prompt_edit_template_btn {
-
   top: 5px;
   right: 5px;
   cursor: pointer;
   padding: 5px;
-  background: white;
+  background: transparent;
   border-radius: 50%;
 }
 
