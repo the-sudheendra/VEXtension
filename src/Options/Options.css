@@ -81,7 +81,7 @@ input::placeholder {
 }
 
 .btn {
-  background: #1A51C3;
+  background: #4681f4;
   color: #fff;
   padding: 10px 15px;
   border: none;
@@ -95,7 +95,7 @@ input::placeholder {
 }
 
 .btn:hover {
-  background: #2563eb;
+  background: #4681f4;
 }
 
 .upload-buttons-container {
@@ -141,11 +141,11 @@ input::placeholder {
 
 .example-btn {
   display: inline-block;
-  background: linear-gradient(135deg, #4f46e5, #6366f1); /* Indigo gradient */
+  background: #4681f4;
   color: white;
   text-decoration: none;
   padding: 0.6em 1.2em;
-  border-radius: 0.75rem;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 0.95rem;
   transition: all 0.25s ease;

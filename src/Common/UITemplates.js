@@ -7,7 +7,7 @@ const veXIconsURLs = {
     markAllNotDone: chrome.runtime.getURL("icons/CategoryNotDone.png"),
     markAllNotApplicable: chrome.runtime.getURL("icons/CategotyNotApplicable.png"),
     logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
-    check: chrome.runtime.getURL("icons/check_24dp.png"),
+    check: chrome.runtime.getURL("icons/save_24.png"),
     close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
 };
 const ChecklistUI = `

@@ -346,8 +346,12 @@ function attachTemplateEditEvents(container) {
           btn.querySelector('img').src = UITemplates.veXIconsURLs.check;
         } else {
           preElement.contentEditable = 'false';
-          prompts[index].template = preElement.textContent;
           btn.querySelector('img').src = UITemplates.veXIconsURLs.edit;
+          if(prompts[index].template == preElement.textContent)
+          {
+             return;
+          }
+          prompts[index].template = preElement.textContent
           chrome.storage.local.set({ "veXPromptsData": { prompts: prompts } });
           Util.notify("Prompt template updated successfully", Constants.NotificationType.Success, true);
         }

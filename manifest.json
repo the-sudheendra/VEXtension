@@ -1,7 +1,7 @@
 {
   "name": "VEXtenstion",
-  "description": "Checklist Tool for OpenText ValueEdge",
-  "version": "3.0.0",
+  "description": "The toolset that gives you the extra edge in ValueEdge ⚡.",
+  "version": "1.0.0",
   "manifest_version": 3,
   "permissions": ["contextMenus", "storage"],
   "content_scripts": [
@@ -67,7 +67,8 @@
         "icons/done_all_24dp_1aa364.png",
         "icons/CategoryNotDone.png",
         "icons/CategotyNotApplicable.png",
-        "icons/CategoryDone.png"
+        "icons/CategoryDone.png",
+        "icons/save_24.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
