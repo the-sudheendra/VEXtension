@@ -293,7 +293,7 @@ textarea.veX_variable_input:active {
 }
 
 .veX_prompt_edit_template_btn {
-  position: absolute;
+
   top: 5px;
   right: 5px;
   cursor: pointer;
@@ -305,4 +305,36 @@ textarea.veX_variable_input:active {
 .veX_prompt_template_content[contenteditable="true"] {
   outline: 1px solid #ccc;
   padding: 5px;
+}
+
+.veX_template_header {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.veX_template_header strong {
+  margin: 0;
+}
+
+.veX_template_header .veX_prompt_edit_template_btn {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  vertical-align: middle;
+}
+
+.veX_template_header .veX_prompt_edit_template_btn:hover {
+  background-color: #f0f0f0;
+}
+
+.veX_template_header .veX_prompt_edit_template_btn img {
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
 }

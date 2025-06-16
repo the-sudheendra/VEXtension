@@ -308,11 +308,13 @@ function getPromptExpandHTML(prompt, index) {
     return `
           <div class="veX_prompt_expand_section veX_selectable" id="veX_expand_${index}" style="display: none;">
             <p><strong>Description:</strong> ${prompt.description}</p>
-            <p><strong>Template:</strong></p>
+            <p class="veX_template_header">
+              <strong>Template:</strong>
+              <span class="veX_prompt_edit_template_btn" title="Edit Template" data-index="${index}">
+                <img src="${UITemplates.veXIconsURLs.edit}" alt="Edit Icon" />
+              </span>
+            </p>
             <div class="veX_prompt_template_container">
-                <span class="veX_prompt_edit_template_btn" title="Edit Template" data-index="${index}">
-                  <img src="${UITemplates.veXIconsURLs.edit}" alt="Edit Icon" />
-                </span>
                 <pre class="veX_prompt_template_content" data-index="${index}">${prompt.template}</pre>
             </div>
             <p><strong>Variables:</strong></p>
