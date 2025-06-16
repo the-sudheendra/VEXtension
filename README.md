@@ -36,7 +36,7 @@
     - Right-click on any ticket to quickly open the checklist or prompts from the context menu — no extra clicks or searching needed.
 
 
-**Get started with [VEXHub(Starter Checklist & Prompts)](https://github.com/the-sudheendra/VEXHub) and learn more about the checklist schema** ✅.
+**Get started with [VEXHub(Starter Checklist & Prompts)](https://github.com/the-sudheendra/VEXHub) 🚀 and learn more about the checklist schema**.
 
 
 ### How to 💡
