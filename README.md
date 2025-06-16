@@ -16,7 +16,7 @@
 </div>
 
 
-## Features 🚀
+## Features 🌟
 
 - **✅ Checklist**  
     - Displays the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
