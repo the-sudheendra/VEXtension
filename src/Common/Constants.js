@@ -191,7 +191,7 @@ const Notifications = {
         "🤔 Can't add comment — finish or close the one already open."
     ],
     NoChecklistFoundInComments: [
-        "🤔 No existing checklist shown yet. It might still be loading—check back in a moment or create a new one!",
+        "🤔 No existing existing checklist shown yet OR It might still be loading—check back in a moment or create a new one!",
     ],
     ChecklistEditSuccess: [
         "📝 Checklist updated! Review the changes and save.",
