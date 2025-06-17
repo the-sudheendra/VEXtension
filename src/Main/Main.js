@@ -554,6 +554,7 @@ function setNotApplicableState(listItemNode, listIndex) {
     listItemNode.classList.remove('veX_completed');
     listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/indeterminate_check_box_24dp_FFFFFF.png");
     listItemNode.querySelector(".veX_done_icon").title = "Not Apllicable";
+    listItemNode.title="Item is marked as not applicable";
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Applicable State", err.message), true);
@@ -581,6 +582,7 @@ function setNotCompleted(listItemNode, listIndex) {
     veXChecklistItems[veXCurrentCategory.name][listIndex].Selected = true;
     listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/disabled.png");
     listItemNode.querySelector(".veX_done_icon").title = "Not Done";
+    listItemNode.title = "Item is marked as not done";
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Completed State", err.message), true);
@@ -597,7 +599,8 @@ function setCompletedState(listItemNode, listIndex) {
 
     listItemNode.querySelector('.veX_done_check').classList.add("veX_checked");
     listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/check_box_24dp_FFFFFF.png");
-    listItemNode.querySelector(".veX_done_icon").title = "Done"
+    listItemNode.querySelector(".veX_done_icon").title = "Done";
+    listItemNode.title = "Item is marked as done";
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Completed State", err.message), true);
