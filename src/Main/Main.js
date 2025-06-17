@@ -650,24 +650,18 @@ function openPromptsPopup() {
  * This function refreshes the checklist
  * from the remote URL if it exists.
  */
-async function refreshChecklistFromRemoteIfExists() {
-  if (await Util.getChecklistMode() != "url") {
-    // We are not using the URL mode.
-    // Hence, we need not refresh anything.
+async function refreshChecklistFromRemoteIfExists(veXChecklistData) {
+  if (!veXChecklistData["veXChecklistRemoteUrl"]) {
     return true;
   }
   try {
-    // Get the remote URL from sync storage
-    // and fetch the checklist from the remote URL
-    const veXChecklistRemoteUrl = await chrome.storage.local.get("veXChecklistRemoteUrl");
-    const veXLoadOnStart = await chrome.storage.local.get("veXLoadOnStart");
-
-    const response = await fetch(`${veXChecklistRemoteUrl?.veXChecklistRemoteUrl}?ts=${Date.now()}`);
+   const veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
+    const veXLoadOnStart = veXChecklistData["veXLoadOnStart"];
+    const response = await fetch(`${veXChecklistRemoteUrl}?ts=${Date.now()}`);
     if (!response.ok) {
       Util.notify("Couldn't fetch checklist JSON from the URL", "warning", true);
       return false;
     }
-    // Validate and update the checklist
     const veXChecklistInfo = await response.json();
     if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl?.veXChecklistRemoteUrl, veXLoadOnStart?.veXLoadOnStart) === true) {
     } else {
@@ -677,8 +671,6 @@ async function refreshChecklistFromRemoteIfExists() {
     Util.onError(error, "Couldn't fetch JSON from the URL", true);
     return false;
   }
-  // Return true by default so as to
-  // not break any existing functionality
   return true;
 }
 
@@ -826,11 +818,11 @@ async function onTicketTitleChange(change) {
     }
     if (veXChecklistData) {
       checklist = veXChecklistData["checklist"];
-      loadOnStart = veXChecklistData["loadOnStart"];
+      loadOnStart = veXChecklistData["veXLoadOnStart"];
       veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
     }
     if (loadOnStart === true) {
-      const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists();
+      const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists(veXChecklistData);
       if (!remoteRefreshSuccess) {
         return;
       }

@@ -78,14 +78,7 @@ function getRandomMessage(notification) {
 }
 
 
-async function getChecklistMode() {
-  const veXChecklistRemoteUrl = await chrome.storage.local.get("veXChecklistRemoteUrl");
-  if (veXChecklistRemoteUrl?.veXChecklistRemoteUrl && veXChecklistRemoteUrl.veXChecklistRemoteUrl != "") {
-    return "url";
-  } else {
-    return "local";
-  }
-}
+
 
 
 async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOnStart) {
@@ -458,7 +451,6 @@ export {
   formatMessage,
   getChecklistStatus,
   getRandomMessage,
-  getChecklistMode,
   saveChecklistData,
   cleanupMutationObserver,
   calculateCompletionPercentage,
