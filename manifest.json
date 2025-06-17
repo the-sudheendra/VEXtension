@@ -1,6 +1,6 @@
 {
   "name": "VEXtenstion",
-  "description": "The toolset that gives you the extra edge in ValueEdge ⚡.",
+  "description": "The toolset that gives you the extra edge in Opentext ValueEdge ⚡.",
   "version": "1.0.2",
   "manifest_version": 3,
   "permissions": ["contextMenus", "storage"],
