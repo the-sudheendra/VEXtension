@@ -128,12 +128,11 @@ async function editExistingComment(veXChecklistItems, donePercentage) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
       return;
     }
+    Util.showLoading();
     if (await isVexChecklistCommentAvailable() == false) {
       Util.notify(Util.getRandomMessage(Constants.Notifications.NoChecklistFoundInComments), Constants.NotificationType.Info, true);
       return;
     }
-
-    Util.showLoading();
 
     let lastComment = getLastChecklistComment();
     if (!lastComment) {

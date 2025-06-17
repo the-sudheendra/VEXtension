@@ -126,10 +126,10 @@ function getCurrentTicketInfo(title) {
     const match = ticketArr[0].match(/^([a-zA-Z]+)(\d+)$/);
     if (!match || match.length < 2) return;
 
-    const ticketTypeElement = document.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
+    const tickeTypeHeader = document.querySelector(".entity-form-document-view-header-entity-name");
+    const ticketTypeElement = tickeTypeHeader.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
     if (!ticketTypeElement?.innerText) return;
-
-    const ticketType = ticketTypeElement.innerText.toUpperCase();
+    const ticketType = ticketTypeElement.innerText.toUpperCase().trim().replace(/\s+/g, ' ');
     if (!Constants.EntityMetaData[ticketType]) {
       veXCurrentTicketInfo = {};
       return;
@@ -206,7 +206,7 @@ async function initView() {
 async function initHeaderView() {
   try {
     veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
-    Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'),document.getElementById("veX_checklist_popup_container"));
+    Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'), document.getElementById("veX_checklist_popup_container"));
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Header View initializing", err.message), true);
@@ -361,7 +361,7 @@ function updateMainContentView() {
       return;
     }
     veXNodes.veXCategoryTitleNode.innerHTML = veXCurrentCategory.name;
-    
+
     // Add event listeners for mark category buttons
     const markCompletedBtn = veXPopUpNode.querySelector('.veX_mark_category_completed_btn');
     const markNotDoneBtn = veXPopUpNode.querySelector('.veX_mark_category_not_done_btn');
@@ -554,6 +554,7 @@ function setNotApplicableState(listItemNode, listIndex) {
     listItemNode.classList.remove('veX_completed');
     listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/indeterminate_check_box_24dp_FFFFFF.png");
     listItemNode.querySelector(".veX_done_icon").title = "Not Apllicable";
+    listItemNode.title="Item is marked as not applicable";
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Applicable State", err.message), true);
@@ -581,6 +582,7 @@ function setNotCompleted(listItemNode, listIndex) {
     veXChecklistItems[veXCurrentCategory.name][listIndex].Selected = true;
     listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/disabled.png");
     listItemNode.querySelector(".veX_done_icon").title = "Not Done";
+    listItemNode.title = "Item is marked as not done";
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Completed State", err.message), true);
@@ -597,7 +599,8 @@ function setCompletedState(listItemNode, listIndex) {
 
     listItemNode.querySelector('.veX_done_check').classList.add("veX_checked");
     listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/check_box_24dp_FFFFFF.png");
-    listItemNode.querySelector(".veX_done_icon").title = "Done"
+    listItemNode.querySelector(".veX_done_icon").title = "Done";
+    listItemNode.title = "Item is marked as done";
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Completed State", err.message), true);
@@ -658,7 +661,7 @@ async function refreshChecklistFromRemoteIfExists() {
     // and fetch the checklist from the remote URL
     const veXChecklistRemoteUrl = await chrome.storage.local.get("veXChecklistRemoteUrl");
     const veXLoadOnStart = await chrome.storage.local.get("veXLoadOnStart");
-    
+
     const response = await fetch(`${veXChecklistRemoteUrl?.veXChecklistRemoteUrl}?ts=${Date.now()}`);
     if (!response.ok) {
       Util.notify("Couldn't fetch checklist JSON from the URL", "warning", true);
@@ -955,7 +958,7 @@ function markCurrentCategoryAsNotDone() {
     for (let i = 0; i < currentCheckList.length; i++) {
       const item = currentCheckList[i];
       const prevStatus = Util.getChecklistStatus(item);
-      if (prevStatus == Constants.CheckListStatus.Completed || prevStatus === Constants.CheckListStatus.NotApplicable ) {
+      if (prevStatus == Constants.CheckListStatus.Completed || prevStatus === Constants.CheckListStatus.NotApplicable) {
         newlyNotDoneCount++;
       }
       item.CursorState.position = 2; // 0 = Not Done
@@ -989,10 +992,10 @@ function markCurrentCategoryAsNotApplicable() {
     for (let i = 0; i < currentCheckList.length; i++) {
       const item = currentCheckList[i];
       const prevStatus = Util.getChecklistStatus(item);
-      if (prevStatus == Constants.CheckListStatus.NotCompleted  || prevStatus ==  Constants.CheckListStatus.NotSelected) {
+      if (prevStatus == Constants.CheckListStatus.NotCompleted || prevStatus == Constants.CheckListStatus.NotSelected) {
         newlyNotApplicableCount++;
       }
-      item.CursorState.position = 3; 
+      item.CursorState.position = 3;
       item.Completed = false;
       item.Selected = false;
       item.NotApplicable = true;

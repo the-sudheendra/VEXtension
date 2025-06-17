@@ -60,9 +60,9 @@ const listTypes = {
     "prompts": 1
 }
 
-const defaultCheklistRemoteURL= "https://the-sudheendra.github.io/VEXHub/Checklist/DefaultChecklist.json";
-const defaultPromptsRemoteURL= "https://the-sudheendra.github.io/VEXHub/AviatorPrompts/DefaultPrompts.json";
-const defaultPromptsTonesURL="https://the-sudheendra.github.io/VEXHub/AviatorPromptsTones/DefaultPromptsTone.json";
+const defaultCheklistRemoteURL = "https://the-sudheendra.github.io/VEXHub/Checklist/DefaultChecklist.json";
+const defaultPromptsRemoteURL = "https://the-sudheendra.github.io/VEXHub/AviatorPrompts/DefaultPrompts.json";
+const defaultPromptsTonesURL = "https://the-sudheendra.github.io/VEXHub/AviatorPromptsTones/DefaultPromptsTone.json";
 
 
 const VEChecklistNodeSelectors = {
@@ -110,22 +110,10 @@ const ErrorMessages = {
 
 const Notifications = {
     SelectAtLeastOneItem: [
-        "Oops! You forgot to select an item. Pick at least one and you're good to go! 🎉",
-        "Almost there! Just select at least one item, and you're all set! 🚀✨",
-        "Wait a sec! You need to select at least one item before adding to comments. ⏳",
-        "You're so close! Just pick one item to continue. You got this! 💪",
-        "Hmm... looks like you didn't select anything. Please pick at least one item! 🤔",
-        "Wait a minute! You forgot to pick an item. Choose one and let's roll! 😃",
+        "⚠️ Please select at least one item to continue."
     ],
     ChecklistSavedSuccessfully: [
-        "🚀 Boom! Your checklist is saved! Time to tackle those tasks! 💪",
-        "💾 Checklist saved! Ready for the next step? ⏳",
-        "📌 Your checklist is saved. You're good to go! 😊",
-        "😌 Your checklist is saved. No worries, it's all there!",
-        "🚀 Saved successfully! Ready to check things off? ",
-        "🎊 Your checklist is saved. Let's get things done! 🤗",
-        "🔥 Checklist locked & loaded! Time to make progress! 🚀",
-        " Yep, it's saved. Now, no excuses—let's get to work!😜 "
+        "🚀 Boom! Your checklist is saved! Time to tackle those tasks! 💪"
     ],
     AviatorPromptsSavedSuccessfully: [
         "💡 Prompts saved. Next stop: smarter decisions!",
@@ -159,22 +147,14 @@ const Notifications = {
         "🎯 Ready for a quick checklist refresh? You've got this! 🌟",
     ],
     OpenTicketToSeeChecklist: [
-        "🤔 Looks like you haven't opened a ticket yet. Open a ticket to see the checklist 🙂",
-        "🔔 Oops! Open a ticket to view the checklist. 😊",
-        "No ticket, no checklist! 😄  Open a ticket to access it.",
+        "🤔 No ticket opened yet. Open a ticket to view the checklist",
         "✨ Almost there! Open a ticket to see the checklist.",
     ],
     OpenTicketToSeePrompts: [
-        "🙋 Need the prompts? You'll need to open a ticket first!"
+        "🤔 No ticket opened yet. Open a ticket to view the Aviator Prompts."
     ],
     UnableToFindChecklist: [
-        "🤔 No checklist found for '$0'. Maybe it wasn't uploaded?",
-        " Checklist not available. Consider adding one for '$0'.😊",
-        "💡 No checklist found. Want to upload one for '$0'?",
-        "🤔 Hmm… No checklist for '$0' yet. Time to upload?",
-        "No checklist here! Want to add one for '$0'?",
-        "🤷‍♂️ Checklist for '$0' is missing. Time to create one?",
-
+       "📋 No checklist found for '$0'. Consider uploading one."
     ],
     ChecklistAddedToComments: [
         "Checklist successfully added to comments! 🎉",
@@ -191,24 +171,16 @@ const Notifications = {
         "🤔 Can't add comment — finish or close the one already open."
     ],
     NoChecklistFoundInComments: [
-        "🤔 No existing existing checklist shown yet OR It might still be loading—check back in a moment or create a new one!",
+        "🤔 No checklist found—it may still be loading or you can create a new one!",
     ],
     ChecklistEditSuccess: [
         "📝 Checklist updated! Review the changes and save.",
         "📝 Checklist edited successfully! Take a look and save.",
-        "🎯 Boom! Checklist updated. Give it a quick review and save.",
-        " Edits done! Give it a look and don't forget to save.",
     ],
     NotAbleToEditComment: [
-        "You can't edit this comment, but a new one is just a click away! 😃",
-        "⚡ Quick tip! This comment isn't editable, but you can drop a new one right away!😃",
-        "💡 Heads up! This comment can't be edited, but feel free to add a new one instead.",
-        "😯 Hmm… looks like this comment can't be changed. Maybe try adding a new one?",
-        "🌟 Keep the conversation going! You can't edit this comment, but adding a new one keeps things flowing!",
-        "Oops! Editing is locked, but hey, who doesn't love a fresh new comment? 😃",
-        "Can't edit 😯 No big deal! Just drop a new comment and keep things rolling.",
+        "This comment can't be edited. Add a new one instead."
     ],
-    "DoneMessages": {
+    DoneMessages: {
         "10": [
             "Let's start the work! 🚀",
             "Nice and easy — just getting into the groove! 🎯",
@@ -251,8 +223,6 @@ const Notifications = {
         ],
         "Common": "Good progress! Keep it going! 🚀"
     }
-
-
 }
 
 const StatusColors = {
