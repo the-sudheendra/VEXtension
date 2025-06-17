@@ -33,7 +33,10 @@ async function initialize() {
     await loadModules();
     await loadPrompts();
     veXPromptViewSetup();
+    // Initialize with empty data first
     initializePromptVariableData();
+    // Set up observer to reinitialize when content is available
+   // setupPromptVariableDataObserver();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Initialize Prompt Modal", err.message), true);
   }
@@ -160,6 +163,37 @@ function initializePromptList() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Initialize Prompt List", err.message), true);
   }
 }
+
+// function setupPromptVariableDataObserver() {
+//   try {
+//     // Create a new observer to watch for content changes
+//     const observer = new MutationObserver((mutations) => {
+//       // Check if any of the selectors in our prompts have content
+//       const hasContent = prompts.some(prompt => 
+//         prompt.variables.some(variable => {
+//           const element = document.querySelector(variable.selector);
+//           return element && (element.value || element.textContent);
+//         })
+//       );
+      
+//       if (hasContent) {
+//         // Reinitialize the data once content is available
+//         initializePromptVariableData();
+//         // Disconnect the observer since we only need to do this once
+//         observer.disconnect();
+//       }
+//     });
+
+//     // Start observing the document body for changes
+//     observer.observe(document.body, {
+//       childList: true,
+//       subtree: true,
+//       characterData: true
+//     });
+//   } catch (err) {
+//     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup Prompt Variable Data Observer", err.message), true);
+//   }
+// }
 
 function initializePromptVariableData() {
   try {
