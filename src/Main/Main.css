@@ -737,7 +737,8 @@ button {
 
 .veX_mark_category_completed_btn,
 .veX_mark_category_not_done_btn,
-.veX_mark_category_not_applicable_btn {
+.veX_mark_category_not_applicable_btn,
+.veX_mark_category_unselect_btn {
   border: none;
   border-radius: 4px;
   padding: 4px 8px;
@@ -750,13 +751,31 @@ button {
 
 .veX_mark_category_completed_btn:hover,
 .veX_mark_category_not_done_btn:hover,
-.veX_mark_category_not_applicable_btn:hover {
+.veX_mark_category_not_applicable_btn:hover,
+.veX_mark_category_unselect_btn:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
 .veX_mark_category_completed_btn img,
 .veX_mark_category_not_done_btn img,
-.veX_mark_category_not_applicable_btn img {
+.veX_mark_category_not_applicable_btn img,
+.veX_mark_category_unselect_btn img {
   width: 22px;
   height: 22px;
+}
+
+.veX_mark_category_buttons_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: absolute;
+  right: 10px;
+}
+
+.veX_mark_category_label {
+  font-size: 14px;
+  color: var(--veX-common-fontColor);
+  margin-right: 4px;
+  font-weight: 500;
+  white-space: nowrap;
 }

@@ -125,7 +125,7 @@ async function addChecklistToComments(veXChecklistItems, donePercentage) {
 async function editExistingComment(veXChecklistItems, donePercentage) {
   try {
     if (!isCommentAllowed(veXChecklistItems)) {
-      Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Info, true);
+      Util.notify(Util.getRandomMessage(Constants.Notifications.SelectAtLeastOneItem), Constants.NotificationType.Warning, true);
       return;
     }
     Util.showLoading();

@@ -8,7 +8,8 @@ const veXIconsURLs = {
     markAllNotApplicable: chrome.runtime.getURL("icons/CategotyNotApplicable.png"),
     logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
     check: chrome.runtime.getURL("icons/save_24.png"),
-    close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png")
+    close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png"),
+    unselect: chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png")
 };
 const ChecklistUI = `
 <header class="veX_header veX_banner">
@@ -33,16 +34,22 @@ const ChecklistUI = `
     <div class="veX_main_content">
         <div class="veX_ui_title_container">
           <div class="veX_ui_title">No Item</div>
-          <div class="veX_mark_category_buttons">
-            <button class="veX_mark_category_completed_btn" title="Mark as done">
-              <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark as done">
-            </button>
-            <button class="veX_mark_category_not_done_btn" title="Mark as not done">
-              <img class="veX_material_icons" src="${veXIconsURLs.markAllNotDone}" alt="Mark as not done">
-            </button>
-            <button class="veX_mark_category_not_applicable_btn" title="Mark as not applicable">
-              <img class="veX_material_icons" src="${veXIconsURLs.markAllNotApplicable}" alt="Mark as not applicable">
-            </button>
+          <div class="veX_mark_category_buttons_wrapper">
+            <span class="veX_mark_category_label">Mark as:</span>
+            <div class="veX_mark_category_buttons">
+              <button class="veX_mark_category_completed_btn" title="Mark as done">
+                <img class="veX_material_icons" src="${veXIconsURLs.markAllCompleted}" alt="Mark as done">
+              </button>
+              <button class="veX_mark_category_not_done_btn" title="Mark as not done">
+                <img class="veX_material_icons" src="${veXIconsURLs.markAllNotDone}" alt="Mark as not done">
+              </button>
+              <button class="veX_mark_category_not_applicable_btn" title="Mark as not applicable">
+                <img class="veX_material_icons" src="${veXIconsURLs.markAllNotApplicable}" alt="Mark as not applicable">
+              </button>
+              <button class="veX_mark_category_unselect_btn" title="Unselect all items">
+                <img class="veX_material_icons" src="${veXIconsURLs.unselect}" alt="Unselect all items">
+              </button>
+            </div>
           </div>
         </div>
          <!-- <div class="veX_header_actions">

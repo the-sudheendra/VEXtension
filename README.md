@@ -1,12 +1,12 @@
 <div align="center">
    <div align="center" style="text-align: center;">
-  <b>VEXtenstion</b> 
+  <b>VEXtension</b> 
   <span>
     <img alt="Version" src="https://img.shields.io/chrome-web-store/v/cmhpdpnhemnhkpbahmocdmjdfpddinka?style=flat-square&label=latest&labelColor=white&color=white&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fve-checklist%2Fcmhpdpnhemnhkpbahmocdmjdfpddinka%2Freviews"/>
     <img alt="Users" src="https://img.shields.io/chrome-web-store/users/cmhpdpnhemnhkpbahmocdmjdfpddinka?style=flat-square&label=users&labelColor=white&color=white"/>
   </span>
 </div>
-   <h4>The toolset that gives you the extra edge in OpenText ValueEdge ⚡ </h4>
+   <h4>The toolset that gives you the Xtra edge in OpenText ValueEdge ⚡ </h4>
 <div style="text-align: center;">
   <a href="https://chromewebstore.google.com/detail/ve-checklist/cmhpdpnhemnhkpbahmocdmjdfpddinka/reviews" target="_blank" rel="noopener noreferrer">
     Download from Chrome Web Store
@@ -46,7 +46,7 @@
 **Use the Extension?**
 * Open a ValueEdge ticket in your browser.
 * Right-click anywhere on the page.
-* In the context menu, you will see an option called **VEXtenstion**.
+* In the context menu, you will see an option called **VEXtension**.
 * Click on **checklist** or **Aviator Prompts** based on your choice
 
 

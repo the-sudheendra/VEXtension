@@ -1,7 +1,7 @@
 {
-  "name": "VEXtenstion",
-  "description": "The toolset that gives you the extra edge in Opentext ValueEdge ⚡.",
-  "version": "3.0.0",
+  "name": "VEXtension",
+  "description": "The toolset that gives you the Xtra edge in Opentext ValueEdge ⚡.",
+  "version": "3.0.1",
   "manifest_version": 3,
   "permissions": ["contextMenus", "storage"],
   "content_scripts": [
@@ -13,7 +13,7 @@
   ],
   "action": {
     "default_popup": "/src/Popup/Popup.html",
-    "default_title": "VEXtenstion"
+    "default_title": "VEXtension"
   },
   "background": {
     "service_worker": "/src/Common/Background.js",

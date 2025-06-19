@@ -366,6 +366,7 @@ function updateMainContentView() {
     const markCompletedBtn = veXPopUpNode.querySelector('.veX_mark_category_completed_btn');
     const markNotDoneBtn = veXPopUpNode.querySelector('.veX_mark_category_not_done_btn');
     const markNotApplicableBtn = veXPopUpNode.querySelector('.veX_mark_category_not_applicable_btn');
+    const markUnselectBtn = veXPopUpNode.querySelector('.veX_mark_category_unselect_btn');
 
     if (markCompletedBtn) {
       markCompletedBtn.onclick = function () {
@@ -380,6 +381,11 @@ function updateMainContentView() {
     if (markNotApplicableBtn) {
       markNotApplicableBtn.onclick = function () {
         markCurrentCategoryAsNotApplicable();
+      };
+    }
+    if (markUnselectBtn) {
+      markUnselectBtn.onclick = function () {
+        markCurrentCategoryAsUnselected();
       };
     }
 
@@ -1002,6 +1008,50 @@ function markCurrentCategoryAsNotApplicable() {
       Util.formatMessage(
         Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
         "Mark Category Not Applicable",
+        err.message
+      ),
+      true
+    );
+  }
+}
+
+function resetCurrentCategoryToUnselected() {
+  const currentCategoryName = veXCurrentCategory.name;
+  const currentCheckList = veXChecklistItems[currentCategoryName];
+  if (!currentCheckList) return;
+  for (let i = 0; i < currentCheckList.length; i++) {
+    currentCheckList[i].CursorState.position = 0; // NotSelected
+    currentCheckList[i].Completed = false;
+    currentCheckList[i].Selected = false;
+    currentCheckList[i].NotApplicable = false;
+  }
+}
+
+function recalculateCompletedItemsForCategory(currentCheckList) {
+  let completedCount = 0;
+  for (let i = 0; i < currentCheckList.length; i++) {
+    const status = Util.getChecklistStatus(currentCheckList[i]);
+    if (status === Constants.CheckListStatus.Completed || status === Constants.CheckListStatus.NotApplicable) {
+      completedCount++;
+    }
+  }
+  return completedCount;
+}
+
+function markCurrentCategoryAsUnselected() {
+  try {
+    const completedItems = recalculateCompletedItemsForCategory(veXChecklistItems[veXCurrentCategory.name]);
+    resetCurrentCategoryToUnselected();
+    veXTotalCompletedItems -= completedItems;
+    if (veXTotalCompletedItems < 0) veXTotalCompletedItems = 0;
+    updateChecklist();
+    updateDonePercentage();
+  } catch (err) {
+    Util.onError(
+      err,
+      Util.formatMessage(
+        Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
+        "Mark Category Unselected",
         err.message
       ),
       true
