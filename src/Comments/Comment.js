@@ -264,17 +264,15 @@ function createCommentWrapper() {
 */
 function createCommentHeader(donePercentage, stats) {
   if (!donePercentage) donePercentage = 0;
-  const headerNode = document.createElement("p");
+  const headerNode = document.createElement("div");
   headerNode.innerHTML = `
-    <div style="display: flex; align-items: center; gap: 5px;">
       <p style="color: #008000;" class="veX_checklist_comment_done_percentage @totalCompletedItems_${veXTotalCompletedItems}">
         <strong>${donePercentage}% Done | </strong>
         ${stats.completed > 0 ? `<b style="color: ${Constants.StatusColors.Completed};"> ${stats.completed} Done  · </b>` : ''}
         ${stats.notApplicable > 0 ? `<b style="color: ${Constants.StatusColors.NotApplicable};"> ${stats.notApplicable} N/A · </b>` : ''}
         ${stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done · </b>` : ''}
         ${stats.notSelected > 0 ? `<b style="color: ${Constants.StatusColors.NotSelected};"> ${stats.notSelected} Not Selected · </b>` : ''}    
-      </p>
-    </div>`;
+      </p>`;
   headerNode.style.color = COMMENT_STYLES.DEFAULT_COLOR;
   return headerNode;
 }
