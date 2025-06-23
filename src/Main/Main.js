@@ -197,16 +197,7 @@ async function initView() {
     initSidebarHeaderView();
     initPhaseMap();
     initPhaseDropdownView();
-    let categoriesToShow = veXCurrentTicketChecklist.categories;
-    if (
-      veXCurrentTicketInfo.phase &&
-      veXPhaseMap[veXCurrentTicketInfo.phase] &&
-      Object.keys(veXPhaseMap[veXCurrentTicketInfo.phase]).length > 0
-    ) {
-      veXNodes.veXTicketPhaseTextNode.innerText = veXCurrentTicketInfo.phase;
-      categoriesToShow = veXPhaseMap[veXCurrentTicketInfo.phase];
-    }
-    initCategoriesView(categoriesToShow);
+    initCategoriesView(getPhaseCategories(veXCurrentTicketInfo.phase));
     updateMainContentView();
     initStyle();
     return true;
@@ -217,6 +208,19 @@ async function initView() {
   }
 }
 
+function getPhaseCategories(phaseName = veXCurrentTicketInfo.phase) {
+  let categoriesToShow = veXCurrentTicketChecklist.categories;
+  veXNodes.veXTicketPhaseTextNode.innerText = "All Categories";
+  if (
+    phaseName &&
+    veXPhaseMap[phaseName] &&
+    Object.keys(veXPhaseMap[phaseName]).length > 0
+  ) {
+    categoriesToShow = veXPhaseMap[phaseName];
+    veXNodes.veXTicketPhaseTextNode.innerText = phaseName;
+  }
+  return categoriesToShow;
+}
 async function initHeaderView() {
   try {
     veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
@@ -306,8 +310,7 @@ function initPhaseDropdownView() {
 }
 
 function onPhaseChange(phaseName) {
-  veXNodes.veXTicketPhaseTextNode.innerText = phaseName;
-  initCategoriesView(veXPhaseMap[phaseName]);
+  initCategoriesView(getPhaseCategories(phaseName));
   updateMainContentView();
 }
 
@@ -407,8 +410,8 @@ function updateMainContentView() {
       };
     }
     veXNodes.veXSidebarParentNode.querySelectorAll(".veX_category_button").forEach((buttonNode) => {
-      if(buttonNode)
-      buttonNode.classList.remove("veX-Active-Button");
+      if (buttonNode)
+        buttonNode.classList.remove("veX-Active-Button");
     });
     veXNodes.veXSidebarParentNode.querySelector(`[categoryName="${veXCurrentCategory.name}"]`).classList.add("veX-Active-Button");
     updateChecklist();
@@ -803,7 +806,9 @@ function onListNoteClick(event, listItemNode, currentCheckList, index) {
     listItemNode.querySelector('.veX_checklist_note').classList.toggle("veX_hide_checklist_note");
     updateNoteIcon(listItemNode, currentCheckList, index);
     if (!listItemNode.querySelector('.veX_checklist_note').classList.contains("veX_hide_checklist_note")) {
-      listItemNode.querySelector('.veX_checklist_note').focus();
+      if (currentCheckList[index] && currentCheckList[index].RichTextNote) {
+        currentCheckList[index].RichTextNote.focus();
+      }
     }
     if (event)
       event.stopPropagation();
@@ -876,7 +881,6 @@ function onTicketPhaseChange(mutation) {
     //   Util.notify(reminderMessage, Constants.NotificationType.Info, true);
     // }
     veXCurrentTicketInfo.phase = newPhase;
-    veXNodes.veXTicketPhaseTextNode.innerText = newPhase;
     onPhaseChange(newPhase);
     //openChecklistPopup();
 

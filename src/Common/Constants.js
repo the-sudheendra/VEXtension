@@ -109,7 +109,7 @@ const ErrorMessages = {
 
 const Notifications = {
     SelectAtLeastOneItem: [
-        "⚠️ Please select at least one item to continue."
+        "Please select at least one item to continue."
     ],
     ChecklistSavedSuccessfully: [
         "🚀 Your checklist is saved! Time to tackle those tasks! 💪"
