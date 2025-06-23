@@ -331,7 +331,7 @@ function createItemNode(item, categoryName) {
 function createNoteSection(noteContent) {
   return `
     <div style="${COMMENT_STYLES.ITEM_STYLES.details}">
-      <b style="${COMMENT_STYLES.ITEM_STYLES.text}">Notes:</b><br/>
+      <b>Notes:</b><br/>
       <span class="veX_checklist_comment_item_note">${DOMPurify.sanitize(noteContent)}</span>
     </div>`;
 }
