@@ -9,7 +9,8 @@ const veXIconsURLs = {
     logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
     check: chrome.runtime.getURL("icons/save_24.png"),
     close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png"),
-    unselect: chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png")
+    unselect: chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png"),
+    closeSmall: chrome.runtime.getURL("icons/close_small_24.png")
 };
 const ChecklistUI = `
 <header class="veX_header veX_banner">
@@ -17,6 +18,7 @@ const ChecklistUI = `
         <img class="veX_logo" src="${veXIconsURLs.logo}" title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
     </div>
     <p class="veX_header_title veX_truncate"></p>
+    <img class="veX_popup_close_icon" id="veX_checklist_close_btn" src="${veXIconsURLs.closeSmall}" alt="Close" title="Close" style="margin-left:auto;cursor:pointer;"/>
 </header>
 <div class="veX_done_status"></div>
 <div class="veX_content_wrapper">
@@ -85,6 +87,7 @@ const PromptsUI = `
                     </div>
                 </div>
             </div>
+            <img class="veX_popup_close_icon" id="veX_prompts_close_btn" src="${veXIconsURLs.closeSmall}" alt="Close" title="Close" style="margin-left:auto;cursor:pointer;"/>
         </div>
     </div>
     

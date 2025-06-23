@@ -108,6 +108,11 @@ function setupPromptsPopupNode() {
     veXPromptsPopupNode.classList.add("veX_prompts_popup_disable");
     veXPromptsPopupNode.innerHTML = UITemplates.PromptsUI;
     document.body.appendChild(veXPromptsPopupNode);
+    // Add close button event listener
+    const closeBtn = veXPromptsPopupNode.querySelector('#veX_prompts_close_btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closePromptsPopup);
+    }
     initializeTonesDropdown();
     attachToneSelectorEvents();
     Util.makeElementDraggable(veXPromptsPopupNode.querySelector('.veX_prompts_header'));

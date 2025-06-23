@@ -84,6 +84,10 @@ function setupChecklistPopupNode() {
   veXPopUpNode.classList.add("veX_popup_disable");
   veXPopUpNode.innerHTML = UITemplates.ChecklistUI;
   document.body.appendChild(veXPopUpNode);
+  const closeBtn = veXPopUpNode.querySelector('#veX_checklist_close_btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeChecklistPopup);
+  }
 }
 function addLoadingElement() {
   let veX_loader = document.createElement('span');
@@ -127,6 +131,7 @@ function getCurrentTicketInfo(title) {
     if (!match || match.length < 2) return;
 
     const tickeTypeHeader = document.querySelector(".entity-form-document-view-header-entity-name");
+    if (!tickeTypeHeader) return;
     const ticketTypeElement = tickeTypeHeader.querySelector(Constants.ValueEdgeNodeSelectors.CurrentTicketType);
     if (!ticketTypeElement?.innerText) return;
     const ticketType = ticketTypeElement.innerText.toUpperCase().trim().replace(/\s+/g, ' ');
@@ -136,7 +141,7 @@ function getCurrentTicketInfo(title) {
     }
 
     MutationObservers.initTicketTypeMutationObserver(onTicketTitleChange, onTicketPhaseChange);
-    //MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
+    MutationObservers.initTicketPhaseMutationObserver(onTicketPhaseChange);
 
 
     veXCurrentTicketInfo = {
@@ -181,7 +186,7 @@ function veXReset() {
     root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);
     root.style.setProperty('--veX-ticktColor', `#fff`);
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Reset", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Reset", err.message), false);
   }
 }
 
@@ -192,7 +197,16 @@ async function initView() {
     initSidebarHeaderView();
     initPhaseMap();
     initPhaseDropdownView();
-    initCategoriesView(veXCurrentTicketChecklist.categories);
+    let categoriesToShow = veXCurrentTicketChecklist.categories;
+    if (
+      veXCurrentTicketInfo.phase &&
+      veXPhaseMap[veXCurrentTicketInfo.phase] &&
+      Object.keys(veXPhaseMap[veXCurrentTicketInfo.phase]).length > 0
+    ) {
+      veXNodes.veXTicketPhaseTextNode.innerText = veXCurrentTicketInfo.phase;
+      categoriesToShow = veXPhaseMap[veXCurrentTicketInfo.phase];
+    }
+    initCategoriesView(categoriesToShow);
     updateMainContentView();
     initStyle();
     return true;
@@ -282,15 +296,19 @@ function initPhaseDropdownView() {
       dropdownListNode.textContent = avaliablePhases[i];
       dropdownListNode.addEventListener('click', (event) => {
         let phaseName = event.target.getAttribute('phaseName');
-        veXNodes.veXTicketPhaseTextNode.innerText = phaseName;
-        initCategoriesView(veXPhaseMap[phaseName]);
-        updateMainContentView();
+        onPhaseChange(phaseName);
       });
       veXPhaseDropDown.appendChild(dropdownListNode);
     }
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phase dropdown initializing", err.message), true);
   }
+}
+
+function onPhaseChange(phaseName) {
+  veXNodes.veXTicketPhaseTextNode.innerText = phaseName;
+  initCategoriesView(veXPhaseMap[phaseName]);
+  updateMainContentView();
 }
 
 function initCategoriesView(categories) {
@@ -560,7 +578,7 @@ function setNotApplicableState(listItemNode, listIndex) {
     listItemNode.classList.remove('veX_completed');
     listItemNode.querySelector(".veX_done_icon").src = chrome.runtime.getURL("icons/indeterminate_check_box_24dp_FFFFFF.png");
     listItemNode.querySelector(".veX_done_icon").title = "Not Apllicable";
-    listItemNode.title="Item is marked as not applicable";
+    listItemNode.title = "Item is marked as not applicable";
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Applicable State", err.message), true);
@@ -661,7 +679,7 @@ async function refreshChecklistFromRemoteIfExists(veXChecklistData) {
     return true;
   }
   try {
-   const veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
+    const veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
     const veXLoadOnStart = veXChecklistData["veXLoadOnStart"];
     const response = await fetch(`${veXChecklistRemoteUrl}?ts=${Date.now()}`);
     if (!response.ok) {
@@ -852,13 +870,15 @@ function onTicketPhaseChange(mutation) {
     if (!mutation.target) return;
     let newPhase = mutation.target.innerText;
     let oldPhase = veXCurrentTicketInfo.phase;
-    if (newPhase && oldPhase && Constants.VEPhaseOrder[newPhase.toLowerCase()] > Constants.VEPhaseOrder[oldPhase.toLowerCase()]) {
-      let reminderMessage = Util.getRandomMessage(Constants.Notifications.ReminderToUpdateChecklist);
-      Util.notify(reminderMessage, Constants.NotificationType.Info, true);
-    }
-    veXCurrentTicketInfo.phase = newPhase;
-    //openChecklistPopup();
 
+    // if (newPhase && oldPhase && Constants.VEPhaseOrder[newPhase.toLowerCase()] > Constants.VEPhaseOrder[oldPhase.toLowerCase()]) {
+    //   let reminderMessage = Util.getRandomMessage(Constants.Notifications.ReminderToUpdateChecklist);
+    //   Util.notify(reminderMessage, Constants.NotificationType.Info, true);
+    // }
+    veXCurrentTicketInfo.phase = newPhase;
+    veXNodes.veXTicketPhaseTextNode.innerText = newPhase;
+    onPhaseChange(newPhase);
+    //openChecklistPopup();
 
   }
   catch (err) {

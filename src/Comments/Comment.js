@@ -211,7 +211,8 @@ async function draftChecklistForComments(veXChecklistItems, donePercentage) {
       completed: 0,
       notCompleted: 0,
       notApplicable: 0,
-      notSelected: 0
+      notSelected: 0,
+      totalItems: 0
     };
 
     Object.values(veXChecklistItems).forEach(checklist => {
@@ -231,6 +232,7 @@ async function draftChecklistForComments(veXChecklistItems, donePercentage) {
             stats.notSelected++;
             break;
         }
+        stats.totalItems++;
       });
     });
 
@@ -266,13 +268,21 @@ function createCommentHeader(donePercentage, stats) {
   if (!donePercentage) donePercentage = 0;
   const headerNode = document.createElement("div");
   headerNode.innerHTML = `
-      <p style="color: #008000;" class="veX_checklist_comment_done_percentage @totalCompletedItems_${veXTotalCompletedItems}">
-        <strong>${donePercentage}% Done | </strong>
-        ${stats.completed > 0 ? `<b style="color: ${Constants.StatusColors.Completed};"> ${stats.completed} Done  · </b>` : ''}
-        ${stats.notApplicable > 0 ? `<b style="color: ${Constants.StatusColors.NotApplicable};"> ${stats.notApplicable} N/A · </b>` : ''}
-        ${stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done · </b>` : ''}
-        ${stats.notSelected > 0 ? `<b style="color: ${Constants.StatusColors.NotSelected};"> ${stats.notSelected} Not Selected · </b>` : ''}    
-      </p>`;
+      <p class="veX_checklist_comment_done_percentage @totalCompletedItems_${veXTotalCompletedItems}" style="color: #008000;">
+<strong>${stats.completed} of ${stats.totalItems} Done | </strong>
+  ${
+    [
+      stats.notSelected > 0 
+        ? `<span style="color: #FFA500; font-weight: bold;"> Todo : ${stats.notSelected}</span>` 
+        : '',
+      stats.notApplicable > 0 
+        ? `<span style="color: ${Constants.StatusColors.NotApplicable}; font-weight: bold;">${stats.notApplicable} N/A</span>` 
+        : '',
+        stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done · </b>` : ''
+    ].filter(Boolean).join(' · ')
+  }
+</p>
+`;
   headerNode.style.color = COMMENT_STYLES.DEFAULT_COLOR;
   return headerNode;
 }

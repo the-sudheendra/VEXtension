@@ -102,6 +102,7 @@ textarea.veX_variable_input:active {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
+  padding-right: 0px;
   background-color: #1c1c1e;
   border-bottom: 1px solid #333;
   flex-wrap: wrap;
@@ -116,7 +117,8 @@ textarea.veX_variable_input:active {
 .veX_prompts_header_actions {
   display: flex;
   align-items: center;
-  gap: 50px;
+  gap: 20px;
+  
 }
 
 
