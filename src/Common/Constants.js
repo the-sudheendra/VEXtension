@@ -100,11 +100,10 @@ const ValueEdgeNodeSelectors = {
 
 const ErrorMessages = {
     UnHandledException: [
-        "Oops! Something went wrong in '$0'. Error: '$1'. See console logs for details."
-
+    "Oops! Sorry for the inconvenience. $0 failed – $1. Please report this issue. – Team VEXtension"
     ],
     SomethingWentWrong: [
-        "⚠️ Oops! Something went wrong. Please report the bug.",
+    "Oops! Something went wrong. Sorry for the inconvenience. Please report the issue. – Team VEXtension",
     ]
 }
 
@@ -113,12 +112,11 @@ const Notifications = {
         "⚠️ Please select at least one item to continue."
     ],
     ChecklistSavedSuccessfully: [
-        "🚀 Boom! Your checklist is saved! Time to tackle those tasks! 💪"
+        "🚀 Your checklist is saved! Time to tackle those tasks! 💪"
     ],
     AviatorPromptsSavedSuccessfully: [
-        "💡 Prompts saved. Next stop: smarter decisions!",
-        "All set! 🙌🏻, Your prompt is ready for deployment in to Aviator 🚀",
-    ],
+        "💡 Prompts saved. Next stop: smarter decisions!"
+        ],
     ReminderToUpdateChecklist: [
         "🔔 Reminder: Don't forget to update the checklist! 😊",
         "📝 Hey there! Give your checklist a quick update before switching phases.",

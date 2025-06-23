@@ -406,14 +406,14 @@ function updateMainContentView() {
         markCurrentCategoryAsUnselected();
       };
     }
-
     veXNodes.veXSidebarParentNode.querySelectorAll(".veX_category_button").forEach((buttonNode) => {
+      if(buttonNode)
       buttonNode.classList.remove("veX-Active-Button");
     });
     veXNodes.veXSidebarParentNode.querySelector(`[categoryName="${veXCurrentCategory.name}"]`).classList.add("veX-Active-Button");
     updateChecklist();
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update mainContent view", err.message), true);
   }
 }
 
