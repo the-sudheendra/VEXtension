@@ -100,10 +100,10 @@ const ValueEdgeNodeSelectors = {
 
 const ErrorMessages = {
     UnHandledException: [
-    "Oops! Sorry for the inconvenience.<br>$0 failed – $1.<br>Please report this issue <a href='https://github.com/the-sudheendra/VEXtension/issues' target='_blank' rel='noopener noreferrer'>here</a>.<br>– Team VEXtension"
+    "Oops! Sorry for the inconvenience 😔<br>$0 failed – $1.<br>Please report this issue <a href='https://github.com/the-sudheendra/VEXtension/issues' target='_blank' rel='noopener noreferrer'>here</a>.<br>– Team VEXtension"
     ],
     SomethingWentWrong: [
-    "Oops! Something went wrong.<br>Sorry for the inconvenience.<br>Please report the issue <a href='https://github.com/the-sudheendra/VEXtension/issues' target='_blank' rel='noopener noreferrer'>here</a>.<br>– Team VEXtension",
+    "Oops! Something went wrong.<br>Sorry for the inconvenience 😔<br>Please report the issue <a href='https://github.com/the-sudheendra/VEXtension/issues' target='_blank' rel='noopener noreferrer'>here</a>.<br>– Team VEXtension",
     ]
 }
 
