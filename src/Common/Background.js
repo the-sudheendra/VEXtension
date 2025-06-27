@@ -6,14 +6,14 @@ async function onInstalled() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'veXChecklist',
-      title: '✅ Checklist',
+      title: '✅ Checklist (Alt+C)',
       documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
       contexts: ['page']
     }
     );
     chrome.contextMenus.create({
       id: 'veXAviatorPrompts',
-      title: '✨ Aviator Prompts',
+      title: '✨ Aviator Prompts (Alt+A)',
       documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
       contexts: ['page']
     }
@@ -112,4 +112,21 @@ function isEmptyObject(obj) {
 chrome.runtime.onInstalled.addListener(onInstalled);
 chrome.contextMenus.onClicked.addListener(onContextMenuClick);
 chrome.runtime.onMessage.addListener(handleMessages);
+
+// Listen for keyboard shortcut commands
+chrome.commands && chrome.commands.onCommand && chrome.commands.onCommand.addListener(function(command) {
+  if (command === "openChecklistPopup") {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, "openChecklistPopup").catch((err) => {
+        console.error(err, "It seems the extension was refreshed. Please refresh the current ValueEdge tab and try again.");
+      });
+    });
+  } else if (command === "openPromptsPopup") {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, "openPromptsPopup").catch((err) => {
+        console.error(err, "It seems the extension was refreshed. Please refresh the current ValueEdge tab and try again.");
+      });
+    });
+  }
+});
 
