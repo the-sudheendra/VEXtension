@@ -83,5 +83,19 @@
   "options_ui": {
     "page": "/src/Options/Options.html",
     "open_in_tab": true
+  },
+  "commands": {
+    "openChecklistPopup": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+V"
+      },
+      "description": "Open Checklist Popup"
+    },
+    "openPromptsPopup": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Q"
+      },
+      "description": "Open Aviator Prompts Popup"
+    }
   }
 }
