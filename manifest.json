@@ -87,13 +87,13 @@
   "commands": {
     "openChecklistPopup": {
       "suggested_key": {
-        "default": "Ctrl+Shift+V"
+        "default": "Alt+C"
       },
       "description": "Open Checklist Popup"
     },
     "openPromptsPopup": {
       "suggested_key": {
-        "default": "Ctrl+Shift+Q"
+        "default": "Alt+A"
       },
       "description": "Open Aviator Prompts Popup"
     }

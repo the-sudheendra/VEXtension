@@ -6,14 +6,14 @@ async function onInstalled() {
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({
       id: 'veXChecklist',
-      title: '✅ Checklist (Ctrl+Shift+V)',
+      title: '✅ Checklist (Alt+C)',
       documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
       contexts: ['page']
     }
     );
     chrome.contextMenus.create({
       id: 'veXAviatorPrompts',
-      title: '✨ Aviator Prompts (Ctrl+Shift+Q)',
+      title: '✨ Aviator Prompts (Alt+A)',
       documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
       contexts: ['page']
     }
