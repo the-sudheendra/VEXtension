@@ -218,6 +218,7 @@ async function validateAndSaveRemoteChecklist(responseData, url) {
         isChecklistSaved = await Util.saveChecklistData(veXChecklistInfo, url, loadOnStart);
         if (isChecklistSaved === true) {
             Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
+            triggerHappyAnimation();
             // clear the url input box since we are using remote checklist
             veXChecklistData = undefined;
             loadChecklistData();
@@ -232,6 +233,7 @@ async function validateAndSaveRemotePrompts(responseData, url) {
     if (Validators.validatePromptTemplates(promptsData) === true)
         if (await Util.savePromtsData(promptsData, url) === true) {
             Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
+            triggerHappyAnimation();
             veXPromptsData = undefined;
             loadPromptsData();
         }
@@ -249,6 +251,7 @@ function onChecklistFileUpload(event) {
                 const veXChecklistInfo = JSON.parse(reader.result);
                 if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, '', false) === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
+                    triggerHappyAnimation();
                     // clear the url input box since
                     // we are now using the file mode
                     document.getElementById('veXRemoteUrl').value = '';
@@ -282,6 +285,7 @@ function onPromptFileUpload(event) {
                 const promptsData = JSON.parse(reader.result);
                 if (Validators.validatePromptTemplates(promptsData) === true && await Util.savePromtsData(promptsData, '') === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.AviatorPromptsSavedSuccessfully), Constants.NotificationType.Success, true);
+                    triggerHappyAnimation();
                     fileInput.value = '';
                     veXPromptsData = undefined;
                     loadPromptsData();
@@ -300,5 +304,12 @@ function onPromptFileUpload(event) {
     }
 }
 
+function triggerHappyAnimation() {
+    const img = document.querySelector('.side-image-Container img');
+    if (!img) return;
+    img.classList.remove('happy-animate'); // reset if already animating
+    void img.offsetWidth; // force reflow
+    img.classList.add('happy-animate');
+}
 
 initialize();
