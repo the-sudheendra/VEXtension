@@ -3,7 +3,7 @@
   <b>VEXtension</b> 
   <span>
     <img alt="Version" src="https://img.shields.io/chrome-web-store/v/aeiiagpokicaeifancpnndjanamdmmdn?style=flat-square&label=latest&labelColor=white&color=white&link=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Fve-checklist%2Fcmhpdpnhemnhkpbahmocdmjdfpddinka%2Freviews"/>
-    <img alt="Users" src="https://img.shields.io/chrome-web-store/users/aeiiagpokicaeifancpnndjanamdmmdn?style=flat-square&label=users&labelColor=white&color=white"/>
+   <img alt="Users" src="https://img.shields.io/chrome-web-store/users/aeiiagpokicaeifancpnndjanamdmmdn?style=flat-square&label=users&labelColor=white&color=white"/>
   </span>
 </div>
    <h4>The toolset that gives you the Xtra edge in OpenText ValueEdge ⚡ </h4>
@@ -25,12 +25,14 @@
     - Displays the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
     - Write notes for each checklist item using a rich text editor. These notes will appear in the ticket comments.
     - Add or update finished checklist items in the comments to help track progress and maintain a clear record.
+    - **Shortcut:** `` Alt+C ``
 
 - **✨ Aviator Prompts**  
   - Smart prompts for ValueEdge Aviator — no need for prompt engineering every time.
   - Save and reuse efficient prompts that can be sent directly to the Aviator chat window.
   - Auto-fill with values from the page using DOM selectors, or enter them manually
   - Edit prompt templates inline and save them easily.
+  - **Shortcut:** `` Alt+A ``
 
 - **✏️ Customizable Checklists & Prompts**  
     - Create your own checklists to match your project needs, or load one from a remote URL.
