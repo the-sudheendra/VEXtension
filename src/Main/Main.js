@@ -208,12 +208,16 @@ async function initView() {
   }
 }
 
-function getPhaseCategories(phaseName = veXCurrentTicketInfo.phase) {
+function getPhaseCategories(phaseName) {
+  phaseName = phaseName || veXCurrentTicketInfo.phase;
+
+  if (!veXCurrentTicketChecklist || Util.isEmptyObject(veXCurrentTicketChecklist)) return {};
   let categoriesToShow = veXCurrentTicketChecklist.categories;
   veXNodes.veXTicketPhaseTextNode.innerText = "All Categories";
+
   if (
     phaseName &&
-    veXPhaseMap[phaseName] &&
+    veXPhaseMap.hasOwnProperty(phaseName) &&
     Object.keys(veXPhaseMap[phaseName]).length > 0
   ) {
     categoriesToShow = veXPhaseMap[phaseName];
