@@ -268,17 +268,20 @@ function createCommentHeader(donePercentage, stats) {
   if (!donePercentage) donePercentage = 0;
   const headerNode = document.createElement("div");
   headerNode.innerHTML = `
-      <p class="veX_checklist_comment_done_percentage @totalCompletedItems_${veXTotalCompletedItems}" style="color: #008000;">
-<strong>${stats.completed} of ${stats.totalItems} Done | </strong>
-  ${
+      <p class="veX_checklist_comment_done_percentage @totalCompletedItems_${donePercentage}%" style="color: #008000;">
+      <span style="color: #008000; font-weight: bold;">Done: ${donePercentage}% | </span>
+    ${ 
     [
       stats.notSelected > 0 
-        ? `<span style="color: #FFA500; font-weight: bold;"> Todo : ${stats.notSelected}</span>` 
+        ? `<span style="color: #F29339; font-weight: bold;"> ${stats.notSelected} Todo</span>` 
+        : '',
+        stats.completed > 0 
+        ? `<span style="color: #008000; font-weight: bold;"> ${stats.completed} Done</span>` 
         : '',
       stats.notApplicable > 0 
         ? `<span style="color: ${Constants.StatusColors.NotApplicable}; font-weight: bold;">${stats.notApplicable} N/A</span>` 
         : '',
-        stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done · </b>` : ''
+        stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done</b>` : ''
     ].filter(Boolean).join(' · ')
   }
 </p>
@@ -495,6 +498,26 @@ function isCommentBarOpen() {
   if (CommentsContainer)
     return true;
   return false;
+}
+
+function encodeChecklistStatus(text, status) {
+  // Map status to invisible char
+  const statusMap = {
+    Completed: '\u200B',
+    NotCompleted: '\u200C',
+    NotApplicable: '\u200D'
+  };
+  return text + (statusMap[status] || '');
+}
+
+function decodeChecklistStatus(text) {
+  const lastChar = text.slice(-1);
+  switch (lastChar) {
+    case '\u200B': return 'Completed';
+    case '\u200C': return 'NotCompleted';
+    case '\u200D': return 'NotApplicable';
+    default: return 'Unknown';
+  }
 }
 
 
