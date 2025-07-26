@@ -148,7 +148,7 @@ button {
 
 .veX_header {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   background-color: var(--veX-ticktColor);
   cursor: move;
@@ -607,7 +607,12 @@ button {
   height: 30px;
 }
 
-
+.veX_header_main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
 
 .veX_segmented-button {
   display: flex;
@@ -632,23 +637,23 @@ button {
   font-size: 18px;
 }
 
-.veX_segment:first-child {
+.veX_segment:first-child,.veX_segment:last-child {
   background-color: #e8def8;
   color: #3f0071;
 }
 
-.veX_segment:first-child:hover {
+.veX_segment:first-child:hover, .veX_segment:last-child:hover {
   background-color: #d1c3eb;
 }
 
-.veX_segment:last-child {
+/* .veX_segment:last-child {
   background-color: #fff;
   color: #333;
 }
 
 .veX_segment:last-child:hover {
   background-color: #f0f0f0;
-}
+} */
 
 .veX_leave_comment_btn_txt,
 .veX_edit_comment_btn_txt {
@@ -657,15 +662,11 @@ button {
 
 
 .veX_header_actions {
-  display: block;
-  margin-top: 10px;
   padding: 8px 15px;
-  background-color: var(--veX-successColor);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
