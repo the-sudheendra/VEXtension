@@ -3,7 +3,7 @@
   "description": "The toolset that gives you the Xtra edge in Opentext ValueEdge ⚡.",
   "version": "3.0.3.5",
   "manifest_version": 3,
-  "permissions": ["contextMenus", "storage"],
+  "permissions": ["contextMenus", "storage", "alarms"],
   "content_scripts": [
     {
       "matches": ["https://*.saas.microfocus.com/*"],
@@ -70,7 +70,9 @@
         "icons/CategoryDone.png",
         "icons/save_24.png",
         "icons/close_small_24.png",
-        "icons/aviator-character-team.avif"
+        "icons/aviator-character-team.avif",
+        "icons/quick_phrases_24.png",
+        "icons/download_24.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }

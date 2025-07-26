@@ -95,6 +95,21 @@ input::placeholder {
   transition: 0.3s;
 }
 
+.download-btn {
+  width: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin-top: 0;
+  background: transparent
+}
+
+.download-icon {
+  width: 100%;
+  height: 100%;
+}
+
 
 .upload-buttons-container {
   display: flex;
@@ -119,7 +134,7 @@ input::placeholder {
 .divider {
   color: #ccc;
   margin: 15px 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .file-upload {
@@ -153,7 +168,8 @@ input::placeholder {
 .example-btn:hover, .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  background: linear-gradient(135deg, #4338ca, #4f46e5);
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  box-shadow: 0 10px 25px rgba(67, 56, 202, 0.4);
 }
 
 .example-btn:active {
@@ -201,7 +217,7 @@ input::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 5px;
 }
 

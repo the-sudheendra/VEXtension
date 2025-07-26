@@ -81,11 +81,14 @@ function setupEventListeners() {
             document.querySelector(".checkbox-container").style.display = "flex";
             loadChecklistData();
             downloadIconTxt.textContent = "Checklist";
+            downloadListBtn.title = "Download Current Checklist";
+
         }
         else if (uploadType === 'prompts') {
             document.querySelector(".checkbox-container").style.display = "none";
             loadPromptsData();
             downloadIconTxt.textContent = "Prompts";
+            downloadListBtn.title = "Download Current Prompts";
         }
     });
 }
@@ -96,14 +99,14 @@ function onDownloadList() {
             Util.notify("Checklist data not available", Constants.NotificationType.Warning, true);
             return;
         }
-        Util.downloadJsonFile(veXChecklistData.checklist, 'veXChecklist_data.json');
+        Util.downloadJsonFile(veXChecklistData.checklist, 'veXChecklist.json');
     }
     else if (uploadType === 'prompts') {
         if (!veXPromptsData) {
             Util.notify("Prompts data not available", Constants.NotificationType.Warning, true);
             return;
         }
-        Util.downloadJsonFile(veXPromptsData.prompts, 'veXPrompts_data.json'); 
+        Util.downloadJsonFile(veXPromptsData.prompts, 'veXPrompts.json'); 
     }
 }
 
