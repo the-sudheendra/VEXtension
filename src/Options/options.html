@@ -17,6 +17,10 @@
                 <option value="checklist">Checklist</option>
                 <option value="prompts">Prompts</option>
             </select>
+            <button class="btn download-btn" id="downloadListBtn">
+                <img src="../../icons/download_24.png" alt="Download" class="download-icon">
+                <span class="download-icon-txt">Checklist</span>
+            </button>
         </div>
 
         <label for="veXRemoteUrl">URL of the JSON:</label>
@@ -38,10 +42,7 @@
             <input type="file" id="jsonFile" accept=".json">
             <span>Choose File</span>
         </div>
-        <div>
-            <button class="btn" style="display: none;" id="downloadChecklistBtn">Download Checklist Data</button>
-            <button class="btn" style="display: none;" id="downloadPromptsBtn">Download Prompts Data</button>
-        </div>
+
         <div class="checklist-repo">
             <p>
                 <a class="example-btn" title="VEXHub Stores the checklists and prompts for easy team sharing and updates 🔄"

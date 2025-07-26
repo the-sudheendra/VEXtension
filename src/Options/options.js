@@ -1,8 +1,8 @@
 const fileInput = document.getElementById('jsonFile');
 const urlInputSaveBtn = document.getElementById('SaveChecklistBtn');
-const downloadChecklistBtn = document.getElementById('downloadChecklistBtn');
-const downloadPromptsBtn = document.getElementById('downloadPromptsBtn');
+const downloadListBtn = document.getElementById('downloadListBtn');
 const remoteURLInput = document.getElementById("veXRemoteUrl");
+const downloadIconTxt = document.querySelector('.download-icon-txt');
 var veXChecklistRemoteUrl = "";
 var veXLoadOnStart = false;
 var uploadType = 'checklist';
@@ -54,8 +54,7 @@ function setupEventListeners() {
 
     loadUrlURLMetaData();
 
-    downloadChecklistBtn.addEventListener('click', onDownloadChecklist);
-    downloadPromptsBtn.addEventListener('click', onDownloadPrompts);
+    downloadListBtn.addEventListener('click', onDownloadList);
     document.querySelector(".file-upload").addEventListener("click", () => {
         document.getElementById("jsonFile").click();
     });
@@ -81,47 +80,33 @@ function setupEventListeners() {
         if (uploadType === 'checklist') {
             document.querySelector(".checkbox-container").style.display = "flex";
             loadChecklistData();
+            downloadIconTxt.textContent = "Checklist";
         }
         else if (uploadType === 'prompts') {
             document.querySelector(".checkbox-container").style.display = "none";
             loadPromptsData();
+            downloadIconTxt.textContent = "Prompts";
         }
     });
 }
 
-function onDownloadChecklist() {
-    if (!veXChecklistData) {
-        alert("Checklist data not available");
-        return;
+function onDownloadList() {
+    if (uploadType === 'checklist') {
+        if (!veXChecklistData) {
+            Util.notify("Checklist data not available", Constants.NotificationType.Warning, true);
+            return;
+        }
+        Util.downloadJsonFile(veXChecklistData.checklist, 'veXChecklist_data.json');
     }
-    const data = JSON.stringify(veXChecklistData, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'checklist_data.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    else if (uploadType === 'prompts') {
+        if (!veXPromptsData) {
+            Util.notify("Prompts data not available", Constants.NotificationType.Warning, true);
+            return;
+        }
+        Util.downloadJsonFile(veXPromptsData.prompts, 'veXPrompts_data.json'); 
+    }
 }
 
-function onDownloadPrompts() {
-    if (!veXpromptsData) {
-        alert("Prompts data not available");
-        return;
-    }
-    const data = JSON.stringify(veXpromptsData, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'prompts_data.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-}
 
 async function loadUrlURLMetaData() {
     if (uploadType == "checklist") {
