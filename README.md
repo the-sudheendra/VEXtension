@@ -46,11 +46,15 @@
 
 ### How to 💡
 **Use the Extension?**
-* Open a ValueEdge ticket in your browser.
-* Right-click anywhere on the page.
-* In the context menu, you will see an option called **VEXtension**.
-* Click on **checklist** or **Aviator Prompts** based on your choice
-
+- Option 1: Using the Mouse
+   - Open a ValueEdge ticket in your browser.
+   - Right-click anywhere on the page.
+   - In the context menu, you will see an option called **VEXtension**.
+   - Click on **checklist** or **Aviator Prompts** based on your choice
+- Option 2: Using Keyboard Shortcuts
+   - Press Alt + C to open the Checklist directly.
+   - Press Alt + A to open Aviator Prompts directly.
+      - ⚙️ Note: If the shortcuts don’t work or conflict with other apps, go to [chrome://extensions/shortcuts](chrome://extensions/shortcuts) chrome://extensions/shortcuts and set custom keys for VEXtension.
 
 **Please note ⚠️**
 - The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
