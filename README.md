@@ -25,14 +25,12 @@
     - Displays the **Definition of Done (DoD)** or **Definition of Ready (DoR)** checklist based on the ticket you're viewing.
     - Write notes for each checklist item using a rich text editor. These notes will appear in the ticket comments.
     - Add or update finished checklist items in the comments to help track progress and maintain a clear record.
-    - **Shortcut:** `` Alt+C ``
 
 - **✨ Aviator Prompts**  
   - Smart prompts for ValueEdge Aviator — no need for prompt engineering every time.
   - Save and reuse efficient prompts that can be sent directly to the Aviator chat window.
   - Auto-fill with values from the page using DOM selectors, or enter them manually
   - Edit prompt templates inline and save them easily.
-  - **Shortcut:** `` Alt+A ``
 
 - **✏️ Customizable Checklists & Prompts**  
     - Create your own checklists to match your project needs, or load one from a remote URL.
@@ -52,13 +50,9 @@
    - In the context menu, you will see an option called **VEXtension**.
    - Click on **checklist** or **Aviator Prompts** based on your choice
 - Option 2: Using Keyboard Shortcuts
-   - Press Alt + C to open the Checklist directly.
-   - Press Alt + A to open Aviator Prompts directly.
+   - Press `` Alt+C `` to open the Checklist directly.
+   - Press `` Alt+A `` to open Aviator Prompts directly.
       - ⚙️ Note: If the shortcuts don’t work or conflict with other apps, go to [chrome://extensions/shortcuts](chrome://extensions/shortcuts) chrome://extensions/shortcuts and set custom keys for VEXtension.
-
-**Please note ⚠️**
-- The schema is case-sensitive. Ensure that all keys and values match the required casing exactly.
-- Whenever you refresh this extension, please do refresh the already opened ValueEdge pages
 
 
 ### Shoutout to libraries 🔥
