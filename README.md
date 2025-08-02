@@ -52,7 +52,7 @@
 - Option 2: Using Keyboard Shortcuts
    - Press `` Alt+C `` to open the Checklist directly.
    - Press `` Alt+A `` to open Aviator Prompts directly.
-      - ⚙️ Note: If the shortcuts don’t work or conflict with other apps, go to [chrome://extensions/shortcuts](chrome://extensions/shortcuts) chrome://extensions/shortcuts and set custom keys for VEXtension.
+      - ⚙️ Note: If the shortcuts don’t work or conflict with other apps, go to `` chrome://extensions/shortcuts `` and set custom keys for VEXtension.
 
 
 ### Shoutout to libraries 🔥
