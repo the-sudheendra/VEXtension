@@ -1,0 +1,487 @@
+/* Alarm Manager Popup Styles - All classes prefixed with veX_ */
+
+.veX_popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.veX_popup-container {
+    width: 900px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.veX_close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.veX_close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.veX_container {
+    padding: 30px;
+}
+
+.veX_header {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.veX_header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.veX_header p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.veX_main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .veX_main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .veX_popup-container {
+        width: 95vw;
+        margin: 20px;
+    }
+}
+
+.veX_add-alarm-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.veX_alarms-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.veX_section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.veX_section-title::before {
+    content: '';
+    width: 4px;
+    height: 24px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border-radius: 2px;
+}
+
+.veX_form-group {
+    margin-bottom: 18px;
+}
+
+.veX_form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #555;
+    font-size: 14px;
+}
+
+.veX_form-group input,
+.veX_form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.veX_form-group input:focus,
+.veX_form-group select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+.veX_button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.veX_btn {
+    flex: 1;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.veX_btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.veX_btn:hover::before {
+    left: 100%;
+}
+
+.veX_btn-primary {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.veX_btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.veX_btn-secondary {
+    background: #f8f9fa;
+    color: #666;
+    border: 2px solid #e1e5e9;
+}
+
+.veX_btn-secondary:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.veX_stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.veX_stat-item {
+    text-align: center;
+    padding: 10px;
+}
+
+.veX_stat-number {
+    font-size: 24px;
+    font-weight: 600;
+    color: #667eea;
+    display: block;
+}
+
+.veX_stat-label {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.veX_alarm-item {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #667eea;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.veX_alarm-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.veX_alarm-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.veX_alarm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.veX_alarm-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 16px;
+}
+
+.veX_alarm-type {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.veX_alarm-type.repeating {
+    background: #e8f5e8;
+    color: #2e7d2e;
+}
+
+.veX_alarm-details {
+    margin-bottom: 15px;
+}
+
+.veX_alarm-time {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.veX_alarm-time::before {
+    content: '🕒';
+    font-size: 16px;
+}
+
+.veX_expiry-time {
+    color: #d32f2f;
+    font-weight: 500;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.veX_expiry-time::before {
+    content: '⏰';
+    font-size: 16px;
+}
+
+.veX_countdown {
+    color: #1976d2;
+    font-weight: 500;
+    font-size: 13px;
+    background: rgba(25, 118, 210, 0.1);
+    padding: 4px 8px;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 6px;
+}
+
+.veX_alarm-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.veX_btn-small {
+    padding: 8px 14px;
+    font-size: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.veX_btn-edit {
+    background: #4caf50;
+    color: white;
+}
+
+.veX_btn-edit:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.veX_btn-delete {
+    background: #f44336;
+    color: white;
+}
+
+.veX_btn-delete:hover {
+    background: #da190b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.veX_no-alarms {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+    border: 2px dashed #ddd;
+}
+
+.veX_no-alarms::before {
+    content: '⏰';
+    font-size: 48px;
+    display: block;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.veX_hidden {
+    display: none !important;
+}
+
+.veX_error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 14px;
+    border-left: 4px solid #f44336;
+}
+
+.veX_success {
+    background: #e8f5e8;
+    color: #2e7d2e;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 15px;
+    font-size: 14px;
+    border-left: 4px solid #4caf50;
+}
+
+@keyframes veX_pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.veX_alarm-item.expiring {
+    animation: veX_pulse 2s infinite;
+    border-left-color: #f44336;
+}
+
+.veX_alarm-item.expiring .veX_alarm-type {
+    background: #ffebee;
+    color: #c62828;
+}
+
+/* Scrollbar styling */
+.veX_alarms-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.veX_alarms-section::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.veX_alarms-section::-webkit-scrollbar-thumb {
+    background: rgba(102, 126, 234, 0.5);
+    border-radius: 3px;
+}
+
+.veX_alarms-section::-webkit-scrollbar-thumb:hover {
+    background: rgba(102, 126, 234, 0.7);
+}
+
+/* Loading animation */
+@keyframes veX_spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.veX_loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #667eea;
+    border-radius: 50%;
+    animation: veX_spin 1s linear infinite;
+}
+
+/* Fade in animation */
+@keyframes veX_fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.veX_alarm-item {
+    animation: veX_fadeIn 0.3s ease-out;
+}

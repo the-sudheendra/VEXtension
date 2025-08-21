@@ -3,12 +3,27 @@
   "description": "The toolset that gives you the Xtra edge in Opentext ValueEdge ⚡.",
   "version": "3.0.3.5",
   "manifest_version": 3,
-  "permissions": ["contextMenus", "storage", "alarms"],
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "alarms"
+  ],
   "content_scripts": [
     {
-      "matches": ["https://*.saas.microfocus.com/*"],
-      "js": ["src/Main/Main.js","src/External/Quill/quill.js"],
-      "css": ["src/Main/Main.css", "src/Notification/Notification.css","src/External/Quill/quill.snow.css","src/AviatorPrompts/PromptModal.css"]
+      "matches": [
+        "https://*.saas.microfocus.com/*"
+      ],
+      "js": [
+        "src/Main/Main.js",
+        "src/External/Quill/quill.js"
+      ],
+      "css": [
+        "src/Main/Main.css",
+        "src/Notification/Notification.css",
+  "src/External/Quill/quill.snow.css",
+  "src/AviatorPrompts/PromptModal.css",
+  "src/ChromeAlarmAPI/alarm.css"
+      ]
     }
   ],
   "action": {
@@ -72,9 +87,14 @@
         "icons/close_small_24.png",
         "icons/aviator-character-team.avif",
         "icons/quick_phrases_24.png",
-        "icons/download_24.png"
+        "icons/download_24.png",
+  "icons/add_task_24dp.png",
+  "icons/calendar_add_on.png",
+  "/src/Options/options.html"
       ],
-      "matches": ["https://*.saas.microfocus.com/*"]
+      "matches": [
+        "https://*.saas.microfocus.com/*"
+      ]
     }
   ],
   "icons": {
@@ -84,7 +104,7 @@
     "128": "icons/fact_check_128.png"
   },
   "options_ui": {
-    "page": "/src/Options/Options.html",
+    "page": "/src/Options/options.html",
     "open_in_tab": true
   },
   "commands": {

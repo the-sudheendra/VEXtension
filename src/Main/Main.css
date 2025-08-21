@@ -120,7 +120,15 @@ button {
   position: fixed;
   border-radius: 10px;
 }
+#veX_add_new_checklist_popup_container
+{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3001;
 
+}
 .veX_popup_disable,
 .veX_prompts_popup_disable {
   opacity: 0 !important;
@@ -610,7 +618,7 @@ button {
 .veX_header_main {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0px;
   width: 100%;
 }
 
@@ -799,4 +807,270 @@ button {
   transform: scale(1.13) rotate(90deg);
   background: rgba(0,0,0,0.18);
   box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+}
+
+/* Add Task Button Styles */
+.veX_add_task_btn {
+  background: var(--veX-successColor);
+  width: 90px;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+  border: none;
+  height: 35px;
+  justify-content: space-evenly;
+  align-items: center;
+  cursor: pointer;
+}
+
+.veX_add_task_btn img {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+.veX_add_task_btn:hover {
+  transform: translateY(-2px);
+}
+
+ .veX_add_new_checklist_popup_container {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Header */
+        .veX_add_new_checklist_popup_header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .veX_add_new_checklist_popup_title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .veX_add_new_checklist_close_btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .veX_add_new_checklist_close_btn:hover {
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        /* Form */
+        .veX_add_new_checklist_popup_form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .veX_add_new_checklist_input_group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .veX_add_new_checklist_input_label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .veX_add_new_checklist_input_field {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .veX_add_new_checklist_input_field:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        /* Buttons */
+        .veX_add_new_checklist_popup_buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .veX_add_new_checklist_btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            flex: 1;
+        }
+
+        .veX_add_new_checklist_btn_primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .veX_add_new_checklist_btn_primary:hover {
+            background: #0056b3;
+        }
+
+        .veX_add_new_checklist_btn_secondary {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        .veX_add_new_checklist_btn_secondary:hover {
+            background: #e9ecef;
+        }
+
+        /* Category Section */
+.veX_add_new_checklist_category_section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.veX_add_new_checklist_select_field {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.veX_add_new_checklist_select_field:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+/* Checkbox Group */
+.veX_add_new_checklist_checkbox_group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.veX_add_new_checklist_checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.veX_add_new_checklist_checkbox_label {
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+}
+
+/* New Category Section */
+.veX_add_new_checklist_new_category_section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+
+/* Multi-select */
+.veX_add_new_checklist_multiselect_container {
+    position: relative;
+}
+
+.veX_add_new_checklist_multiselect_field {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s;
+}
+
+.veX_add_new_checklist_multiselect_field:hover {
+    border-color: #007bff;
+}
+
+.veX_add_new_checklist_dropdown_arrow {
+    color: #666;
+    transition: transform 0.2s;
+}
+
+.veX_add_new_checklist_multiselect_field.open .veX_add_new_checklist_dropdown_arrow {
+    transform: rotate(180deg);
+}
+
+.veX_add_new_checklist_phases_dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1001;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.veX_add_new_checklist_phase_option {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.veX_add_new_checklist_phase_option:hover {
+    background: #f8f9fa;
+}
+
+.veX_add_new_checklist_phase_checkbox {
+    width: 16px;
+    height: 16px;
+}
+
+.veX_add_new_checklist_phase_label {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
 }

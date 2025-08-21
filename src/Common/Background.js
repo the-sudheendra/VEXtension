@@ -1,4 +1,5 @@
 import {veXDefaultChecklist,veXDefaultPrompts,veXDefaultPromptsTone}  from './DefaultList.js';
+import alarmManager from '../ChromeAlarmAPI/ChromeAlarmAPI.js';
 const defaultCheklistRemoteURL= "https://the-sudheendra.github.io/VEXHub/Checklist/DefaultChecklist.json";
 const defaultPromptsRemoteURL= "https://the-sudheendra.github.io/VEXHub/AviatorPrompts/DefaultPrompts.json";
 const defaultPromptsTonesURL="https://the-sudheendra.github.io/VEXHub/AviatorPromptsTones/DefaultPromptsTone.json";
@@ -14,6 +15,13 @@ async function onInstalled() {
     chrome.contextMenus.create({
       id: 'veXAviatorPrompts',
       title: '✨ Aviator Prompts (Alt+A)',
+      documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
+      contexts: ['page']
+    }
+    );
+     chrome.contextMenus.create({
+      id: 'veXReminders',
+      title: '🔔 Reminders (Alt+R)',
       documentUrlPatterns: ["https://*.saas.microfocus.com/*"],
       contexts: ['page']
     }
@@ -47,7 +55,36 @@ async function setDefaultPrompts()
   chrome.storage.local.set({ veXPromptsData: promptsData });
 }
 async function handleMessages(request, sender, sendResponse) {
+  try {
+    if (request?.action === 'createReminder') {
+      const { message, when, repeat } = request.payload || {};
+      const name = `vex_reminder_${Date.now()}`;
+      // Save message
+      const remindersKey = 'veXReminders';
+      const existingStore = await chrome.storage.local.get(remindersKey) || {};
+      const store = existingStore[remindersKey] || {};
+      store[name] = { message, when, repeat };
+      await chrome.storage.local.set({ [remindersKey]: store });
 
+      // schedule
+      if (repeat === 'none') {
+        await alarmManager.setAlarm(name, { when });
+      } else if (repeat === 'daily') {
+        await alarmManager.setAlarm(name, { when, periodInMinutes: 60 * 24 });
+      } else if (repeat === 'weekly') {
+        await alarmManager.setAlarm(name, { when, periodInMinutes: 60 * 24 * 7 });
+      } else if (repeat === 'monthly') {
+        await alarmManager.setAlarm(name, { when, periodInMinutes: 60 * 24 * 30 });
+      } else {
+        await alarmManager.setAlarm(name, { when });
+      }
+      sendResponse({ ok: true, name });
+      return true;
+    }
+  } catch (err) {
+    console.error('createReminder failed', err);
+    sendResponse({ ok: false, error: err?.message || 'Unknown error' });
+  }
 }
 
 function onContextMenuClick(info, tab) {
@@ -60,6 +97,13 @@ function onContextMenuClick(info, tab) {
   } else if (info.menuItemId === "veXAviatorPrompts") {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, "openPromptsPopup").catch((err) => {
+        console.error(err, "It seems the extension was refreshed. Please refresh the current ValueEdge tab and try again.");
+      })
+    });
+  }
+  else if (info.menuItemId === "veXReminders") {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, "openRemindersPopup").catch((err) => {
         console.error(err, "It seems the extension was refreshed. Please refresh the current ValueEdge tab and try again.");
       })
     });
@@ -111,7 +155,28 @@ function isEmptyObject(obj) {
 //**Event Handlers**
 chrome.runtime.onInstalled.addListener(onInstalled);
 chrome.contextMenus.onClicked.addListener(onContextMenuClick);
-chrome.runtime.onMessage.addListener(handleMessages);
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  const maybePromise = handleMessages(request, sender, sendResponse);
+  // Indicate async response when returning a Promise
+  return !!maybePromise;
+});
+
+// When alarms fire, notify the active tab 
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  try {
+    const remindersKey = 'veXReminders';
+    const data = await chrome.storage.local.get(remindersKey);
+    const info = data?.[remindersKey]?.[alarm.name];
+    const message = info?.message || 'Reminder';
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs && tabs[0]) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'reminderFired', payload: { message } }).catch(() => {});
+      }
+    });
+  } catch (e) {
+    console.error('Failed to handle onAlarm', e);
+  }
+});
 
 // Listen for keyboard shortcut commands
 chrome.commands && chrome.commands.onCommand && chrome.commands.onCommand.addListener(function(command) {

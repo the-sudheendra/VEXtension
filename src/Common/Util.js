@@ -45,8 +45,7 @@ function onError(error, info = "Something went wrong", display = false) {
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-function getChecklistStatus(item) {
-  let status = item.CursorState.position;
+function getChecklistStatus(status) {
   switch (status) {
     case 0:
       return Constants.CheckListStatus.NotSelected;
@@ -58,6 +57,20 @@ function getChecklistStatus(item) {
       return Constants.CheckListStatus.NotApplicable;
   }
 }
+function getCursorState(status) {
+  switch (status) {
+    case Constants.CheckListStatus.NotSelected:
+      return -2;
+    case Constants.CheckListStatus.Completed:
+      return 1;
+    case Constants.CheckListStatus.NotCompleted:
+      return 0;
+    case Constants.CheckListStatus.NotApplicable:
+      return -1;
+    default:
+      return -2; 
+  }
+  }
 
 function formatMessage(message, ...params) {
   let output = "";
@@ -442,6 +455,37 @@ async function getPromptsTone() {
     return {};
   }
 }
+function downloadJsonFile(jsonObject, filename = 'VEXtensionList.json') {
+  try {
+      // Convert JSON object to string with proper formatting
+      const jsonString = JSON.stringify(jsonObject, null, 2);
+      
+      // Create a Blob with the JSON data
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      
+      // Create a temporary URL for the blob
+      const url = URL.createObjectURL(blob);
+      
+      // Create a temporary anchor element for download
+      const downloadLink = document.createElement('a');
+      downloadLink.href = url;
+      downloadLink.download = filename;
+      
+      // Append to body, click, and remove
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      
+      // Clean up the temporary URL
+      URL.revokeObjectURL(url);
+      
+      console.log(`JSON file "${filename}" downloaded successfully!`);
+      return true;
+  } catch (error) {
+      console.error('Error downloading JSON file:', error);
+      return false;
+  }
+}
 export {
   onError,
   notify,
@@ -475,6 +519,8 @@ export {
   getDefaultChecklist,
   getDefaultPrompts,
   getPromptsTone,
-  centerThePopup
+  centerThePopup,
+  getCursorState,
+  downloadJsonFile
 
 }

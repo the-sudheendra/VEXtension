@@ -5,9 +5,9 @@ async function loadModules() {
   let URL = chrome.runtime.getURL("src/Common/Util.js");
   if (!Util)
 
-/**
- * Dynamically imports the Util and Constants modules.
- */
+    /**
+     * Dynamically imports the Util and Constants modules.
+     */
     Util = await import(URL);
   URL = chrome.runtime.getURL("src/Common/Constants.js");
   if (!Constants)
@@ -35,7 +35,7 @@ function isCommentAllowed(veXChecklistItems) {
       let checklist = veXChecklistItems[categoryName];
       for (let j = 0; j < checklist.length; j++) {
         let item = checklist[j];
-        let status = Util.getChecklistStatus(item);
+        let status = Util.getChecklistStatus(item.CursorState.position);
         if (status == Constants.CheckListStatus.Completed || status == Constants.CheckListStatus.NotCompleted || status == Constants.CheckListStatus.NotApplicable)
           return true;
       }
@@ -217,7 +217,7 @@ async function draftChecklistForComments(veXChecklistItems, donePercentage) {
 
     Object.values(veXChecklistItems).forEach(checklist => {
       checklist.forEach(item => {
-        const status = Util.getChecklistStatus(item);
+        const status = Util.getChecklistStatus(item.CursorState.position);
         switch (status) {
           case Constants.CheckListStatus.Completed:
             stats.completed++;
@@ -270,20 +270,16 @@ function createCommentHeader(donePercentage, stats) {
   headerNode.innerHTML = `
       <p class="veX_checklist_comment_done_percentage @totalCompletedItems_${donePercentage}%" style="color: #008000;">
       <span style="color: #008000; font-weight: bold;">Done: ${donePercentage}% | </span>
-    ${ 
-    [
-      stats.notSelected > 0 
-        ? `<span style="color: #F29339; font-weight: bold;"> ${stats.notSelected} Todo</span>` 
+    ${[
+      stats.notSelected > 0
+        ? `<span style="color: #F29339; font-weight: bold;"> ${stats.notSelected} Todo</span>`
         : '',
-        stats.completed > 0 
-        ? `<span style="color: #008000; font-weight: bold;"> ${stats.completed} Done</span>` 
+      stats.notApplicable > 0
+        ? `<span style="color: ${Constants.StatusColors.NotApplicable}; font-weight: bold;">${stats.notApplicable} N/A</span>`
         : '',
-      stats.notApplicable > 0 
-        ? `<span style="color: ${Constants.StatusColors.NotApplicable}; font-weight: bold;">${stats.notApplicable} N/A</span>` 
-        : '',
-        stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done</b>` : ''
+      stats.notCompleted > 0 ? `<b style="color: ${Constants.StatusColors.NotCompleted};">${stats.notCompleted} Not Done</b>` : ''
     ].filter(Boolean).join(' · ')
-  }
+    }
 </p>
 `;
   headerNode.style.color = COMMENT_STYLES.DEFAULT_COLOR;
@@ -318,7 +314,7 @@ function createCategorySection(categoryName, doneItemsInCategory, totalItemsInCa
  */
 function createItemNode(item, categoryName) {
   const itemNode = document.createElement("div");
-  const status = Util.getChecklistStatus(item);
+  const status = Util.getChecklistStatus(item.CursorState.position);
   const baseClassName = `veX_checklist_comment_item @category_${categoryName}@status_${status}`;
   const noteContent = item["RichTextNote"].getSemanticHTML();
   const itemContent = `
@@ -346,7 +342,7 @@ async function processCategories(commentWrapper, veXChecklistItems, donePercenta
 
     const checklist = veXChecklistItems[categoryName];
     if (checklist.every(item =>
-      Util.getChecklistStatus(item) === Constants.CheckListStatus.NotSelected)) {
+      Util.getChecklistStatus(item.CursorState.position) === Constants.CheckListStatus.NotSelected)) {
       continue;
     }
     const checklistNode = document.createElement("div");
@@ -355,8 +351,8 @@ async function processCategories(commentWrapper, veXChecklistItems, donePercenta
 
     let doneItemsInCategory = 0;
     for (const item of checklist) {
-      if (Util.getChecklistStatus(item) !== Constants.CheckListStatus.NotSelected) {
-        if (Util.getChecklistStatus(item) == Constants.CheckListStatus.Completed || Util.getChecklistStatus(item) == Constants.CheckListStatus.NotApplicable) doneItemsInCategory++;
+      if (Util.getChecklistStatus(item.CursorState.position) !== Constants.CheckListStatus.NotSelected) {
+        if (Util.getChecklistStatus(item.CursorState.position) == Constants.CheckListStatus.Completed || Util.getChecklistStatus(item.CursorState.position) == Constants.CheckListStatus.NotApplicable) doneItemsInCategory++;
         checklistNode.appendChild(createItemNode(item, categoryName));
       }
     }
@@ -373,7 +369,7 @@ async function processCategories(commentWrapper, veXChecklistItems, donePercenta
  * @returns {string} - The prefix for the item.
  */
 function setPrefixForList(item) {
-  let status = Util.getChecklistStatus(item);
+  let status = Util.getChecklistStatus(item.CursorState.position);
   switch (status) {
     case Constants.CheckListStatus.Completed: return "✔";
     case Constants.CheckListStatus.NotCompleted: return "X";
@@ -386,7 +382,7 @@ function setPrefixForList(item) {
  * @returns {string} - The color for the item.
  */
 function setColor(item) {
-  let status = Util.getChecklistStatus(item);
+  let status = Util.getChecklistStatus(item.CursorState.position);
   switch (status) {
     case Constants.CheckListStatus.Completed: return Constants.StatusColors.Completed;
     case Constants.CheckListStatus.NotCompleted: return Constants.StatusColors.NotCompleted;
@@ -419,49 +415,83 @@ async function doCelebration(donePercentage) {
   } */
 }
 
-function getChecklistCommentData() {
+async function onGetChecklistCommentData() {
   try {
-    let commentData = document.querySelector(".veX_checklist_comment_wrapper");
-    if (!commentData) return {};
-    let doneNode = commentData.querySelector(".veX_checklist_comment_done_percentage");
-    let doneNodeData = doneNode.classList[1].split("@")[1];
-    if (doneNodeData.startsWith("totalCompletedItems"))
-      veXChecklistCommentData.TotalCompletedItems = doneNodeData.slice(20);
-    let checklistItems = commentData.querySelectorAll(".veX_checklist_comment_item");
-    checklistItems.forEach((item) => {
-      let data = item.classList[1];
-      if (!data) return;
-      let dataArr = data.split("@");
-      let category = "";
-      let status = "";
-      if (!dataArr || dataArr.length < 2) return;
-      if (dataArr[1].startsWith("category")) {
-        category = dataArr[1].slice(9);
-      }
-      if (dataArr[2].startsWith("status")) {
-        status = dataArr[2].slice(7);
-      }
-      if (category != "") {
-        if (Util.isEmptyObject(veXChecklistCommentData[category])) {
-          veXChecklistCommentData[category] = {}
-          veXChecklistCommentData[category].checklist = []
+    Util.showLoading();
+    if (await isVexChecklistCommentAvailable() == false) {
+      Util.notify(Util.getRandomMessage(Constants.Notifications.NoChecklistFoundInComments), Constants.NotificationType.Info, true);
+      return;
+    }
+    getChecklistCommentData();
+    updateChecklistView();
+  }
+  finally {
+    Util.hideLoading();
+  }
+}
+function getChecklistCommentData() {
+
+  const result = [];
+
+  try {
+
+    let doc = getLastChecklistComment();
+    if (!doc) {
+      throw new Error('No checklist comment found');
+    }
+    const wrapper = doc.querySelector('.veX_checklist_comment_wrapper');
+    if (!wrapper) {
+      throw new Error('No checklist wrapper element found');
+    }
+    const doneNode = wrapper.querySelector(".veX_checklist_comment_done_percentage");
+    if (doneNode) {
+      const doneNodeClass = doneNode.classList[1];
+      if (doneNodeClass && doneNodeClass.includes("totalCompletedItems")) {
+        const percentageMatch = doneNodeClass.match(/totalCompletedItems_(\d+)%/);
+        if (percentageMatch) {
+          result.totalCompletedItems = parseInt(percentageMatch[1]);
         }
-        veXChecklistCommentData[category].checklist.push({
-          note: item.querySelector(".veX_checklist_comment_item_note").innerText || "",
-          status: status,
-          value: item.querySelector(".veX_checklist_comment_item_value").innerText || "",
-        })
       }
-    });
+    }
+
+    const checklistItems = wrapper.querySelectorAll(".veX_checklist_comment_item");
+
+    checklistItems.forEach((item) => {
+      const classList = item.classList[1];
+      if (!classList) return;
+
+      const categoryMatch = classList.match(/@category_([^@]+)/);
+      const statusMatch = classList.match(/@status_([^@]+)/);
+
+      if (!categoryMatch || !statusMatch) return;
+
+      const categoryName = categoryMatch[1];
+      const status = statusMatch[1];
+      const noteElement = item.querySelector(".veX_checklist_comment_item_note");
+      const valueElement = item.querySelector(".veX_checklist_comment_item_value");
+      result.push({
+        note: noteElement?.textContent?.trim() || "",
+        status: parseInt(status),
+        value: valueElement?.textContent?.trim() || "",
+        category: categoryName
+      });
+      if (veXChecklistItems.hasOwnProperty(categoryName)) {
+        let checklist = veXChecklistItems[categoryName];
+        for (let i = 0; i < checklist.length; i++) {
+          let item = checklist[i];
+          if (item.ListContent == valueElement.textContent.trim() ) {
+            checklist[i].CursorState = Util.getCursorState(parseInt(status));
+            console.log("checklist[i].CursorState", checklist[i].CursorState);
+          }
+        }
+      }
+    })
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Retrieve Checklist Comment Data", err.message), true);
+    console.error("Error processing checklist data:", err);
   }
 }
 
-/**
- * Syncs the checklist data with the comments section.
- */
 function onSyncChecklistComments() {
   try {
     let backUp_checklistData = structuredClone(veXChecklistItems);
@@ -522,5 +552,5 @@ function decodeChecklistStatus(text) {
 
 
 export {
-  getChecklistCommentData, addChecklistToComments, onSyncChecklistComments, editExistingComment
-}
+    getChecklistCommentData, addChecklistToComments, onSyncChecklistComments, editExistingComment, onGetChecklistCommentData
+  }

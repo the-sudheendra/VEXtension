@@ -10,6 +10,7 @@ var veXTotalItems = 0;
 var veXNodes = {};
 var veXPopUpNode = document.createElement("div");
 var veXPopUpOverlay = document.createElement("div");
+var veXAddNewChecklistNode = document.createElement("div");
 var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
@@ -65,11 +66,131 @@ async function initialize() {
   veXSetup();
 }
 
+const existingCategories = ['Development', 'Testing', 'Deployment', 'Documentation'];
+const availablePhases = ['Planning', 'Design', 'Development', 'Testing', 'Deployment', 'Maintenance'];
+
+// Function to populate categories dropdown
+function populateCategories() {
+    const categorySelect = document.getElementById('veX_add_new_checklist_category_select');
+    categorySelect.innerHTML = '<option value="">Select existing category</option>';
+    
+    existingCategories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+    });
+}
+
+// Function to populate phases multi-select
+function populatePhases() {
+    const phasesDropdown = document.getElementById('veX_add_new_checklist_phases_dropdown');
+    phasesDropdown.innerHTML = '';
+    
+    availablePhases.forEach(phase => {
+        const optionDiv = document.createElement('div');
+        optionDiv.className = 'veX_add_new_checklist_phase_option';
+        optionDiv.innerHTML = `
+            <input type="checkbox" id="phase_${phase}" class="veX_add_new_checklist_phase_checkbox" value="${phase}" onchange="updatePhasesDisplay()">
+            <label for="phase_${phase}" class="veX_add_new_checklist_phase_label">${phase}</label>
+        `;
+        phasesDropdown.appendChild(optionDiv);
+    });
+}
+
+// Function to toggle new category input
+function toggleNewCategoryInput() {
+    const checkbox = document.getElementById('veX_add_new_checklist_add_category_checkbox');
+    const newCategorySection = document.getElementById('veX_add_new_checklist_new_category_section');
+    const categorySelect = document.getElementById('veX_add_new_checklist_category_select');
+    
+    if (checkbox.checked) {
+        newCategorySection.style.display = 'flex';
+        categorySelect.disabled = true;
+        categorySelect.value = '';
+    } else {
+        newCategorySection.style.display = 'none';
+        categorySelect.disabled = false;
+        // Clear new category inputs
+        document.getElementById('veX_add_new_checklist_new_category_name').value = '';
+        clearSelectedPhases();
+    }
+}
+
+// Function to toggle phases dropdown
+function togglePhasesDropdown() {
+    const dropdown = document.getElementById('veX_add_new_checklist_phases_dropdown');
+    const field = document.getElementById('veX_add_new_checklist_phases_select');
+    
+    if (dropdown.style.display === 'none') {
+        dropdown.style.display = 'block';
+        field.classList.add('open');
+    } else {
+        dropdown.style.display = 'none';
+        field.classList.remove('open');
+    }
+}
+
+// Function to update phases display
+function updatePhasesDisplay() {
+    const checkboxes = document.querySelectorAll('.veX_add_new_checklist_phase_checkbox:checked');
+    const placeholder = document.getElementById('veX_add_new_checklist_phases_placeholder');
+    
+    if (checkboxes.length === 0) {
+        placeholder.textContent = 'Select applicable phases';
+    } else {
+        const selectedPhases = Array.from(checkboxes).map(cb => cb.value);
+        placeholder.textContent = selectedPhases.join(', ');
+    }
+}
+
+// Function to clear selected phases
+function clearSelectedPhases() {
+    const checkboxes = document.querySelectorAll('.veX_add_new_checklist_phase_checkbox');
+    checkboxes.forEach(cb => cb.checked = false);
+    updatePhasesDisplay();
+}
+
+// Function to get selected phases
+function getSelectedPhases() {
+    const checkboxes = document.querySelectorAll('.veX_add_new_checklist_phase_checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+// Close phases dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const dropdown = document.getElementById('veX_add_new_checklist_phases_dropdown');
+    const field = document.getElementById('veX_add_new_checklist_phases_select');
+    
+    if (dropdown && !field.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = 'none';
+        field.classList.remove('open');
+    }
+});
+
+// Updated show popup function to populate dropdowns
+function showPopup() {
+    const existingPopup = document.getElementById('veX_add_new_checklist_popup');
+    if (existingPopup) {
+        existingPopup.remove();
+    }
+
+    document.body.insertAdjacentHTML('beforeend', popupHTML);
+    
+    // Populate dropdowns
+    populateCategories();
+    populatePhases();
+    
+    setTimeout(() => {
+        document.getElementById('veX_add_new_checklist_name').focus();
+    }, 100);
+}
 
 function veXSetup() {
   try {
     setupChecklistPopupNode();
     setupChecklistPopupOverlay();
+    setupAddNewChecklistPopupNode();
     addLoadingElement();
     initVEXNodes();
     MutationObservers.initTicketTitleMutationObserver(onTicketTitleChange);
@@ -87,6 +208,116 @@ function setupChecklistPopupNode() {
   const closeBtn = veXPopUpNode.querySelector('#veX_checklist_close_btn');
   if (closeBtn) {
     closeBtn.addEventListener('click', closeChecklistPopup);
+  }
+  const addTaskBtn = veXPopUpNode.querySelector('#veX_add_task_btn');
+  if (addTaskBtn) {
+    addTaskBtn.addEventListener('click', openAddNewChecklistPopup);
+  }
+  // Set Reminder button
+  const setReminderBtn = veXPopUpNode.querySelector('#veX_set_reminder_btn');
+  if (setReminderBtn) {
+    setReminderBtn.addEventListener('click', openRemindersPopup);
+  }
+}
+function setupAddNewChecklistPopupNode() {
+  veXAddNewChecklistNode.id = "veX_add_new_checklist_popup_container";
+  veXAddNewChecklistNode.classList.add("veX_popup_disable");
+  veXAddNewChecklistNode.innerHTML = UITemplates.addNewChecklistUI;
+  document.body.appendChild(veXAddNewChecklistNode);
+  // Bind events after DOM is appended
+  const phasesSelect = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_phases_select');
+  if (phasesSelect) {
+    phasesSelect.addEventListener('click', togglePhasesDropdown);
+  }
+  const closeBtn = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_close_btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', hideAddNewChecklistPopup);
+  }
+
+  const addBtn = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_add_btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', onChecklistAddClick);
+  }
+  // Add event listener for Options button
+  const optionsBtn = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_options_btn');
+  if (optionsBtn) {
+    optionsBtn.addEventListener('click', function() {
+      if (chrome && chrome.runtime && chrome.runtime.openOptionsPage) {
+        chrome.runtime.openOptionsPage();
+      } else {
+        window.open(chrome.runtime.getURL('src/Options/options.html'));
+      }
+    });
+  }
+  // Add event listener for Add New Category checkbox
+  const addCategoryCheckbox = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_add_category_checkbox');
+  if (addCategoryCheckbox) {
+    addCategoryCheckbox.addEventListener('change', toggleNewCategoryInput);
+  }
+  // Close phases dropdown when clicking outside the control (scoped to this popup)
+  document.addEventListener('click', function onDocClick(event) {
+    const dropdown = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_phases_dropdown');
+    const field = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_phases_select');
+    if (dropdown && field && !field.contains(event.target) && !dropdown.contains(event.target)) {
+      dropdown.style.display = 'none';
+      field.classList.remove('open');
+    }
+  });
+  async function onChecklistAddClick(event) {
+    try {
+      Util.showLoading();
+      const checklistName = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_name').value;
+      const checklistCategory = veXAddNewChecklistNode.querySelector('#veX_add_new_checklist_category').value;
+      if (!checklistName || !checklistCategory) {
+        Util.notify("Please enter checklist name and category", Constants.NotificationType.Warning, true);
+        return;
+      }
+      
+      let checklistData = await chrome.storage.local.get("veXChecklistData") || {};
+      checklistData =  checklistData["veXChecklistData"] || {};
+      
+      if( !checklistData || Util.isEmptyObject(checklistData)) {
+        Util.notify("Current Checklist data not found", Constants.NotificationType.Warning, true);
+        return;
+      }
+      let checklist = checklistData["checklist"] || {};
+
+      if (!checklist || Util.isEmptyObject(checklist) || !checklist[veXCurrentTicketInfo.type]) {
+        Util.notify("Current Checklist data not found", Constants.NotificationType.Warning, true);
+        return;
+      }
+      checklist = checklist[veXCurrentTicketInfo.type];
+      if (checklist.categories.hasOwnProperty(checklistCategory)) {
+        checklist.categories[checklistCategory].checklist.push(checklistName);
+      }
+      else {
+        checklist.categories[checklistCategory] = {}
+        checklist.categories[checklistCategory].checklist=[];
+        checklist.categories[checklistCategory].checklist.push(checklistName);
+      }
+
+      checklistData["checklist"][veXCurrentTicketInfo.type] = checklist;
+      
+      await chrome.storage.local.set({ veXChecklistData: checklistData });
+      veXCurrentTicketChecklist = checklist;
+      initPhaseMap();
+      initPhaseDropdownView();
+      initCategoriesView(getPhaseCategories("All Categories"));
+      updateMainContentView();
+      openChecklistPopup();
+      hideAddNewChecklistPopup();
+      veXAddNewChecklistNode.classList.add("veX_popup_disable");
+      Util.notify("Checklist added successfully", Constants.NotificationType.Success, true);
+    }
+    catch (err) {
+      Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Add Checklist", err.message), true);
+    }
+    finally {
+      Util.hideLoading();
+      event.stopPropagation();
+      event.preventDefault();
+    }
+
   }
 }
 function addLoadingElement() {
@@ -207,6 +438,11 @@ async function initView() {
     return false;
   }
 }
+async function updateChecklistView(newChecklistItems) {
+  veXChecklistItems = newChecklistItems;
+  updateChecklist();
+
+}
 
 function getPhaseCategories(phaseName) {
   phaseName = phaseName || veXCurrentTicketInfo.phase;
@@ -227,7 +463,7 @@ function getPhaseCategories(phaseName) {
 }
 async function initHeaderView() {
   try {
-    veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
+    veXNodes.veXHeaderTitleNode.innerHTML = "Checklist for " + veXCurrentTicketInfo.type;
     Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'), document.getElementById("veX_checklist_popup_container"));
   }
   catch (err) {
@@ -236,10 +472,9 @@ async function initHeaderView() {
 }
 async function initFooterView() {
   try {
-    // veXPopUpNode.querySelector('.veX_add_comment_icon').src = await chrome.runtime.getURL("icons/add_comment_24.png");
     veXPopUpNode.querySelector(".veX_leave_comment_btn").addEventListener("click", onAddToComments);
-    // veXPopUpNode.querySelector(".veX_edit_comment_icon").src = await chrome.runtime.getURL("icons/rate_review_24.png");
     veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
+    veXPopUpNode.querySelector(".veX_get_checklist_btn").addEventListener("click", Comments.onGetChecklistCommentData);
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
@@ -653,6 +888,8 @@ function closeChecklistPopup() {
   }
 }
 
+
+
 function openChecklistPopup() {
   try {
     if (Util.isPromptsPopupOpen()) {
@@ -666,12 +903,110 @@ function openChecklistPopup() {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Checklist Popup", err.message), true);
   }
 }
-
+function openAddNewChecklistPopup() {
+  try {
+    closeChecklistPopup();
+    veXAddNewChecklistNode.classList.remove("veX_popup_disable");
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Add New Checklist Popup", err.message), true);
+  }
+}
+function hideAddNewChecklistPopup() {
+  try {
+    veXAddNewChecklistNode.classList.add("veX_popup_disable");
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Hiding Add New Checklist Popup", err.message), true);
+  }
+}
 function openPromptsPopup() {
   try {
 
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening PromptPopup", err.message), true);
+  }
+}
+
+// Reminders popup handlers
+function openRemindersPopup() {
+  try {
+    // Close other popups if open
+    closeChecklistPopup();
+    if (Util.isPromptsPopupOpen && Util.isPromptsPopupOpen()) {
+      PromptModal.closePromptsPopup();
+    }
+    // If already exists, remove to re-render fresh
+    const existing = document.getElementById('veX_reminder_popup_overlay');
+    if (existing) existing.remove();
+
+    // Inject UI and CSS
+    document.body.insertAdjacentHTML('beforeend', UITemplates.RemindersUI);
+
+    // Bind actions
+    const overlay = document.getElementById('veX_reminder_popup_overlay');
+    const closeBtn = document.getElementById('veX_reminder_close_btn');
+    const cancelBtn = document.getElementById('veX_cancel_reminder_btn');
+    const saveBtn = document.getElementById('veX_save_reminder_btn');
+    const messageInput = document.getElementById('veX_reminder_message');
+    const dateTimeInput = document.getElementById('veX_reminder_datetime');
+    const repeatSelect = document.getElementById('veX_reminder_repeat');
+
+    const hide = () => overlay && overlay.remove();
+    closeBtn && closeBtn.addEventListener('click', hide);
+    cancelBtn && cancelBtn.addEventListener('click', hide);
+
+    // Save reminder -> request background to create chrome alarm
+    saveBtn && saveBtn.addEventListener('click', async () => {
+      try {
+        const msg = (messageInput?.value || '').trim();
+        const dt = dateTimeInput?.value;
+        const repeat = repeatSelect?.value || 'none';
+        if (!msg || !dt) {
+          Util.notify('Please enter message and date/time', Constants.NotificationType.Warning, true);
+          return;
+        }
+        const whenMs = new Date(dt).getTime();
+        if (isNaN(whenMs) || whenMs <= Date.now()) {
+          Util.notify('Choose a future date/time', Constants.NotificationType.Warning, true);
+          return;
+        }
+
+        const response = await chrome.runtime.sendMessage({
+          action: 'createReminder',
+          payload: { message: msg, when: whenMs, repeat }
+        });
+        if (response && response.ok) {
+          Util.notify('Reminder scheduled', Constants.NotificationType.Success, true);
+        } else {
+          Util.notify(response?.error || 'Failed to schedule reminder', Constants.NotificationType.Error, true);
+          return;
+        }
+        hide();
+      } catch (err) {
+        Util.onError(err, 'Failed to schedule reminder', true);
+      }
+    });
+
+    // Optionally, list scheduled reminders
+    const listNode = document.getElementById('veX_reminders_list');
+    if (listNode) {
+      chrome.storage.local.get('veXReminders', async (data) => {
+        const items = Object.entries(data.veXReminders || {});
+        if (!items.length) {
+          listNode.innerHTML = '<p>No reminders scheduled</p>';
+          return;
+        }
+        const frag = document.createDocumentFragment();
+        items.forEach(([name, info]) => {
+          const div = document.createElement('div');
+          const next = new Date(info.when);
+          div.textContent = `${info.message} — ${next.toLocaleString()} ${info.repeat !== 'none' ? `(${info.repeat})` : ''}`;
+          frag.appendChild(div);
+        });
+        listNode.appendChild(frag);
+      });
+    }
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), 'Opening Reminders Popup', err.message), true);
   }
 }
 
@@ -915,11 +1250,17 @@ async function onEditComment(event) {
   if (event)
     event.stopPropagation();
 }
+async function onGetChecklistCommentData(event) {
+  await Comments.onGetChecklistCommentData();
+  if (event)
+    event.stopPropagation();
+}
 //End of Event Handlers
 
 function handleMessagesFromServiceWorker(request, sender, sendResponse) {
   try {
-    switch (request) {
+    const action = (typeof request === 'string') ? request : (request && request.action);
+    switch (action) {
       case "openChecklistPopup":
         if (!(Util.isEmptyObject(veXCurrentTicketChecklist) || Util.isEmptyObject(veXCurrentTicketInfo)))
           openChecklistPopup();
@@ -933,6 +1274,19 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
         }
         else
           Util.notify(Util.getRandomMessage(Constants.ErrorMessages.SomethingWentWrong), Constants.NotificationType.Error, true);
+        break;
+      case "openRemindersPopup":
+        openRemindersPopup();
+        break;
+      case "reminderFired": {
+        var msg = 'Reminder';
+        if (request && request.payload && request.payload.message) {
+          msg = request.payload.message;
+        }
+        Util.notify(msg, Constants.NotificationType.Info, true);
+        break;
+      }
+      default:
         break;
     }
   }
@@ -949,7 +1303,7 @@ function markCurrentCategoryAsCompleted() {
     let newlyCompletedCount = 0;
     for (let i = 0; i < currentCheckList.length; i++) {
       const item = currentCheckList[i];
-      const prevStatus = Util.getChecklistStatus(item);
+      const prevStatus = Util.getChecklistStatus(item.CursorState.position);
       if (prevStatus == Constants.CheckListStatus.NotSelected || prevStatus == Constants.CheckListStatus.NotCompleted) {
         newlyCompletedCount++;
       }
@@ -983,7 +1337,7 @@ function markCurrentCategoryAsNotDone() {
     let newlyNotDoneCount = 0;
     for (let i = 0; i < currentCheckList.length; i++) {
       const item = currentCheckList[i];
-      const prevStatus = Util.getChecklistStatus(item);
+      const prevStatus = Util.getChecklistStatus(item.CursorState.position);
       if (prevStatus == Constants.CheckListStatus.Completed || prevStatus === Constants.CheckListStatus.NotApplicable) {
         newlyNotDoneCount++;
       }
@@ -1017,7 +1371,7 @@ function markCurrentCategoryAsNotApplicable() {
     let newlyNotApplicableCount = 0;
     for (let i = 0; i < currentCheckList.length; i++) {
       const item = currentCheckList[i];
-      const prevStatus = Util.getChecklistStatus(item);
+      const prevStatus = Util.getChecklistStatus(item.CursorState.position);
       if (prevStatus == Constants.CheckListStatus.NotCompleted || prevStatus == Constants.CheckListStatus.NotSelected) {
         newlyNotApplicableCount++;
       }
@@ -1086,6 +1440,10 @@ function markCurrentCategoryAsUnselected() {
     );
   }
 }
+
+//--
+
+//--
 
 initialize();
 //<-Event Handlers
