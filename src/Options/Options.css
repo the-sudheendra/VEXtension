@@ -240,17 +240,7 @@ input::placeholder {
   background-color: #f4f4f4;
   color: black;
 }
-.side-image-Container
-{
-  position: absolute;
-  right: 100px;
-  top: 150px;
-}
-.side-image-Container img {
-  height: 450px;
-  transition: transform 0.3s;
-  cursor: pointer;
-}
+
 
 @keyframes happy-bounce {
   0%   { transform: scale(1) rotate(0deg);}
