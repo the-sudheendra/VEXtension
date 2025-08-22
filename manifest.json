@@ -1,9 +1,9 @@
 {
   "name": "VEXtension",
   "description": "The toolset that gives you the Xtra edge in Opentext ValueEdge ⚡.",
-  "version": "3.0.3.5",
+  "version": "3.0.3.6",
   "manifest_version": 3,
-  "permissions": ["contextMenus", "storage", "alarms"],
+  "permissions": ["contextMenus", "storage"],
   "content_scripts": [
     {
       "matches": ["https://*.saas.microfocus.com/*"],
