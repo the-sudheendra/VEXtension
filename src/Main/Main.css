@@ -726,6 +726,7 @@ button {
 .veX_ui_title_container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   margin-bottom: 10px;
 }
@@ -769,8 +770,6 @@ button {
   display: flex;
   align-items: center;
   gap: 8px;
-  position: absolute;
-  right: 10px;
 }
 
 .veX_mark_category_label {
