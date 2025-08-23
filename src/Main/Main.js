@@ -14,6 +14,7 @@ var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
 var veXSelectors;
+var veXToolbarButton = null;
 var root = document.querySelector(':root');
 var Util;
 var DomPurify;
@@ -251,6 +252,7 @@ function veXReset() {
     veXTotalItems = 0;
     Util.cleanupMutationObserver(MutationObservers.veXTicketPhaseMutationObserver);
     Util.cleanupMutationObserver(MutationObservers.veXTicketTypeMutationObserver);
+    removeChecklistToolbarButton();
     root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
     root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);
     root.style.setProperty('--veX-ticktColor', `#fff`);
@@ -682,13 +684,191 @@ function updateDonePercentage() {
     let donePercentage = Util.calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems);
     veXNodes.veXDonePercentageNode.innerHTML = `${donePercentage}%`;
     root.style.setProperty('--veX-checkedItemsPercentage', `${donePercentage}%`);
+    updateChecklistToolbarBadge();
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Done Percentage", err.message), true);
   }
 }
 
-function setNotApplicableState(listItemNode, listIndex) {
+function countTotalChecklistItems() {
+  try {
+    let totalItems = 0;
+    if (veXChecklistItems && !Util.isEmptyObject(veXChecklistItems)) {
+      Object.values(veXChecklistItems).forEach(categoryItems => {
+        if (Array.isArray(categoryItems)) {
+          categoryItems.forEach(item => {
+              totalItems++;
+          });
+        }
+      });
+    }
+    return totalItems;
+  } catch (err) {
+    Util.onError(err, "Error counting checklist items", false);
+    return 0;
+  }
+}
+
+async function createChecklistToolbarButton() {
+  try {
+    removeChecklistToolbarButton();
+
+    const toolbarContainer = document.querySelector('[data-aid="alm-entity-form-tab-details-toolbar toolbar"] .toolbar-buttons-group');
+    if (!toolbarContainer) {
+      setTimeout(() => {
+        createChecklistToolbarButton();
+      }, 500);
+      return;
+    }
+
+    veXToolbarButton = document.createElement('div');
+    veXToolbarButton.id = 'veX_checklist_toolbar_button';
+    veXToolbarButton.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      margin-left: 8px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      position: relative;
+      min-width: 44px;
+      background: transparent;
+      border: 1px solid transparent;
+    `;
+
+    // Create the icon
+    const icon = document.createElement('img');
+    icon.src = chrome.runtime.getURL('icons/checklist_24dp.png');
+    icon.alt = 'Checklist';
+    icon.title = 'View Checklist Items';
+    icon.style.cssText = `
+      width: 22px;
+      height: 22px;
+      display: block;
+    `;
+
+    // Create the badge
+    const badge = document.createElement('span');
+    badge.id = 'veX_checklist_toolbar_badge';
+    badge.style.cssText = `
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      background: ${veXCurrentTicketInfo.color || '#f29339'};      
+      color: white;
+      border-radius: 8px;
+      padding: 3px;
+      font-size: 10px;
+      text-align: center;
+      border: 1px solid white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    `;
+
+    // Set initial badge count
+    const todoCount = countTotalChecklistItems();
+    badge.textContent = todoCount.toString();
+    badge.style.display = todoCount > 0 ? 'block' : 'none';
+
+    // Add click handler to open checklist popup
+    veXToolbarButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      if (!(Util.isEmptyObject(veXCurrentTicketChecklist) || Util.isEmptyObject(veXCurrentTicketInfo))) {
+        openChecklistPopup();
+      } else if (!Util.isEmptyObject(veXCurrentTicketInfo) && Util.isEmptyObject(veXCurrentTicketChecklist)) {
+        Util.notify(Util.formatMessage(Util.getRandomMessage(Constants.Notifications.UnableToFindChecklist), veXCurrentTicketInfo.type), Constants.NotificationType.Info, true);
+      } else {
+        Util.notify(Util.getRandomMessage(Constants.Notifications.OpenTicketToSeeChecklist), Constants.NotificationType.Info, true);
+      }
+    });
+
+    // Assemble the button
+    veXToolbarButton.appendChild(icon);
+    veXToolbarButton.appendChild(badge);
+
+    // Append to toolbar
+    toolbarContainer.appendChild(veXToolbarButton);
+
+  } catch (err) {
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Create Toolbar Button", err.message), false);
+  }
+}
+
+function removeChecklistToolbarButton() {
+  try {
+    if (veXToolbarButton && veXToolbarButton.parentNode) {
+      veXToolbarButton.parentNode.removeChild(veXToolbarButton);
+    }
+    veXToolbarButton = null;
+  } catch (err) {
+    Util.onError(err, "Error removing toolbar button", false);
+  }
+}
+
+function updateChecklistToolbarBadge() {
+  // TODO: We have to use this once we have sync with comments and chec
+  // try {
+  // //   if (!veXToolbarButton) return;
+
+  // //   const badge = veXToolbarButton.querySelector('#veX_checklist_toolbar_badge');
+  // //   if (!badge) return;
+
+  // //   const todoCount = countTotalChecklistItems();
+  // //   badge.textContent = todoCount.toString();
+  // //   badge.style.display = todoCount > 0 ? 'block' : 'none';
+  // // } catch (err) {
+  // //   Util.onError(err, "Error updating toolbar badge", false);
+  // // }
+  // }
+}
+
+function showChecklistUpdateAnimation() {
+  try {
+    if (!veXToolbarButton) return;
+    
+    // Add CSS animation keyframes if not already added
+    if (!document.getElementById('veX_checklist_animation_styles')) {
+      const style = document.createElement('style');
+      style.id = 'veX_checklist_animation_styles';
+      style.textContent = `
+        @keyframes veX-gentle-pulse {
+          0% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.3);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+        
+        .veX_checklist_update_animation {
+          animation: veX-gentle-pulse 0.8s ease-in-out 1;
+        }
+      `;
+      document.head.appendChild(style);
+    }
+    
+    // Add animation class
+    veXToolbarButton.classList.add('veX_checklist_update_animation');
+    
+    // Remove animation after it completes
+    setTimeout(() => {
+      veXToolbarButton.classList.remove('veX_checklist_update_animation');
+    }, 800); // Match animation duration
+    
+  } catch (err) {
+    Util.onError(err, "Error showing checklist update animation", false);
+  }
+}function setNotApplicableState(listItemNode, listIndex) {
   try {
     veXChecklistItems[veXCurrentCategory.name][listIndex].NotApplicable = true;
     listItemNode.classList.add("veX_not_applicable");
@@ -902,6 +1082,7 @@ function applyNewState(listItemNode, index, newState) {
   if (handler) {
     handler();
   }
+  updateChecklistToolbarBadge();
 }
 
 function onListNoteClick(event, listItemNode, currentCheckList, index) {
@@ -948,6 +1129,7 @@ async function onTicketTitleChange(change) {
     veXReset();
     getCurrentTicketInfo(document.head.querySelector('title').innerText);
     if (Util.isEmptyObject(veXCurrentTicketInfo)) {
+      removeChecklistToolbarButton();
       return;
     }
 
@@ -968,6 +1150,7 @@ async function onTicketTitleChange(change) {
     if (loadOnStart === true) {
       const remoteRefreshSuccess = await refreshChecklistFromRemoteIfExists(veXChecklistData);
       if (!remoteRefreshSuccess) {
+        removeChecklistToolbarButton();
         return;
       }
     }
@@ -976,6 +1159,9 @@ async function onTicketTitleChange(change) {
     if (!Util.isEmptyObject(veXCurrentTicketChecklist)) {
       initChecklist();
       veXIsViewInitialised = initView();
+      createChecklistToolbarButton();
+    } else {
+      removeChecklistToolbarButton();
     }
   }
   catch (err) {
@@ -991,13 +1177,14 @@ function onTicketPhaseChange(mutation) {
     let newPhase = mutation.target.innerText;
     let oldPhase = veXCurrentTicketInfo.phase;
 
-    // if (newPhase && oldPhase && Constants.VEPhaseOrder[newPhase.toLowerCase()] > Constants.VEPhaseOrder[oldPhase.toLowerCase()]) {
-    //   let reminderMessage = Util.getRandomMessage(Constants.Notifications.ReminderToUpdateChecklist);
-    //   Util.notify(reminderMessage, Constants.NotificationType.Info, true);
-    // }
+    if (newPhase && oldPhase && Constants.VEPhaseOrder[newPhase.toLowerCase()] > Constants.VEPhaseOrder[oldPhase.toLowerCase()]) {
+      const phaseCategories = getPhaseCategories(newPhase);
+      if (phaseCategories && Object.keys(phaseCategories).length > 0) {
+        showChecklistUpdateAnimation();
+      }
+    }
     veXCurrentTicketInfo.phase = newPhase;
     onPhaseChange(newPhase);
-    //openChecklistPopup();
 
   }
   catch (err) {
@@ -1087,6 +1274,7 @@ function markCurrentCategoryAsCompleted() {
     veXTotalCompletedItems += newlyCompletedCount;
     updateChecklist();
     updateDonePercentage();
+    updateChecklistToolbarBadge();
   } catch (err) {
     Util.onError(
       err,
@@ -1121,6 +1309,7 @@ function markCurrentCategoryAsNotDone() {
     veXTotalCompletedItems -= newlyNotDoneCount;
     updateChecklist();
     updateDonePercentage();
+    updateChecklistToolbarBadge();
   } catch (err) {
     Util.onError(
       err,
@@ -1155,6 +1344,7 @@ function markCurrentCategoryAsNotApplicable() {
     veXTotalCompletedItems += newlyNotApplicableCount;
     updateChecklist();
     updateDonePercentage();
+    updateChecklistToolbarBadge();
   } catch (err) {
     Util.onError(
       err,
@@ -1199,6 +1389,7 @@ function markCurrentCategoryAsUnselected() {
     if (veXTotalCompletedItems < 0) veXTotalCompletedItems = 0;
     updateChecklist();
     updateDonePercentage();
+    updateChecklistToolbarBadge();
   } catch (err) {
     Util.onError(
       err,

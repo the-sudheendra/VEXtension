@@ -72,7 +72,8 @@
         "icons/close_small_24.png",
         "icons/aviator-character-team.avif",
         "icons/quick_phrases_24.png",
-        "icons/download_24.png"
+        "icons/download_24.png",
+        "icons/checklist_24dp.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
