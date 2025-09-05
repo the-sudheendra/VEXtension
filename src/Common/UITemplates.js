@@ -14,6 +14,7 @@ const veXIconsURLs = {
     addTask: chrome.runtime.getURL("icons/add_task_24dp.png"),
     settings: chrome.runtime.getURL("icons/settings_24dp.png")
 };
+const app_version = chrome.runtime.getManifest().version;
 const ChecklistUI = `
 <header class="veX_header veX_banner">
     <div class="veX_logo_container">
@@ -26,9 +27,9 @@ const ChecklistUI = `
             <div class="veX_settings_container">
                 <img class="veX_header_icon" id="veX_settings_btn" src="${veXIconsURLs.settings}" alt="More" title="More" />
                 <div class="veX_settings_dropdown" id="veX_settings_dropdown" style="display: none;">
-                    <div class="veX_dropdown_item" id="veX_about_btn">About</div>
-                    <div class="veX_dropdown_item" id="veX_report_problem_btn">Report a problem</div>
-                    <div class="veX_dropdown_item" id="veX_feedback_btn">Feedback</div>
+                    <div class="veX_dropdown_item" id="veX_about_btn" title="v${app_version}">About</div>
+                    <div class="veX_dropdown_item" id="veX_report_problem_btn" title="🪲🐛">Report a problem</div>
+                    <div class="veX_dropdown_item" id="veX_feedback_btn" title="🙁😐🙂🤩🌟">Give Feedback</div>
                 </div>
             </div>
         </div>
