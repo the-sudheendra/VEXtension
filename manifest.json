@@ -73,7 +73,10 @@
         "icons/aviator-character-team.avif",
         "icons/quick_phrases_24.png",
         "icons/download_24.png",
-        "icons/checklist_24dp.png"
+        "icons/checklist_24dp.png",
+        "icons/settings_24dp.png",
+        "icons/add_task_24dp.png",
+        "/src/Options/options.html"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }
@@ -85,7 +88,7 @@
     "128": "icons/fact_check_128.png"
   },
   "options_ui": {
-    "page": "/src/Options/Options.html",
+    "page": "/src/Options/options.html",
     "open_in_tab": true
   },
   "commands": {

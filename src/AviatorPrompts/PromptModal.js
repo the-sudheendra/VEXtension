@@ -249,9 +249,19 @@ function openPromptsPopup() {
       closeChecklistPopup();
     }
     veXPromptsPopupOverlay.style.visibility = "visible";
+    veXPromptsPopupOverlay.classList.add("veX_overlay_opening");
+    
     veXPromptsPopupNode.classList.add("veX_popup_active");
+    veXPromptsPopupNode.classList.add("veX_prompts_popup_opening");
     Util.centerThePopup(veXPromptsPopupNode);
     veXPromptsPopupNode.classList.remove("veX_popup_disable");
+    
+    // Clean up animation classes after animation completes
+    setTimeout(() => {
+      veXPromptsPopupNode.classList.remove("veX_prompts_popup_opening");
+      veXPromptsPopupOverlay.classList.remove("veX_overlay_opening");
+    }, 600);
+    
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Prompts Popup", err.message), true);
   }

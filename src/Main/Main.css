@@ -16,7 +16,8 @@
   --veX-common-borderWidth: 2px;
   --veX-notCompletedColor: #d85c4c;
   --veX-CompletedColor: var(--veX-successColor);
-  --vex-notApplicableColor: #808080; //*fdec83*/
+  --vex-notApplicableColor: #808080; 
+  --vex-image-size : 30px;
 }
 
 .veX_truncate {
@@ -142,7 +143,7 @@ button {
 }
 
 .veX_banner {
-  overflow: hidden;
+  overflow: visible;
   height: 50px;
 }
 
@@ -661,8 +662,15 @@ button {
 }
 
 
+.veX_header_right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .veX_header_actions {
-  padding: 8px 15px;
+  padding: 4px 8px;
   color: white;
   border: none;
   border-radius: 4px;
@@ -670,7 +678,21 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
+}
+
+.veX_header_icon {
+  width: var(--vex-image-size);
+  height: var(--vex-image-size);
+  cursor: pointer;
+  filter: brightness(0) invert(1);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.veX_header_icon:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .veX_selectable {
@@ -798,4 +820,95 @@ button {
   transform: scale(1.13) rotate(90deg);
   background: rgba(0,0,0,0.18);
   box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+}
+
+@keyframes veX-popup-dropIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -200px) scale(0.95);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes veX-overlay-fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes veX-popup-dropOut {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -200px) scale(0.95);
+  }
+}
+
+.veX_popup_opening {
+  animation: veX-popup-dropIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+.veX_overlay_opening {
+  animation: veX-overlay-fadeIn 0.4s ease-out forwards;
+}
+
+.veX_popup_closing {
+  animation: veX-popup-dropOut 0.4s ease-in forwards;
+}
+
+/* Settings Dropdown Styles */
+.veX_settings_container {
+  position: relative;
+  display: inline-block;
+}
+
+.veX_settings_dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--veX-common-backgroundColor);
+  border: 1px solid var(--veX-borderColor);
+  border-radius: var(--veX-common-borderRadius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  z-index: 3001;
+  margin-top: 4px;
+}
+
+.veX_dropdown_item {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: var(--veX-common-fontSize);
+  color: var(--veX-common-fontColor);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.veX_dropdown_item:last-child {
+  border-bottom: none;
+}
+
+.veX_dropdown_item:hover {
+  background-color: var(--vex-hoverColor);
+}
+
+.veX_dropdown_item:first-child {
+  border-radius: var(--veX-common-borderRadius) var(--veX-common-borderRadius) 0 0;
+}
+
+.veX_dropdown_item:last-child {
+  border-radius: 0 0 var(--veX-common-borderRadius) var(--veX-common-borderRadius);
 }
