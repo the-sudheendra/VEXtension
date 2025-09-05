@@ -10,7 +10,9 @@ const veXIconsURLs = {
     check: chrome.runtime.getURL("icons/save_24.png"),
     close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png"),
     unselect: chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png"),
-    closeSmall: chrome.runtime.getURL("icons/close_small_24.png")
+    closeSmall: chrome.runtime.getURL("icons/close_small_24.png"),
+    addTask: chrome.runtime.getURL("icons/add_task_24dp.png"),
+    settings: chrome.runtime.getURL("icons/settings_24dp.png")
 };
 const ChecklistUI = `
 <header class="veX_header veX_banner">
@@ -18,7 +20,13 @@ const ChecklistUI = `
         <img class="veX_logo" src="${veXIconsURLs.logo}" title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
     </div>
     <p class="veX_header_title veX_truncate"></p>
-    <img class="veX_popup_close_icon" id="veX_checklist_close_btn" src="${veXIconsURLs.closeSmall}" alt="Close" title="Close" style="margin-left:auto;cursor:pointer;"/>
+    <div class="veX_header_right">
+        <div class="veX_header_actions">
+            <img class="veX_header_icon" id="veX_add_task_btn" src="${veXIconsURLs.addTask}" alt="Add Task" title="Add Task" />
+            <img class="veX_header_icon" id="veX_settings_btn" src="${veXIconsURLs.settings}" alt="Settings" title="Settings" />
+        </div>
+        <img class="veX_popup_close_icon" id="veX_checklist_close_btn" src="${veXIconsURLs.closeSmall}" alt="Close" title="Close" style="cursor:pointer;"/>
+    </div>
 </header>
 <div class="veX_done_status"></div>
 <div class="veX_content_wrapper">

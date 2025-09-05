@@ -73,7 +73,9 @@
         "icons/aviator-character-team.avif",
         "icons/quick_phrases_24.png",
         "icons/download_24.png",
-        "icons/checklist_24dp.png"
+        "icons/checklist_24dp.png",
+        "icons/settings_24dp.png",
+        "icons/add_task_24dp.png"
       ],
       "matches": ["https://*.saas.microfocus.com/*"]
     }

@@ -960,9 +960,16 @@ function openChecklistPopup() {
       PromptModal.closePromptsPopup();
     }
     veXPopUpOverlay.style.visibility = "visible";
+    veXPopUpOverlay.classList.add("veX_overlay_opening");
     veXPopUpNode.classList.add("veX_popup_active");
+    veXPopUpNode.classList.add("veX_popup_opening");
     Util.centerThePopup(veXPopUpNode);
     veXPopUpNode.classList.remove("veX_popup_disable");
+        setTimeout(() => {
+      veXPopUpNode.classList.remove("veX_popup_opening");
+      veXPopUpOverlay.classList.remove("veX_overlay_opening");
+    }, 600);
+    
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Checklist Popup", err.message), true);
   }
