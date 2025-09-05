@@ -792,7 +792,6 @@ async function createChecklistToolbarButton() {
       padding: 6px 10px;
       margin-left: 8px;
       cursor: pointer;
-      border-radius: 6px;
       transition: all 0.2s ease;
       position: relative;
       min-width: 44px;
