@@ -131,7 +131,7 @@ function setupSettingsDropdownHandlers() {
   
   if (aboutBtn) {
     aboutBtn.addEventListener('click', () => {
-      window.open('https://github.com/the-sudheendra/VEXtension?tab=readme-ov-file#features', '_blank');
+      window.open('https://github.com/the-sudheendra/VEXtension?tab=readme-ov-file#features-', '_blank');
       document.querySelector('#veX_settings_dropdown').style.display = 'none';
     });
   }
@@ -358,7 +358,7 @@ function getPhaseCategories(phaseName) {
 }
 async function initHeaderView() {
   try {
-    veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.type;
+    veXNodes.veXHeaderTitleNode.innerHTML = `${veXCurrentTicketInfo.type?"Checklist for "+veXCurrentTicketInfo.type:"Checklist"}`;
     Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'), document.getElementById("veX_checklist_popup_container"));
   }
   catch (err) {
