@@ -90,6 +90,66 @@ function setupChecklistPopupNode() {
   if (closeBtn) {
     closeBtn.addEventListener('click', closeChecklistPopup);
   }
+  const addTaskBtn = veXPopUpNode.querySelector('#veX_add_task_btn');
+  if (addTaskBtn) {
+    addTaskBtn.addEventListener('click', () => {
+      if (chrome && chrome.runtime && chrome.runtime.openOptionsPage) {
+        chrome.runtime.openOptionsPage();
+      } else {
+        window.open(chrome.runtime.getURL('src/Options/options.html'));
+      }
+    });
+  }
+  
+  // Settings dropdown functionality
+  const settingsBtn = veXPopUpNode.querySelector('#veX_settings_btn');
+  const settingsDropdown = veXPopUpNode.querySelector('#veX_settings_dropdown');
+  
+  if (settingsBtn && settingsDropdown) {
+    settingsBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const isVisible = settingsDropdown.style.display === 'block';
+      settingsDropdown.style.display = isVisible ? 'none' : 'block';
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (event) => {
+      if (!settingsBtn.contains(event.target) && !settingsDropdown.contains(event.target)) {
+        settingsDropdown.style.display = 'none';
+      }
+    });
+  }
+  
+  // Settings dropdown menu item handlers
+  setupSettingsDropdownHandlers();
+}
+
+function setupSettingsDropdownHandlers() {
+  const aboutBtn = veXPopUpNode.querySelector('#veX_about_btn');
+  const reportProblemBtn = veXPopUpNode.querySelector('#veX_report_problem_btn');
+  const feedbackBtn = veXPopUpNode.querySelector('#veX_feedback_btn');
+  
+  if (aboutBtn) {
+    aboutBtn.addEventListener('click', () => {
+      window.open('https://github.com/the-sudheendra/VEXtension?tab=readme-ov-file#features', '_blank');
+      document.querySelector('#veX_settings_dropdown').style.display = 'none';
+    });
+  }
+  
+  if (reportProblemBtn) {
+    reportProblemBtn.addEventListener('click', () => {
+      window.open('https://github.com/the-sudheendra/VEXtension/issues', '_blank');
+      document.querySelector('#veX_settings_dropdown').style.display = 'none';
+    });
+  }
+  
+  if (feedbackBtn) {
+    feedbackBtn.addEventListener('click', () => {
+      window.open('https://chromewebstore.google.com/detail/ve-checklist/aeiiagpokicaeifancpnndjanamdmmdn/reviews', '_blank');
+      document.querySelector('#veX_settings_dropdown').style.display = 'none';
+    });
+  }
+  
 }
 function addLoadingElement() {
   let veX_loader = document.createElement('span');

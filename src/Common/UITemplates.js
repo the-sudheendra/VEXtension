@@ -22,8 +22,15 @@ const ChecklistUI = `
     <p class="veX_header_title veX_truncate"></p>
     <div class="veX_header_right">
         <div class="veX_header_actions">
-            <img class="veX_header_icon" id="veX_add_task_btn" src="${veXIconsURLs.addTask}" alt="Add Task" title="Add Task" />
-            <img class="veX_header_icon" id="veX_settings_btn" src="${veXIconsURLs.settings}" alt="Settings" title="Settings" />
+            <img class="veX_header_icon" id="veX_add_task_btn" src="${veXIconsURLs.addTask}" alt="Add Checklist" title="Add Checklist" />
+            <div class="veX_settings_container">
+                <img class="veX_header_icon" id="veX_settings_btn" src="${veXIconsURLs.settings}" alt="More" title="More" />
+                <div class="veX_settings_dropdown" id="veX_settings_dropdown" style="display: none;">
+                    <div class="veX_dropdown_item" id="veX_about_btn">About</div>
+                    <div class="veX_dropdown_item" id="veX_report_problem_btn">Report a problem</div>
+                    <div class="veX_dropdown_item" id="veX_feedback_btn">Feedback</div>
+                </div>
+            </div>
         </div>
         <img class="veX_popup_close_icon" id="veX_checklist_close_btn" src="${veXIconsURLs.closeSmall}" alt="Close" title="Close" style="cursor:pointer;"/>
     </div>

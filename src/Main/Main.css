@@ -143,7 +143,7 @@ button {
 }
 
 .veX_banner {
-  overflow: hidden;
+  overflow: visible;
   height: 50px;
 }
 
@@ -692,7 +692,6 @@ button {
 }
 
 .veX_header_icon:hover {
-  opacity: 0.8;
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -868,4 +867,48 @@ button {
 
 .veX_popup_closing {
   animation: veX-popup-dropOut 0.4s ease-in forwards;
+}
+
+/* Settings Dropdown Styles */
+.veX_settings_container {
+  position: relative;
+  display: inline-block;
+}
+
+.veX_settings_dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--veX-common-backgroundColor);
+  border: 1px solid var(--veX-borderColor);
+  border-radius: var(--veX-common-borderRadius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  z-index: 3001;
+  margin-top: 4px;
+}
+
+.veX_dropdown_item {
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: var(--veX-common-fontSize);
+  color: var(--veX-common-fontColor);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.veX_dropdown_item:last-child {
+  border-bottom: none;
+}
+
+.veX_dropdown_item:hover {
+  background-color: var(--vex-hoverColor);
+}
+
+.veX_dropdown_item:first-child {
+  border-radius: var(--veX-common-borderRadius) var(--veX-common-borderRadius) 0 0;
+}
+
+.veX_dropdown_item:last-child {
+  border-radius: 0 0 var(--veX-common-borderRadius) var(--veX-common-borderRadius);
 }
