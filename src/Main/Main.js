@@ -298,7 +298,7 @@ function getPhaseCategories(phaseName) {
 }
 async function initHeaderView() {
   try {
-    veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.title;
+    veXNodes.veXHeaderTitleNode.innerHTML = veXCurrentTicketInfo.type;
     Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'), document.getElementById("veX_checklist_popup_container"));
   }
   catch (err) {
@@ -738,7 +738,17 @@ async function createChecklistToolbarButton() {
       min-width: 44px;
       background: transparent;
       border: 1px solid transparent;
+      border-radius: 6px;
     `;
+
+    // Add hover effect
+    veXToolbarButton.addEventListener('mouseenter', function() {
+      this.style.background = 'rgba(0,0,0,0.1)';
+    });
+    
+    veXToolbarButton.addEventListener('mouseleave', function() {
+      this.style.background = 'transparent';
+    });
 
     // Create the icon
     const icon = document.createElement('img');
