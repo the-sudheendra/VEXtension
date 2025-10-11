@@ -1,3 +1,14 @@
+import { EntityMetaData } from "./Constants.js";
+// Returns the ticket code (e.g., 'E', 'ER') for a given ticket type name (e.g., 'Epic', 'Enhancement')
+function getTicketCodeByTypeName(typeName) {
+  if (!typeName) return undefined;
+  for (const [code, meta] of Object.entries(EntityMetaData)) {
+    if (meta.name.toLowerCase() === typeName.toLowerCase()) {
+      return code;
+    }
+  }
+  return undefined;
+}
 var notifyAPI;
 var DefaultList;
 (async () => {
@@ -38,8 +49,11 @@ function waitForElementToBeVisible(element) {
 }
 
 function onError(error, info = "Something went wrong", display = false) {
-  console.error(`Error From VE-Checklist: ${error?.message}`);
-  console.dir(error);
+  if (!display) {
+    console.error(`Error From VE-Checklist: ${error?.message}`);
+    console.dir(error);
+    return;
+  }
   notify(`${info}`, Constants.NotificationType.Error, display);
 }
 function delay(ms) {
@@ -81,7 +95,7 @@ function getRandomMessage(notification) {
 
 
 
-async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOnStart) {
+async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl) {
   try {
     let keyValue = {};
     let entites = Object.keys(veXChecklistInfo);
@@ -96,7 +110,6 @@ async function saveChecklistData(veXChecklistInfo, veXChecklistRemoteUrl, loadOn
     checklistData["checklist"] = keyValue;
     if (veXChecklistRemoteUrl)
       checklistData["veXChecklistRemoteUrl"] = veXChecklistRemoteUrl;
-    checklistData["veXLoadOnStart"] = (loadOnStart === true ? true : false);
     await chrome.storage.local.set({ veXChecklistData: checklistData });
     return true;
   }
@@ -139,10 +152,10 @@ async function getLocalListData(listType) {
 }
 async function getRemoteListData(remoteUrl, listType) {
   if (!remoteUrl || remoteUrl === "") {
-    onError("Invalid remote url",)
+    onError("Invalid remote url for fetching " + listType);
     return;
   }
-  try {    
+  try {
     const response = await fetch(`${remoteUrl}?ts=${Date.now()}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -164,7 +177,7 @@ function calculateCompletionPercentage(veXTotalItems, veXTotalCompletedItems) {
   return Math.min(Math.round(percentage), 100);
 }
 
-function makeElementDraggable(element,targetElement) {
+function makeElementDraggable(element, targetElement) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
   if (element) {
     element.onmousedown = dragMouseDown;
@@ -410,7 +423,7 @@ function isValidURL(str) {
 
 async function getDefaultPrompts() {
   try {
-    
+
     const response = await fetch(`${Constants.defaultPromptsRemoteURL}?ts=${Date.now()}`);
     return await response.json() || DefaultList.veXDefaultPrompts || [];
   }
@@ -421,7 +434,7 @@ async function getDefaultPrompts() {
 }
 async function getDefaultChecklist() {
   try {
-    
+
     const response = await fetch(`${Constants.defaultCheklistRemoteURL}?ts=${Date.now()}`);
     return await response.json() || DefaultList.veXDefaultChecklist || {};
   }
@@ -433,8 +446,8 @@ async function getDefaultChecklist() {
 
 async function getPromptsTone() {
   try {
-    
-    const response =await fetch(`${Constants.defaultPromptsTonesURL}?ts=${Date.now()}`);
+
+    const response = await fetch(`${Constants.defaultPromptsTonesURL}?ts=${Date.now()}`);
     return await response.json() || DefaultList.veXDefaultPromptsTone || {};
   }
   catch (err) {
@@ -444,33 +457,33 @@ async function getPromptsTone() {
 }
 function downloadJsonFile(jsonObject, filename = 'VEXtensionList.json') {
   try {
-      // Convert JSON object to string with proper formatting
-      const jsonString = JSON.stringify(jsonObject, null, 2);
-      
-      // Create a Blob with the JSON data
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      
-      // Create a temporary URL for the blob
-      const url = URL.createObjectURL(blob);
-      
-      // Create a temporary anchor element for download
-      const downloadLink = document.createElement('a');
-      downloadLink.href = url;
-      downloadLink.download = filename;
-      
-      // Append to body, click, and remove
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      
-      // Clean up the temporary URL
-      URL.revokeObjectURL(url);
-      
-      console.log(`JSON file "${filename}" downloaded successfully!`);
-      return true;
+    // Convert JSON object to string with proper formatting
+    const jsonString = JSON.stringify(jsonObject, null, 2);
+
+    // Create a Blob with the JSON data
+    const blob = new Blob([jsonString], { type: 'application/json' });
+
+    // Create a temporary URL for the blob
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary anchor element for download
+    const downloadLink = document.createElement('a');
+    downloadLink.href = url;
+    downloadLink.download = filename;
+
+    // Append to body, click, and remove
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+
+    // Clean up the temporary URL
+    URL.revokeObjectURL(url);
+
+    console.log(`JSON file "${filename}" downloaded successfully!`);
+    return true;
   } catch (error) {
-      console.error('Error downloading JSON file:', error);
-      return false;
+    console.error('Error downloading JSON file:', error);
+    return false;
   }
 }
 export {
@@ -507,6 +520,7 @@ export {
   getDefaultPrompts,
   getPromptsTone,
   centerThePopup,
-  downloadJsonFile
+  downloadJsonFile,
+  getTicketCodeByTypeName
 
 }

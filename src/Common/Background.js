@@ -35,7 +35,6 @@ async function setDefaultChecklist()
   let checklistData = {};
   checklistData["checklist"] = await getDefaultChecklist();
   checklistData["veXChecklistRemoteUrl"] = defaultCheklistRemoteURL;
-  checklistData["veXLoadOnStart"] = false;
   await chrome.storage.local.set({ veXChecklistData: checklistData });
 }
 

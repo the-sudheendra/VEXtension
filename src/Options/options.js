@@ -4,7 +4,6 @@ const downloadListBtn = document.getElementById('downloadListBtn');
 const remoteURLInput = document.getElementById("veXRemoteUrl");
 const downloadIconTxt = document.querySelector('.download-icon-txt');
 var veXChecklistRemoteUrl = "";
-var veXLoadOnStart = false;
 var uploadType = 'checklist';
 var Util;
 var Constants;
@@ -78,14 +77,12 @@ function setupEventListeners() {
     document.getElementById('uploadType').addEventListener('change', function () {
         uploadType = this.value;
         if (uploadType === 'checklist') {
-            document.querySelector(".checkbox-container").style.display = "flex";
             loadChecklistData();
             downloadIconTxt.textContent = "Checklist";
             downloadListBtn.title = "Download Current Checklist";
 
         }
         else if (uploadType === 'prompts') {
-            document.querySelector(".checkbox-container").style.display = "none";
             loadPromptsData();
             downloadIconTxt.textContent = "Prompts";
             downloadListBtn.title = "Download Current Prompts";
@@ -132,9 +129,7 @@ async function loadChecklistData() {
     }
     if (!veXChecklistData) return;
 
-    let loadOnStart = false;
     let veXChecklistRemoteUrl = "";
-    loadOnStart = veXChecklistData["veXLoadOnStart"];
     veXChecklistRemoteUrl = veXChecklistData["veXChecklistRemoteUrl"];
     veXConfiguredChecklist = veXChecklistData["checklist"];
     if (document.getElementById('SaveChecklistBtn')) {
@@ -142,8 +137,6 @@ async function loadChecklistData() {
     }
     if (document.getElementById('veXRemoteUrl'))
         document.getElementById('veXRemoteUrl').value = veXChecklistRemoteUrl || "";
-    if (document.getElementById('loadOnStart'))
-        document.getElementById('loadOnStart').checked = (loadOnStart === true ? true : false);
 }
 async function loadPromptsData() {
     if (!veXPromptsData) {
@@ -200,10 +193,9 @@ async function onSaveURL() {
 }
 
 async function validateAndSaveRemoteChecklist(responseData, url) {
-    const loadOnStart = document.getElementById('loadOnStart').checked;
     const veXChecklistInfo = responseData;
     if (Validators.validateChecklist(veXChecklistInfo) === true) {
-        isChecklistSaved = await Util.saveChecklistData(veXChecklistInfo, url, loadOnStart);
+        isChecklistSaved = await Util.saveChecklistData(veXChecklistInfo, url);
         if (isChecklistSaved === true) {
             Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
             // clear the url input box since we are using remote checklist
@@ -235,12 +227,11 @@ function onChecklistFileUpload(event) {
             try {
                 Util.showLoading();
                 const veXChecklistInfo = JSON.parse(reader.result);
-                if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, '', false) === true) {
+                if (Validators.validateChecklist(veXChecklistInfo) === true && await Util.saveChecklistData(veXChecklistInfo, '') === true) {
                     Util.notify(Util.getRandomMessage(Constants.Notifications.ChecklistSavedSuccessfully), Constants.NotificationType.Success, true);
                     // clear the url input box since
                     // we are now using the file mode
                     document.getElementById('veXRemoteUrl').value = '';
-                    document.getElementById('loadOnStart').checked = false;
                     veXChecklistData = undefined;
                     loadChecklistData();
                 }

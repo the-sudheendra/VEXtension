@@ -7,6 +7,7 @@ const veXIconsURLs = {
     markAllNotDone: chrome.runtime.getURL("icons/CategoryNotDone.png"),
     markAllNotApplicable: chrome.runtime.getURL("icons/CategotyNotApplicable.png"),
     logo: chrome.runtime.getURL("icons/fact_check_48_FFFFFF.png"),
+    refreshRemote: chrome.runtime.getURL("icons/refresh_remote_checklist.png"),
     check: chrome.runtime.getURL("icons/save_24.png"),
     close: chrome.runtime.getURL("icons/keyboard_arrow_up_24dp.png"),
     unselect: chrome.runtime.getURL("icons/check_box_outline_blank_24dp.png"),
@@ -20,9 +21,19 @@ const ChecklistUI = `
     <div class="veX_logo_container">
         <img class="veX_logo" src="${veXIconsURLs.logo}" title="Checklist Tool for OpenText ValueEdge" alt="VE Checklist">
     </div>
-    <p class="veX_header_title veX_truncate"></p>
+    <div class="veX_header_title_wrapper">
+        <span class="veX_header_title_static">Checklist for</span>
+        <div class="veX_ticket_type_dropdown">
+            <div class="veX_ticket_type_selector" id="veX_ticket_type_selector" title="Change Ticket Type">
+                <span class="veX_selected_type">Select Type</span>
+            </div>
+            <div class="veX_ticket_type_options" id="veX_ticket_type_options" style="display: none;">
+            </div>
+        </div>
+    </div>
     <div class="veX_header_right">
         <div class="veX_header_actions">
+            <img class="veX_header_icon" id="veX_refresh_remote_btn" src="${veXIconsURLs.refreshRemote}" alt="Refresh from Remote" title="Refresh checklist from remote URL" style="display: none;" />
             <img class="veX_header_icon" id="veX_add_task_btn" src="${veXIconsURLs.addTask}" alt="Add Checklist" title="Add Checklist" />
             <div class="veX_settings_container">
                 <img class="veX_header_icon" id="veX_settings_btn" src="${veXIconsURLs.settings}" alt="More" title="More" />

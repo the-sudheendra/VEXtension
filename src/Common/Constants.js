@@ -80,6 +80,7 @@ const VEChecklistNodeSelectors = {
     UISyncIcon: ".veX_sync_icon",
     UISyncIconContainer: ".veX_sync_icon_container",
     UICategoryButton: ".veX_category_button",
+    UITicketTypeSelector:"#veX_ticket_type_selector"
 };
 const ValueEdgeNodeSelectors = {
     CurrentTicketType: '[ng-if="header.shouldShowEntityLabel"]',

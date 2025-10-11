@@ -28,14 +28,13 @@
             <input type="text" id="veXRemoteUrl" placeholder="Enter Remote Url">
         </div>
 
-        <div class="checkbox-container">
-            <input type="checkbox" id="loadOnStart">
-            <label for="loadOnStart">Load checklist on every page load</label>
-        </div>
-
         <button class="btn" id="SaveChecklistBtn">Save</button>
 
-        <div class="divider">OR</div>
+        <div class="divider" style="display: flex; align-items: center; text-align: center; margin: 24px 0;">
+            <hr style="flex: 1; border: none; border-top: 1.5px solid #b0b8c1; margin: 0 12px 0 0; background: none;">
+            <span style="font-weight: 500; color: #6c7a89; letter-spacing: 1px;">OR</span>
+            <hr style="flex: 1; border: none; border-top: 1.5px solid #b0b8c1; margin: 0 0 0 12px; background: none;">
+        </div>
 
         <label for="jsonFile">Choose a JSON file:</label>
         <div class="file-upload">
@@ -45,17 +44,32 @@
 
         <div class="checklist-repo">
             <p>
-                <a class="example-btn" title="VEXHub Stores the checklists and prompts for easy team sharing and updates 🔄"
+                <a class="example-btn"
+                    title="VEXHub Stores the checklists and prompts for easy team sharing and updates 🔄"
                     href="https://github.com/the-sudheendra/VEXHub" target="_blank" rel="noopener noreferrer">
                     View Examples <span class="arrow">💡</span>
                 </a>
             </p>
         </div>
     </div>
-    
+
     <span id="veX_loader" style="display: none;"></span>
 
     <script src="./Options.js"></script>
+
+    <footer
+        style="position: fixed; left: 0; bottom: 18px; width: 100vw; text-align: center; z-index: 100; pointer-events: none;">
+        <div
+            style="display: inline-block; background: rgba(20, 30, 60, 0.85); border-radius: 12px; padding: 10px 28px; box-shadow: 0 2px 12px 0 rgba(0,0,0,0.08); pointer-events: auto;">
+            <span style="color: #e0e6ed; font-size: 1.05em; font-weight: 500;">Made with <span
+                    style="color: #ff5a5f;">❤</span> for OpenText.</span>
+            <span style="margin-left: 5px;">
+                <a href="https://github.com/the-sudheendra/VEXtension" target="_blank" rel="noopener noreferrer"
+                    style="color: #4fc3f7; text-decoration: underline; font-weight: 500; font-size: 1em;">Fork on
+                    GitHub</a>
+            </span>
+        </div>
+    </footer>
 </body>
 
 </html>

@@ -16,8 +16,8 @@
   --veX-common-borderWidth: 2px;
   --veX-notCompletedColor: #d85c4c;
   --veX-CompletedColor: var(--veX-successColor);
-  --vex-notApplicableColor: #808080; 
-  --vex-image-size : 30px;
+  --vex-notApplicableColor: #808080;
+  --vex-image-size: 30px;
 }
 
 .veX_truncate {
@@ -638,12 +638,14 @@ button {
   font-size: 18px;
 }
 
-.veX_segment:first-child,.veX_segment:last-child {
+.veX_segment:first-child,
+.veX_segment:last-child {
   background-color: #e8def8;
   color: #3f0071;
 }
 
-.veX_segment:first-child:hover, .veX_segment:last-child:hover {
+.veX_segment:first-child:hover,
+.veX_segment:last-child:hover {
   background-color: #d1c3eb;
 }
 
@@ -693,6 +695,136 @@ button {
 
 .veX_header_icon:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.veX_header_title_wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: var(--veX-header-fontSize);
+  font-weight: 500;
+  color: var(--veX-fontColorAgainstTicketColor);
+}
+
+.veX_header_title_static {
+  color: var(--veX-fontColorAgainstTicketColor);
+  white-space: nowrap;
+}
+
+.veX_ticket_type_dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.veX_ticket_type_selector {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--veX-fontColorAgainstTicketColor);
+  border: none;
+  border-radius: 6px;
+  font-family: 'Roboto', Arial, sans-serif;
+  font-size: var(--veX-header-fontSize);
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 6px 28px 6px 0px;
+  position: relative;
+  user-select: none;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  max-height: 40px;
+  background: none;
+  box-shadow: none;
+}
+
+.veX_ticket_type_selector::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 55%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid rgba(255, 255, 255, 0.7);
+  transition: transform 0.2s ease;
+}
+
+.veX_ticket_type_selector.veX_dropdown_open::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.veX_selected_type {
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* .veX_ticket_type_selector.veX_dropdown_open {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2), 0 0 0 2px rgba(255, 255, 255, 0.3);
+} */
+
+.veX_ticket_type_selector:active {
+  transform: translateY(0);
+}
+
+.veX_ticket_type_options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 100%;
+  background-color: var(--veX-common-backgroundColor);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  animation: veX_dropdown_fade_in 0.2s ease;
+}
+
+@keyframes veX_dropdown_fade_in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.veX_ticket_type_option {
+  padding: 10px 14px;
+  color: var(--veX-common-fontColor);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.veX_ticket_type_option:hover {
+  background-color: var(--vex-hoverColor);
+}
+
+.veX_ticket_type_option.veX_selected {
+  background-color: var(--vex-hoverColor);
+  font-weight: 600;
+  position: relative;
+}
+
+.veX_ticket_type_option.veX_selected::after {
+  content: '✓';
+  position: absolute;
+  right: 14px;
+  color: var(--veX-successColor);
+  font-weight: bold;
 }
 
 .veX_selectable {
@@ -806,20 +938,20 @@ button {
   width: 30px;
   height: 30px;
   cursor: pointer;
-  filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.12));
+  filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.12));
   transition: transform 0.18s, box-shadow 0.18s;
   margin-left: auto;
   margin-right: 8px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0, 0, 0, 0.08);
   padding: 2px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
 .veX_popup_close_icon:hover {
   transform: scale(1.13) rotate(90deg);
-  background: rgba(0,0,0,0.18);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+  background: rgba(0, 0, 0, 0.18);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
 }
 
 @keyframes veX-popup-dropIn {
@@ -827,10 +959,12 @@ button {
     opacity: 0;
     transform: translate(-50%, -200px) scale(0.95);
   }
+
   70% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1.02);
   }
+
   100% {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -841,6 +975,7 @@ button {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -851,6 +986,7 @@ button {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -200px) scale(0.95);
