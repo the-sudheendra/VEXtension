@@ -69,18 +69,6 @@ input::placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin: 8px 0;
-}
-
-.checkbox-container input {
-  width: 16px;
-  height: 16px;
-}
-
 .btn {
   background: #4681f4;
   color: #fff;
