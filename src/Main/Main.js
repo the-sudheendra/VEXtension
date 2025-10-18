@@ -1099,53 +1099,69 @@ function showChecklistUpdateAnimation() {
   try {
     if (!veXToolbarButton) return;
 
-    // Add CSS animation keyframes for moving gradient if not already added
+    // Add CSS animation keyframes for radial glow effect (only once)
     if (!document.getElementById('veX_checklist_animation_styles')) {
       const style = document.createElement('style');
       style.id = 'veX_checklist_animation_styles';
       style.textContent = `
-        @keyframes veX-moving-gradient {
-          0% {
-            background-position: -100% center;
-          }
-          100% {
-            background-position: 100% center;
-          }
+        @keyframes veX-radial-glow {
+          0% { background-position: 150% center; }
+          100% { background-position: -150% center; }
+        }
+        @keyframes veX-glow-fade {
+          0%, 100% { opacity: 0; }
+          15%, 85% { opacity: 1; }
         }
       `;
       document.head.appendChild(style);
     }
 
-    // Save original styles
-    const originalBackground = veXToolbarButton.style.background;
-    const originalBackgroundSize = veXToolbarButton.style.backgroundSize;
-    const originalBackgroundPosition = veXToolbarButton.style.backgroundPosition;
-    const originalAnimation = veXToolbarButton.style.animation;
+    // Prevent multiple animations from stacking
+    const existingOverlay = veXToolbarButton.querySelector('.veX-animation-overlay');
+    if (existingOverlay) {
+      existingOverlay.remove();
+    }
 
-    // Get computed success color and create light version
-    const successColor = getComputedStyle(document.documentElement).getPropertyValue('--veX-successColor').trim() || '#1aa364';
-
-    // Create light pastel version of success color (80% lighter)
+    // Get computed success color
+    const successColor = getComputedStyle(document.documentElement)
+      .getPropertyValue('--veX-successColor').trim() || '#1aa364';
     const lightSuccessColor = `color-mix(in srgb, ${successColor} 30%, white)`;
 
-    // Apply gradient with inline styles to ensure it overrides everything
-    veXToolbarButton.style.background = `linear-gradient(90deg,
-      transparent 0%,
-      ${lightSuccessColor} 20%,
-      #d0f5e4 40%,
-      ${lightSuccessColor} 60%,
-      transparent 100%)`;
-    veXToolbarButton.style.backgroundSize = '200% 100%';
-    veXToolbarButton.style.backgroundPosition = '0% center';
-    veXToolbarButton.style.animation = 'veX-moving-gradient 2s linear forwards';
+    // Ensure button positioning for overlay
+    const computedPosition = getComputedStyle(veXToolbarButton).position;
+    const needsPositioning = computedPosition === 'static';
+    if (needsPositioning) {
+      veXToolbarButton.style.position = 'relative';
+    }
 
-    // Remove animation and restore original styles after it completes
+    // Create animation overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'veX-animation-overlay';
+    overlay.style.cssText = `
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      border-radius: inherit;
+      background: radial-gradient(ellipse at center,
+        ${lightSuccessColor} 0%,
+        #d0f5e4 30%,
+        ${lightSuccessColor} 60%,
+        transparent 100%);
+      background-size: 200% 200%;
+      background-position: 150% center;
+      animation: veX-radial-glow 3.5s ease-out forwards, veX-glow-fade 3.5s ease-out forwards;
+    `;
+
+    veXToolbarButton.appendChild(overlay);
+
+    // Cleanup after animation
     setTimeout(() => {
-      veXToolbarButton.style.background = originalBackground;
-      veXToolbarButton.style.backgroundSize = originalBackgroundSize;
-      veXToolbarButton.style.backgroundPosition = originalBackgroundPosition;
-      veXToolbarButton.style.animation = originalAnimation;
-    }, 2000);
+      overlay?.remove();
+      if (needsPositioning) {
+        veXToolbarButton.style.position = '';
+      }
+    }, 3500);
 
   } catch (err) {
     Util.onError(err, "Error showing checklist update animation", false);
