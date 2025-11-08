@@ -532,7 +532,10 @@ async function onTicketTypeChange(newTicketType) {
 
     // Get the cached checklist data
     const checklistData = await getCachedChecklistData();
-    if (!checklistData || !checklistData.checklist) return;
+    if (!checklistData || !checklistData.checklist) {
+      Util.notify(`Unable to load checklist data`, Constants.NotificationType.Warning, true);
+      return;
+    }
 
     const checklist = checklistData.checklist;
     if (!checklist || !checklist[newTicketType]) {
@@ -540,11 +543,18 @@ async function onTicketTypeChange(newTicketType) {
       return;
     }
 
-    // Update current ticket info
-    veXCurrentTicketInfo.type = newTicketType;
-
     // Update current ticket checklist
     veXCurrentTicketChecklist = checklist[newTicketType];
+
+    // Validate that the checklist has categories before proceeding
+    if (!veXCurrentTicketChecklist || !veXCurrentTicketChecklist.categories ||
+        Util.isEmptyObject(veXCurrentTicketChecklist.categories)) {
+      Util.notify(`Invalid checklist schema for ${newTicketType}`, Constants.NotificationType.Warning, true);
+      return;
+    }
+
+    // Update current ticket info
+    veXCurrentTicketInfo.type = newTicketType;
 
     // Reinitialize the checklist and view
     reinitializeChecklistView();
@@ -689,14 +699,27 @@ function initChecklist() {
   veXTotalItems = 0;
   veXChecklistItems = {};
   try {
-    let categories = Object.keys(veXCurrentTicketChecklist.categories);
-    if (Util.isEmptyArray(categories)) {
-      Util.notify("No category found while initializing checklist item");
+    // Validate that veXCurrentTicketChecklist exists and has categories
+    if (!veXCurrentTicketChecklist || !veXCurrentTicketChecklist.categories) {
+      Util.notify("Invalid checklist data structure", Constants.NotificationType.Warning, false);
       return;
     }
+
+    let categories = Object.keys(veXCurrentTicketChecklist.categories);
+    if (Util.isEmptyArray(categories)) {
+      Util.notify("No category found while initializing checklist item", Constants.NotificationType.Warning, false);
+      return;
+    }
+
     categories.forEach((categoryName) => {
       veXChecklistItems[categoryName] = [];
       let currentCategory = veXCurrentTicketChecklist.categories[categoryName];
+
+      // Validate that currentCategory has a checklist property
+      if (!currentCategory || !currentCategory.checklist || !Array.isArray(currentCategory.checklist)) {
+        return; // Skip this category if it's invalid
+      }
+
       currentCategory.checklist.forEach((listContent) => {
         veXChecklistItems[categoryName].push(
           {
