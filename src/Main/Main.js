@@ -15,6 +15,8 @@ var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
 var veXSelectors;
 var veXToolbarButton = null;
+var veXAviatorPromptsButton = null;
+var veXAviatorButtonRetryCount = 0;
 var root = document.querySelector(':root');
 var Util;
 var DomPurify;
@@ -90,6 +92,7 @@ function veXSetup() {
     initVEXNodes();
     setupDocumentClickHandler();
     MutationObservers.initTicketTitleMutationObserver(onTicketTitleChange);
+    MutationObservers.initAviatorPanelMutationObserver(createAviatorPromptsButton);
     PromptModal.initialize();
   } catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup", err.message), true);
@@ -339,7 +342,10 @@ function veXReset() {
     veXCachedChecklistData = null;
     Util.cleanupMutationObserver(MutationObservers.veXTicketPhaseMutationObserver);
     Util.cleanupMutationObserver(MutationObservers.veXTicketTypeMutationObserver);
+    Util.cleanupMutationObserver(MutationObservers.veXAviatorPanelMutationObserver);
     removeChecklistToolbarButton();
+    removeAviatorPromptsButton();
+    veXAviatorButtonRetryCount = 0;
     root.style.setProperty('--veX-checkedItemsPercentage', `0%`);
     root.style.setProperty('--veX-fontColorAgainstTicketColor', `#000000`);
     root.style.setProperty('--veX-ticktColor', `#fff`);
@@ -1504,6 +1510,9 @@ async function onTicketTitleChange(change) {
     } else {
       removeChecklistToolbarButton();
     }
+
+    // Always create the Aviator Prompts button regardless of checklist state
+    createAviatorPromptsButton();
   }
   catch (err) {
     Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Title Change", err.message), true);
@@ -1741,6 +1750,95 @@ function markCurrentCategoryAsUnselected() {
       ),
       true
     );
+  }
+}
+
+async function createAviatorPromptsButton() {
+  try {
+    removeAviatorPromptsButton();
+
+    // Target the Aviator chat panel bottom section
+    const chatBottomSection = document.querySelector("[data-aid='chat-with-entity-panel-bottom-section']");
+
+    if (!chatBottomSection) {
+      // Retry with a maximum limit to prevent infinite loops
+      const MAX_RETRIES = 10;
+      if (veXAviatorButtonRetryCount < MAX_RETRIES) {
+        veXAviatorButtonRetryCount++;
+        setTimeout(() => {
+          createAviatorPromptsButton();
+        }, 500);
+      } else {
+        // Reset counter and stop retrying
+        veXAviatorButtonRetryCount = 0;
+      }
+      return;
+    }
+
+    // Reset retry counter on success
+    veXAviatorButtonRetryCount = 0;
+
+    // Create the button container
+    veXAviatorPromptsButton = document.createElement('button');
+    veXAviatorPromptsButton.id = 'veX_aviator_prompts_button';
+    veXAviatorPromptsButton.setAttribute('data-aid', 'aviator-prompts-button');
+    veXAviatorPromptsButton.setAttribute('type', 'button');
+    veXAviatorPromptsButton.setAttribute('aria-label', 'Aviator Prompts');
+    veXAviatorPromptsButton.setAttribute('title', 'Aviator Prompts - pre-configured AI prompts');
+    veXAviatorPromptsButton.textContent = 'Prompts ✨';
+
+    // Add click handler
+    veXAviatorPromptsButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      event.preventDefault();
+
+      if (!Util.isEmptyObject(veXCurrentTicketInfo)) {
+        PromptModal.openPromptsPopup();
+      } else {
+        Util.notify(
+          Util.getRandomMessage(Constants.Notifications.OpenTicketToSeePrompts),
+          Constants.NotificationType.Info,
+          true
+        );
+      }
+    });
+
+    // Find the "Using Images" button (the icon button with data-aid="icon-button")
+    const iconButton = chatBottomSection.querySelector('[data-aid="icon-button"]');
+
+    if (iconButton) {
+      // Insert the button right after the icon button, in the same parent container
+      if (iconButton.nextSibling) {
+        iconButton.parentNode.insertBefore(veXAviatorPromptsButton, iconButton.nextSibling);
+      } else {
+        iconButton.parentNode.appendChild(veXAviatorPromptsButton);
+      }
+    } else {
+      // Fallback: Insert at the beginning of the chat bottom section
+      chatBottomSection.insertBefore(veXAviatorPromptsButton, chatBottomSection.firstChild);
+    }
+
+  } catch (err) {
+    Util.onError(
+      err,
+      Util.formatMessage(
+        Util.getRandomMessage(Constants.ErrorMessages.UnHandledException),
+        "Create Aviator Prompts Button",
+        err.message
+      ),
+      false
+    );
+  }
+}
+
+function removeAviatorPromptsButton() {
+  try {
+    if (veXAviatorPromptsButton && veXAviatorPromptsButton.parentNode) {
+      veXAviatorPromptsButton.parentNode.removeChild(veXAviatorPromptsButton);
+    }
+    veXAviatorPromptsButton = null;
+  } catch (err) {
+    Util.onError(err, "Error removing Aviator prompts button", false);
   }
 }
 

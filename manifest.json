@@ -1,7 +1,7 @@
 {
   "name": "VEXtension",
   "description": "The toolset that gives you the Xtra edge in Opentext ValueEdge ⚡.",
-  "version": "3.1.0.2",
+  "version": "3.2.0.0",
   "manifest_version": 3,
   "permissions": ["contextMenus", "storage"],
   "content_scripts": [

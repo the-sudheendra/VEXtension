@@ -366,7 +366,11 @@ function getPromptExpandHTML(prompt, index) {
             <div class="veX_prompt_template_container">
                 <pre class="veX_prompt_template_content" data-index="${index}">${prompt.template}</pre>
             </div>
-            <p><strong>Variables:</strong></p>
+            <p>
+              <span style="font-size: 12px; color: #666; font-weight: normal; margin-left: 8px;" >
+                ℹ️ Aviator already has ticket context; add variables only if context is missing 😉
+              </span>
+            </p>
             <ul class="veX_prompt_variable_list">
                 ${prompt.variables.map(
       (v) =>

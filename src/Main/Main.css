@@ -1064,3 +1064,29 @@ button {
 .veX_dropdown_item:last-child {
   border-radius: 0 0 var(--veX-common-borderRadius) var(--veX-common-borderRadius);
 }
+
+/* Aviator Prompts Button Styles */
+#veX_aviator_prompts_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 12px;
+  margin:auto;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background 0.2s ease;
+  min-height: 32px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#veX_aviator_prompts_button:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}

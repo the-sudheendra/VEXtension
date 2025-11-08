@@ -2,6 +2,7 @@ var Util;
 var veXTicketPhaseMutationObserver;
 var veXTicketTitleMutationObserver;
 var veXTicketTypeMutationObserver;
+var veXAviatorPanelMutationObserver;
 
 (async () => {
     const utilURL = chrome.runtime.getURL("src/Common/Util.js");
@@ -68,11 +69,60 @@ function initTicketPhaseMutationObserver(onTicketPhaseChange) {
     }
 }
 
+function initAviatorPanelMutationObserver(callback) {
+    try {
+        // Clean up existing observer
+        if (veXAviatorPanelMutationObserver) {
+            veXAviatorPanelMutationObserver.disconnect();
+            veXAviatorPanelMutationObserver = null;
+        }
+
+        // Observe the entire document body for the Aviator panel appearing
+        const targetNode = document.body;
+        if (!targetNode) return;
+
+        const options = {
+            childList: true,
+            subtree: true,
+            attributeFilter: ['data-aid'] // Only watch data-aid changes for better performance
+        };
+
+        let debounceTimer = null;
+
+        veXAviatorPanelMutationObserver = new MutationObserver((mutationList, observer) => {
+            // Debounce to avoid excessive calls during rapid DOM changes
+            if (debounceTimer) {
+                clearTimeout(debounceTimer);
+            }
+
+            debounceTimer = setTimeout(() => {
+                // Only check once after mutations settle
+                const chatBottomSection = document.querySelector("[data-aid='chat-with-entity-panel-bottom-section']");
+                if (chatBottomSection) {
+                    const existingButton = document.querySelector('#veX_aviator_prompts_button');
+                    if (!existingButton) {
+                        callback();
+                        // Disconnect observer after successful injection to stop observing
+                        observer.disconnect();
+                        veXAviatorPanelMutationObserver = null;
+                    }
+                }
+            }, 150); // Wait 150ms for mutations to settle
+        });
+
+        veXAviatorPanelMutationObserver.observe(targetNode, options);
+    } catch (err) {
+        Util.onError(err, "An error occurred during Aviator panel observer setup.");
+    }
+}
+
 export {
     initTicketTitleMutationObserver,
     initTicketTypeMutationObserver,
     initTicketPhaseMutationObserver,
+    initAviatorPanelMutationObserver,
     veXTicketPhaseMutationObserver,
     veXTicketTitleMutationObserver,
-    veXTicketTypeMutationObserver
+    veXTicketTypeMutationObserver,
+    veXAviatorPanelMutationObserver
 }
