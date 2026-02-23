@@ -13,6 +13,8 @@ var veXPopUpOverlay = document.createElement("div");
 var veXCurrentPhaseCategories = [];
 var veXIsViewInitialised = false;
 var veXCurrentCategory = {};
+var veXPhaseRetryCount = 0;
+var veXPhaseRetryTimer = null;
 var veXSelectors;
 var veXToolbarButton = null;
 var veXAviatorPromptsButton = null;
@@ -95,7 +97,7 @@ function veXSetup() {
     MutationObservers.initAviatorPanelMutationObserver(createAviatorPromptsButton);
     PromptModal.initialize();
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Setup", err.message), false);
   }
 }
 
@@ -257,7 +259,7 @@ function initVEXNodes() {
     veXNodes.veXSyncIconContainer = veXPopUpNode.querySelector(veXSelectors.UISyncIconContainer);
     veXNodes.veXTicketTypeSelector = veXPopUpNode.querySelector(veXSelectors.UITicketTypeSelector);
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Nodes Setup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Nodes Setup", err.message), false);
   }
 }
 
@@ -367,7 +369,7 @@ async function initView() {
     return true;
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "View initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "View initializing", err.message), false);
     return false;
   }
 }
@@ -396,7 +398,7 @@ async function initHeaderView() {
     Util.makeElementDraggable(veXPopUpNode.querySelector('.veX_header'), document.getElementById("veX_checklist_popup_container"));
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Header View initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Header View initializing", err.message), false);
   }
 }
 async function initTicketTypeSelector() {
@@ -465,7 +467,7 @@ async function initTicketTypeSelector() {
     });
 
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Type Selector initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Type Selector initializing", err.message), false);
   }
 }
 
@@ -560,7 +562,7 @@ async function onTicketTypeChange(newTicketType) {
     reinitializeChecklistView();
     updateChecklistPopupColor(newTicketType);
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Type Change", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Type Change", err.message), false);
   }
 }
 
@@ -586,7 +588,7 @@ async function initFooterView() {
     veXPopUpNode.querySelector(".veX_edit_comment_btn").addEventListener("click", onEditComment);
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), false);
   }
 }
 
@@ -613,7 +615,7 @@ function initPhaseMap() {
     });
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phases initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phases initializing", err.message), false);
   }
 }
 
@@ -629,7 +631,7 @@ function initSidebarHeaderView() {
     veXNodes.veXTicketPhaseNode.addEventListener('click', OnTicketPhaseClick);
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "SideBar Header initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "SideBar Header initializing", err.message), false);
   }
 }
 
@@ -657,7 +659,7 @@ function initPhaseDropdownView() {
       veXPhaseDropDown.appendChild(dropdownListNode);
     }
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phase dropdown initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Phase dropdown initializing", err.message), false);
   }
 }
 
@@ -691,7 +693,7 @@ function initCategoriesView(categories) {
     }
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Categories View initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Categories View initializing", err.message), false);
   }
 }
 
@@ -736,7 +738,7 @@ function initChecklist() {
       );
     });
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Checklist Data initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Checklist Data initializing", err.message), false);
   }
 }
 
@@ -783,7 +785,7 @@ function updateMainContentView() {
     veXNodes.veXSidebarParentNode.querySelector(`[categoryName="${veXCurrentCategory.name}"]`).classList.add("veX-Active-Button");
     updateChecklist();
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update mainContent view", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update mainContent view", err.message), false);
   }
   finally {
     Util.hideLoading();
@@ -893,7 +895,7 @@ function updateChecklist() {
     });
     parentNode.appendChild(fragment);
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Checklist", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Checklist", err.message), false);
   }
 }
 
@@ -952,17 +954,54 @@ function updateNoteIcon(listItem, currentCheckList, index) {
     }
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Footer View initializing", err.message), false);
   }
 }
 
 function getCurrentTicketPhase() {
   try {
-    return document.querySelector(Constants.ValueEdgeNodeSelectors.PhaseNode).childNodes[3].innerText;
+    const phasePicker = document.querySelectorAll("phase-picker")[0];
+    if (!phasePicker) return "";
+
+    const phaseTextNode = phasePicker.querySelector(".field-editor-preeditor-field-display-value-text");
+    if (phaseTextNode) {
+      veXPhaseRetryCount = 0;
+      if (veXPhaseRetryTimer) {
+        clearTimeout(veXPhaseRetryTimer);
+        veXPhaseRetryTimer = null;
+      }
+      return phaseTextNode.innerText;
+    }
+
+    schedulePhaseTextRetry();
+    return "";
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Fetching Current Ticket Phase", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Fetching Current Ticket Phase", err.message), false);
   }
+}
+
+function schedulePhaseTextRetry() {
+  const maxRetries = 10;
+  if (veXPhaseRetryCount >= maxRetries) return;
+
+  if (veXPhaseRetryTimer) {
+    clearTimeout(veXPhaseRetryTimer);
+  }
+
+  veXPhaseRetryCount++;
+  veXPhaseRetryTimer = setTimeout(() => {
+    const phasePicker = document.querySelectorAll("phase-picker")[0];
+    const phaseTextNode = phasePicker?.querySelector(".field-editor-preeditor-field-display-value-text");
+    if (phaseTextNode?.innerText) {
+      veXCurrentTicketInfo.phase = phaseTextNode.innerText;
+      onPhaseChange(veXCurrentTicketInfo.phase);
+      veXPhaseRetryCount = 0;
+      veXPhaseRetryTimer = null;
+      return;
+    }
+    schedulePhaseTextRetry();
+  }, 300);
 }
 
 function updateDonePercentage() {
@@ -973,7 +1012,7 @@ function updateDonePercentage() {
     updateChecklistToolbarBadge();
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Done Percentage", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Update Done Percentage", err.message), false);
   }
 }
 
@@ -1209,7 +1248,7 @@ function setNotApplicableState(listItemNode, listIndex) {
     listItemNode.title = "Item is marked as not applicable";
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Applicable State", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Applicable State", err.message), false);
   }
 }
 function setNotSelected(listItemNode, listIndex) {
@@ -1223,7 +1262,7 @@ function setNotSelected(listItemNode, listIndex) {
     listItemNode.querySelector(".veX_done_icon").title = "Unselected";
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Selected State", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Selected State", err.message), false);
   }
 }
 function setNotCompleted(listItemNode, listIndex) {
@@ -1237,7 +1276,7 @@ function setNotCompleted(listItemNode, listIndex) {
     listItemNode.title = "Item is marked as not done";
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Completed State", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Not Completed State", err.message), false);
   }
 }
 
@@ -1255,7 +1294,7 @@ function setCompletedState(listItemNode, listIndex) {
     listItemNode.title = "Item is marked as done";
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Completed State", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Set Completed State", err.message), false);
   }
 }
 //<-Common Functions
@@ -1270,7 +1309,7 @@ function closeChecklistPopup() {
     veXPopUpNode.classList.add("veX_popup_disable");
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Checklist Popup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Closing Checklist Popup", err.message), false);
   }
 }
 
@@ -1291,7 +1330,7 @@ function openChecklistPopup() {
     }, 600);
 
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Checklist Popup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening Checklist Popup", err.message), false);
   }
 }
 
@@ -1299,7 +1338,7 @@ function openPromptsPopup() {
   try {
 
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening PromptPopup", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Opening PromptPopup", err.message), false);
   }
 }
 
@@ -1342,7 +1381,7 @@ async function refreshChecklistFromRemoteAndUpdate() {
       }
     }
   } catch (err) {
-    Util.onError(err, "Error refreshing checklist from remote", true);
+    Util.onError(err, "Error refreshing checklist from remote", false);
   } finally {
     Util.hideLoading();
   }
@@ -1370,7 +1409,7 @@ async function refreshChecklistFromRemoteIfExists(veXChecklistData) {
       return false;
     }
   } catch (error) {
-    Util.onError(error, "Couldn't fetch JSON from the URL", true);
+    Util.onError(error, "Couldn't fetch JSON from the URL", false);
     return false;
   }
   return true;
@@ -1401,7 +1440,7 @@ function onListItemClick(event, listItemNode, currentCheckList, index) {
 
     event.stopPropagation();
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "ListItem Click", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "ListItem Click", err.message), false);
   }
 }
 
@@ -1489,7 +1528,7 @@ function onListNoteClick(event, listItemNode, currentCheckList, index) {
     if (event)
       event.stopPropagation();
   } catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Click", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "List Note Click", err.message), false);
   }
 }
 // function onListNoteChange(event, listItemNode) {
@@ -1538,7 +1577,7 @@ async function onTicketTitleChange(change) {
     createAviatorPromptsButton();
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Title Change", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Title Change", err.message), false);
   }
 }
 
@@ -1561,7 +1600,7 @@ function onTicketPhaseChange(mutation) {
 
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Phase Change", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Phase Change", err.message), false);
   }
 
 }
@@ -1575,7 +1614,7 @@ function OnTicketPhaseClick(event) {
     }
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Phase Click", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Ticket Phase Click", err.message), false);
   }
 }
 
@@ -1622,7 +1661,7 @@ function handleMessagesFromServiceWorker(request, sender, sendResponse) {
     }
   }
   catch (err) {
-    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Handling Messages From Service Worker", err.message), true);
+    Util.onError(err, Util.formatMessage(Util.getRandomMessage(Constants.ErrorMessages.UnHandledException), "Handling Messages From Service Worker", err.message), false);
   }
 }
 
@@ -1656,7 +1695,7 @@ function markCurrentCategoryAsCompleted() {
         "Mark Category Completed",
         err.message
       ),
-      true
+      false
     );
   }
 }
@@ -1691,7 +1730,7 @@ function markCurrentCategoryAsNotDone() {
         "Mark Category Not Done",
         err.message
       ),
-      true
+      false
     );
   }
 }
@@ -1726,7 +1765,7 @@ function markCurrentCategoryAsNotApplicable() {
         "Mark Category Not Applicable",
         err.message
       ),
-      true
+      false
     );
   }
 }
@@ -1771,7 +1810,7 @@ function markCurrentCategoryAsUnselected() {
         "Mark Category Unselected",
         err.message
       ),
-      true
+      false
     );
   }
 }
@@ -1821,7 +1860,7 @@ async function createAviatorPromptsButton() {
         Util.notify(
           Util.getRandomMessage(Constants.Notifications.OpenTicketToSeePrompts),
           Constants.NotificationType.Info,
-          true
+          false
         );
       }
     });

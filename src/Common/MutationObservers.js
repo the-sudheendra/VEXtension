@@ -51,14 +51,21 @@ function initTicketTypeMutationObserver(onTicketTitleChange, onTicketPhaseChange
 function initTicketPhaseMutationObserver(onTicketPhaseChange) {
     try {
         veXTicketPhaseMutationObserver = null;
-        let targetNode = document.querySelector("[data-aid='entity-life-cycle-widget-phase']");
-        if (!targetNode) return;
-        targetNode = targetNode.childNodes[3];
-        let options = { attributes: true, childList: true, subtree: true };
+        const phasePicker = document.querySelector("phase-picker");
+        if (!phasePicker) return;
+
+        const phaseTextNode = phasePicker.querySelector(".field-editor-preeditor-field-display-value-text");
+        const targetNode = phaseTextNode || phasePicker;
+        let options = { attributes: true, childList: true, characterData: true, subtree: true };
         veXTicketPhaseMutationObserver = new MutationObserver(
             (mutationList, observer) => {
                 for (const mutation of mutationList) {
-                    onTicketPhaseChange(mutation);
+                    const currentPhaseNode = phasePicker.querySelector(".field-editor-preeditor-field-display-value-text");
+                    if (currentPhaseNode) {
+                        onTicketPhaseChange({ target: currentPhaseNode });
+                    } else {
+                        onTicketPhaseChange(mutation);
+                    }
                 }
             }
         );
